@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BlueOnionSoftware.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BuildHeaderForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FF008000</Value>
+    </Setting>
+    <Setting Name="BuildTextForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FF808080</Value>
+    </Setting>
+    <Setting Name="LogErrorForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FFFF0000</Value>
+    </Setting>
+    <Setting Name="LogWarningForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FFB8860B</Value>
+    </Setting>
+    <Setting Name="LogInformationForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FF00008B</Value>
+    </Setting>
+    <Setting Name="LogSpecialForeground" Type="System.Windows.Media.Color" Scope="Application">
+      <Value Profile="(Default)">#FF800080</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
