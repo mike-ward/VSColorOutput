@@ -23,6 +23,7 @@ namespace BlueOnionSoftware
             if (_outputClassifier == null)
             {
                 _outputClassifier = new OutputClassifier(ClassificationRegistry);
+                TextManagerEvents.RegisterForTextManagerEvents();
             }
             return _outputClassifier;
         }
