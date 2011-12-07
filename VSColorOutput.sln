@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSColorOutput", "OutputClassifier\VSColorOutput.csproj", "{BF205896-9741-4035-B0BA-4030C92036B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSColorOutput", "VSColorOutput\VSColorOutput.csproj", "{BF205896-9741-4035-B0BA-4030C92036B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4906F798-1AA4-49F8-9E56-38C5B5B7200D}"
 EndProject

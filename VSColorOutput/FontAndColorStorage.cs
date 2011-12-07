@@ -12,7 +12,7 @@ namespace BlueOnionSoftware
 
         public static IVsFontAndColorStorage GetFontAndColorStorageService()
         {
-            return Override ?? Package.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
+            return Override ?? VsColorOutputPackage.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
         }
 
         private static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
