@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.Win32;
 
 namespace BlueOnionSoftware
 {

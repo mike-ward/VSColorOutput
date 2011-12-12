@@ -1,5 +1,4 @@
 ﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
-using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -17,18 +16,14 @@ namespace BlueOnionSoftware
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
         private const string RegExPatternsKey = "RegExPatterns";
+        private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
 
         [DisplayName("RegEx Patterns")]
         public RegExClassification[] RegExPatterns { get; set; }
 
         public override void LoadSettingsFromStorage()
         {
-            using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
-            using (var settings = root.OpenSubKey(SettingsRegistryPath))
-            {
-                var json = settings.GetValue(RegExPatternsKey) as string;
-                RegExPatterns = string.IsNullOrEmpty(json) ? DefaultPatterns() : LoadPatternsFromRegistry(json);
-            }
+            RegExPatterns = LoadPatterns();
         }
 
         public override void SaveSettingsToStorage()
@@ -39,7 +34,7 @@ namespace BlueOnionSoftware
                 serializer.WriteObject(ms, RegExPatterns);
                 var json = Encoding.Default.GetString(ms.ToArray());
                 using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
-                using (var settings = root.OpenSubKey(SettingsRegistryPath, true))
+                using (var settings = root.OpenSubKey(RegistryPath, true))
                 {
                     settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
                     settings.Close();
@@ -47,15 +42,36 @@ namespace BlueOnionSoftware
             }
         }
 
+        public static bool UseDefaults { get; set; }
+
+        public static RegExClassification[] LoadPatterns()
+        {
+            if (UseDefaults)
+            {
+                return DefaultPatterns();
+            }
+            using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
+            using (var settings = root.OpenSubKey(RegistryPath))
+            {
+                var json = settings.GetValue(RegExPatternsKey) as string;
+                return string.IsNullOrEmpty(json) ? DefaultPatterns() : LoadPatternsFromJson(json);
+            }
+        }
+
         private static RegExClassification[] DefaultPatterns()
         {
             return new[]
             {
-                new RegExClassification {RegExPattern = "=====", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true}
+                new RegExClassification {RegExPattern = @"\+\+\+\>", ClassificationType = ClassificationTypes.LogSpecial, IgnoreCase = false},
+                new RegExClassification {RegExPattern = @"(=====|-----)", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = false},
+                new RegExClassification {RegExPattern = @"0 failed", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true},
+                new RegExClassification {RegExPattern = @"(\W|^)information\W", ClassificationType = ClassificationTypes.LogInformation, IgnoreCase = true},
+                new RegExClassification {RegExPattern = @"(\W|^)warning\W", ClassificationType = ClassificationTypes.LogWarning, IgnoreCase = true},
+                new RegExClassification {RegExPattern = @"(\W|^)(error|fail|failed|exception)\W", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true}
             };
         }
 
-        private static RegExClassification[] LoadPatternsFromRegistry(string json)
+        private static RegExClassification[] LoadPatternsFromJson(string json)
         {
             using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
             {
@@ -64,7 +80,6 @@ namespace BlueOnionSoftware
             }
         }
 
-        [Serializable]
         public enum ClassificationTypes
         {
             BuildText,

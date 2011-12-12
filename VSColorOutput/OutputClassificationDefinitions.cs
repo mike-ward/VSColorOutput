@@ -10,13 +10,13 @@ namespace BlueOnionSoftware
     {
         private const string VsColorOut = "VSColorOutput ";
 
-        public const string BuildHead = VsColorOut + "Build Header";
-        public const string BuildText = VsColorOut + "Build Text";
+        public const string BuildHead = "BuildHead";
+        public const string BuildText = "BuildText";
 
-        public const string LogInfo = VsColorOut + "Log Information";
-        public const string LogWarn = VsColorOut + "Log Warning";
-        public const string LogError = VsColorOut + "Log Error";
-        public const string LogSpecial = VsColorOut + "Log Special";
+        public const string LogInfo = "LogInformation";
+        public const string LogWarn = "LogWarning";
+        public const string LogError = "LogError";
+        public const string LogSpecial = "LogSpecial";
 
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(BuildHead)]
@@ -30,7 +30,7 @@ namespace BlueOnionSoftware
         {
             public BuildHeaderFormat()
             {
-                DisplayName = BuildHead;
+                DisplayName = VsColorOut + "Build Header";
                 ForegroundColor = Settings.Default.BuildHeaderForeground;
             }
         }
@@ -47,7 +47,7 @@ namespace BlueOnionSoftware
         {
             public BuildTextFormat()
             {
-                DisplayName = BuildText;
+                DisplayName = VsColorOut + "Build Text";
                 ForegroundColor = Settings.Default.BuildTextForeground;
             }
         }
@@ -64,7 +64,7 @@ namespace BlueOnionSoftware
         {
             public LogSpecialFormat()
             {
-                DisplayName = LogSpecial;
+                DisplayName = VsColorOut + "Log Special";
                 ForegroundColor = Settings.Default.LogSpecialForeground;
             }
         }
@@ -81,7 +81,7 @@ namespace BlueOnionSoftware
         {
             public LogErrorFormat()
             {
-                DisplayName = LogError;
+                DisplayName = VsColorOut + "Log Error";
                 ForegroundColor = Settings.Default.LogErrorForeground;
             }
         }
@@ -98,7 +98,7 @@ namespace BlueOnionSoftware
         {
             public LogWarningFormat()
             {
-                DisplayName = LogWarn;
+                DisplayName = VsColorOut + "Log Warning";
                 ForegroundColor = Settings.Default.LogWarningForeground;
             }
         }
@@ -115,7 +115,7 @@ namespace BlueOnionSoftware
         {
             public LogInformationFormat()
             {
-                DisplayName = LogInfo;
+                DisplayName = VsColorOut + "Log Information";
                 ForegroundColor = Settings.Default.LogInformationForeground;
             }
         }

@@ -30,8 +30,8 @@ namespace Tests
             mockSnapshot.VerifyAll();
         }
 
-        [TestCase("----", OutputClassificationDefinitions.BuildHead)]
-        [TestCase("====", OutputClassificationDefinitions.BuildHead)]
+        [TestCase("-----", OutputClassificationDefinitions.BuildHead)]
+        [TestCase("=====", OutputClassificationDefinitions.BuildHead)]
         [TestCase("0 failed,", OutputClassificationDefinitions.BuildHead)]
         [TestCase("plain text", OutputClassificationDefinitions.BuildText)]
         [TestCase("+++>", OutputClassificationDefinitions.LogSpecial)]
@@ -67,6 +67,7 @@ namespace Tests
             mockSnapshotLine.SetupGet(l => l.Snapshot).Returns(mockSnapshot.Object);
 
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 1);
+            VsColorOutputOptions.UseDefaults = true;
             var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
             mockClassificationTypeRegistryService.VerifyAll();

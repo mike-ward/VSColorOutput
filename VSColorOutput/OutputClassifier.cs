@@ -20,27 +20,13 @@ namespace BlueOnionSoftware
             _classificationTypeRegistry = registry;
         }
 
-        private static readonly Regex _containsInfo = new Regex(@"(\W|^)information\W", RegexOptions.IgnoreCase);
-        private static readonly Regex _containsWarn = new Regex(@"(\W|^)warning\W", RegexOptions.IgnoreCase);
-        private static readonly Regex _containsError = new Regex(@"(\W|^)(error|fail|failed|exception)\W", RegexOptions.IgnoreCase);
-
         private struct Classifier
         {
-            public string Name { get; set; }
+            public string Type { get; set; }
             public Predicate<string> Test { get; set; }
         }
 
-        private static readonly Classifier[] _classifiers = new []
-        {
-            new Classifier {Test = text => text.Contains("+++>"), Name = OutputClassificationDefinitions.LogSpecial},
-            new Classifier {Test = text => text.Contains("----"), Name = OutputClassificationDefinitions.BuildHead},
-            new Classifier {Test = text => text.Contains("===="), Name = OutputClassificationDefinitions.BuildHead},
-            new Classifier {Test = text => text.Contains("0 failed,"), Name = OutputClassificationDefinitions.BuildHead},
-            new Classifier {Test = text => _containsInfo.IsMatch(text), Name = OutputClassificationDefinitions.LogInfo},
-            new Classifier {Test = text => _containsWarn.IsMatch(text), Name = OutputClassificationDefinitions.LogWarn},
-            new Classifier {Test = text => _containsError.IsMatch(text), Name = OutputClassificationDefinitions.LogError},
-            new Classifier {Test = text => true, Name = OutputClassificationDefinitions.BuildText}
-        };
+        private Classifier[] _classifiers;
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
@@ -50,6 +36,7 @@ namespace BlueOnionSoftware
             {
                 return spans;
             }
+            LoadPatterns();
             var start = span.Start.GetContainingLine().LineNumber;
             var end = (span.End - 1).GetContainingLine().LineNumber;
             for (var i = start; i <= end; i++)
@@ -59,12 +46,35 @@ namespace BlueOnionSoftware
                 var text = line.Snapshot.GetText(snapshotSpan);
                 if (string.IsNullOrWhiteSpace(text) == false)
                 {
-                    var classificationName = _classifiers.First(t => t.Test(text)).Name;
+                    var classificationName = _classifiers.First(t => t.Test(text)).Type;
                     var type = _classificationTypeRegistry.GetClassificationType(classificationName);
                     spans.Add(new ClassificationSpan(line.Extent, type));
                 }
             }
             return spans;
+        }
+
+        private void LoadPatterns()
+        {
+            if (_classifiers == null)
+            {
+                var patterns = VsColorOutputOptions.LoadPatterns() ?? new VsColorOutputOptions.RegExClassification[0];
+                var classifiers = patterns.Select(pattern => new Classifier
+                {
+                    Type = pattern.ClassificationType.ToString(),
+                    Test = text => Regex.IsMatch(text, pattern.RegExPattern, pattern.IgnoreCase
+                        ? RegexOptions.IgnoreCase
+                        : RegexOptions.None)
+                });
+                _classifiers = classifiers.Concat(new[]
+                {
+                    new Classifier
+                    {
+                        Type = OutputClassificationDefinitions.BuildText,
+                        Test = t => true
+                    }
+                }).ToArray();
+            }
         }
     }
 }
