@@ -34,7 +34,7 @@ namespace Tests
         [TestCase("=====", OutputClassificationDefinitions.BuildHead)]
         [TestCase("0 failed,", OutputClassificationDefinitions.BuildHead)]
         [TestCase("plain text", OutputClassificationDefinitions.BuildText)]
-        [TestCase("+++>", OutputClassificationDefinitions.LogSpecial)]
+        [TestCase("+++>", OutputClassificationDefinitions.LogCustom1)]
         [TestCase(":Error:", OutputClassificationDefinitions.LogError)]
         [TestCase("Error ", OutputClassificationDefinitions.LogError)]
         [TestCase(" Failed ", OutputClassificationDefinitions.LogError)]

@@ -12,7 +12,7 @@ namespace BlueOnionSoftware
 
         public static IVsFontAndColorStorage GetFontAndColorStorageService()
         {
-            return Override ?? VsColorOutputPackage.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
+            return Override ?? Package.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
         }
 
         private static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
@@ -22,7 +22,10 @@ namespace BlueOnionSoftware
             {OutputClassificationDefinitions.LogInfo, new[] {new ColorableItemInfo()}},
             {OutputClassificationDefinitions.LogWarn, new[] {new ColorableItemInfo()}},
             {OutputClassificationDefinitions.LogError, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogSpecial, new[] {new ColorableItemInfo()}}
+            {OutputClassificationDefinitions.LogCustom1, new[] {new ColorableItemInfo()}},
+            {OutputClassificationDefinitions.LogCustom2, new[] {new ColorableItemInfo()}},
+            {OutputClassificationDefinitions.LogCustom3, new[] {new ColorableItemInfo()}},
+            {OutputClassificationDefinitions.LogCustom4, new[] {new ColorableItemInfo()}}
         };
 
         public static void UpdateColors()
@@ -43,7 +46,6 @@ namespace BlueOnionSoftware
                         store.GetItem(color.Key, color.Value);
                     }
                     store.CloseCategory();
-
                     store.OpenCategory(DefGuidList.guidOutputWindowFontCategory, flags);
                     foreach (var color in _colorMap)
                     {

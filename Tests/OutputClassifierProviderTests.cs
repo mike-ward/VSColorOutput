@@ -47,6 +47,7 @@ namespace Tests
                 mockTextManager2.VerifyAll();
                 mockConnectionPointContainer.VerifyAll();
                 mockTextManagerEventsConnection.VerifyAll();
+                textManagerEventsConnection.Should().BeSameAs(mockTextManagerEventsConnection.Object);
             }
             finally
             {

@@ -28,6 +28,11 @@ namespace BlueOnionSoftware
 
         private Classifier[] _classifiers;
 
+        public void ClearClassifiers()
+        {
+            _classifiers = null;
+        }
+
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             var spans = new List<ClassificationSpan>();

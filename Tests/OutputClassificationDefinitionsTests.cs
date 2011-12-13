@@ -26,14 +26,6 @@ namespace Tests
         }
 
         [Test]
-        public void LogSpecialFormat()
-        {
-            var format = new OutputClassificationDefinitions.LogSpecialFormat();
-            format.DisplayName.Should().Be("VSColorOutput Log Special");
-            format.ForegroundColor.Should().Be(Colors.Purple);
-        }
-
-        [Test]
         public void LogErrorFormat()
         {
             var format = new OutputClassificationDefinitions.LogErrorFormat();
@@ -46,7 +38,7 @@ namespace Tests
         {
             var format = new OutputClassificationDefinitions.LogWarningFormat();
             format.DisplayName.Should().Be("VSColorOutput Log Warning");
-            format.ForegroundColor.Should().Be(Colors.DarkGoldenrod);
+            format.ForegroundColor.Should().Be(Colors.Olive);
         }
 
         [Test]
@@ -55,6 +47,38 @@ namespace Tests
             var format = new OutputClassificationDefinitions.LogInformationFormat();
             format.DisplayName.Should().Be("VSColorOutput Log Information");
             format.ForegroundColor.Should().Be(Colors.DarkBlue);
+        }
+
+        [Test]
+        public void LogCustom1Format()
+        {
+            var format = new OutputClassificationDefinitions.LogCustom1Format();
+            format.DisplayName.Should().Be("VSColorOutput Log Custom1");
+            format.ForegroundColor.Should().Be(Colors.Purple);
+        }
+
+        [Test]
+        public void LogCustom2Format()
+        {
+            var format = new OutputClassificationDefinitions.LogCustom2Format();
+            format.DisplayName.Should().Be("VSColorOutput Log Custom2");
+            format.ForegroundColor.Should().Be(Colors.DarkSalmon);
+        }
+
+        [Test]
+        public void LogCustom3Format()
+        {
+            var format = new OutputClassificationDefinitions.LogCustom3Format();
+            format.DisplayName.Should().Be("VSColorOutput Log Custom3");
+            format.ForegroundColor.Should().Be(Colors.DarkOrange);
+        }
+
+        [Test]
+        public void LogCustom4Format()
+        {
+            var format = new OutputClassificationDefinitions.LogCustom4Format();
+            format.DisplayName.Should().Be("VSColorOutput Log Custom4");
+            format.ForegroundColor.Should().Be(Colors.Brown);
         }
     }
 }

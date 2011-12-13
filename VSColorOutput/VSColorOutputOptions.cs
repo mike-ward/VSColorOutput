@@ -39,6 +39,10 @@ namespace BlueOnionSoftware
                     settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
                     settings.Close();
                 }
+                if (OutputClassifierProvider.OutputClassifier != null)
+                {
+                    OutputClassifierProvider.OutputClassifier.ClearClassifiers();
+                }
             }
         }
 
@@ -54,7 +58,7 @@ namespace BlueOnionSoftware
             using (var settings = root.OpenSubKey(RegistryPath))
             {
                 var json = settings.GetValue(RegExPatternsKey) as string;
-                return string.IsNullOrEmpty(json) ? DefaultPatterns() : LoadPatternsFromJson(json);
+                return string.IsNullOrEmpty(json) || json == "[]" ? DefaultPatterns() : LoadPatternsFromJson(json);
             }
         }
 
@@ -62,7 +66,7 @@ namespace BlueOnionSoftware
         {
             return new[]
             {
-                new RegExClassification {RegExPattern = @"\+\+\+\>", ClassificationType = ClassificationTypes.LogSpecial, IgnoreCase = false},
+                new RegExClassification {RegExPattern = @"\+\+\+\>", ClassificationType = ClassificationTypes.LogCustom1, IgnoreCase = false},
                 new RegExClassification {RegExPattern = @"(=====|-----)", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = false},
                 new RegExClassification {RegExPattern = @"0 failed", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(\W|^)information\W", ClassificationType = ClassificationTypes.LogInformation, IgnoreCase = true},
@@ -87,7 +91,10 @@ namespace BlueOnionSoftware
             LogError,
             LogWarning,
             LogInformation,
-            LogSpecial
+            LogCustom1,
+            LogCustom2,
+            LogCustom3,
+            LogCustom4
         }
 
         public class RegExClassification

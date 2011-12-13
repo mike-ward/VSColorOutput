@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace BlueOnionSoftware
 {
+    [ContentType("TestOutput")]
     [ContentType("BuildOutput")]
     [ContentType("DebugOutput")]
     [Export(typeof(IClassifierProvider))]
@@ -16,16 +17,16 @@ namespace BlueOnionSoftware
         [Import]
         internal IClassificationTypeRegistryService ClassificationRegistry;
 
-        private static OutputClassifier _outputClassifier;
+        public static OutputClassifier OutputClassifier { get; private set; }
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
-            if (_outputClassifier == null)
+            if (OutputClassifier == null)
             {
-                _outputClassifier = new OutputClassifier(ClassificationRegistry);
+                OutputClassifier = new OutputClassifier(ClassificationRegistry);
                 TextManagerEvents.RegisterForTextManagerEvents();
             }
-            return _outputClassifier;
+            return OutputClassifier;
         }
     }
 }

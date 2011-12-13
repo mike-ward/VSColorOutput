@@ -31,7 +31,10 @@ namespace Tests
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogInfo, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogWarn, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogError, It.IsAny<ColorableItemInfo[]>()));
-                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogSpecial, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom1, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom2, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom3, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom4, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.CloseCategory(), Times.Exactly(2));
 
                 var ouputWindowGuid = DefGuidList.guidOutputWindowFontCategory;
@@ -41,7 +44,10 @@ namespace Tests
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogInfo, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogWarn, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogError, It.IsAny<ColorableItemInfo[]>()));
-                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogSpecial, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom1, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom2, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom3, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom4, It.IsAny<ColorableItemInfo[]>()));
             }
             finally
             {
