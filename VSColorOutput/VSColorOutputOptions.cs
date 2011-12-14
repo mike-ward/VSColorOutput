@@ -33,15 +33,14 @@ namespace BlueOnionSoftware
                 var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
                 serializer.WriteObject(ms, RegExPatterns);
                 var json = Encoding.Default.GetString(ms.ToArray());
-                using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
-                using (var settings = root.OpenSubKey(RegistryPath, true))
+                using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, true))
+                using (var settings = root.OpenSubKey(RegistryPath, true) ?? root.CreateSubKey(RegistryPath))
                 {
                     settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
-                    settings.Close();
-                }
-                if (OutputClassifierProvider.OutputClassifier != null)
-                {
-                    OutputClassifierProvider.OutputClassifier.ClearClassifiers();
+                    if (OutputClassifierProvider.OutputClassifier != null)
+                    {
+                        OutputClassifierProvider.OutputClassifier.ClearClassifiers();
+                    }
                 }
             }
         }
@@ -57,8 +56,8 @@ namespace BlueOnionSoftware
             using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
             using (var settings = root.OpenSubKey(RegistryPath))
             {
-                var json = settings.GetValue(RegExPatternsKey) as string;
-                return string.IsNullOrEmpty(json) || json == "[]" ? DefaultPatterns() : LoadPatternsFromJson(json);
+                var json = (settings != null) ? settings.GetValue(RegExPatternsKey) as string : null;
+                return (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
             }
         }
 
@@ -80,7 +79,8 @@ namespace BlueOnionSoftware
             using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
             {
                 var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
-                return (RegExClassification[])serializer.ReadObject(ms);
+                var patterns = serializer.ReadObject(ms) as RegExClassification[];
+                return patterns ?? DefaultPatterns();
             }
         }
 
