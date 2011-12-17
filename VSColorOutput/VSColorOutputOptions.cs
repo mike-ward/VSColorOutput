@@ -19,6 +19,7 @@ namespace BlueOnionSoftware
         private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
 
         [DisplayName("RegEx Patterns")]
+        [Description("Specify patterns (Regular Expressions) and assoicate with classification types. The order of the patterns is significant.")]
         public RegExClassification[] RegExPatterns { get; set; }
 
         public override void LoadSettingsFromStorage()
@@ -45,11 +46,11 @@ namespace BlueOnionSoftware
             }
         }
 
-        public static bool UseDefaults { get; set; }
+        public static bool UseDefaultPatterns { get; set; }
 
         public static RegExClassification[] LoadPatterns()
         {
-            if (UseDefaults)
+            if (UseDefaultPatterns)
             {
                 return DefaultPatterns();
             }
