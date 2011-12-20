@@ -100,7 +100,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassificationTypes.cs" />
     <Compile Include="FontAndColorStorage.cs" />
+    <Compile Include="RegExClassification.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="VsColorOutputPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OutputClassifier.cs" />

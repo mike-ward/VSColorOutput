@@ -26,7 +26,7 @@ namespace BlueOnionSoftware
             public Predicate<string> Test { get; set; }
         }
 
-        private Classifier[] _classifiers;
+        private IEnumerable<Classifier> _classifiers;
 
         public void ClearClassifiers()
         {
@@ -41,7 +41,7 @@ namespace BlueOnionSoftware
             {
                 return spans;
             }
-            LoadPatterns();
+            LoadClassifiers();
             var start = span.Start.GetContainingLine().LineNumber;
             var end = (span.End - 1).GetContainingLine().LineNumber;
             for (var i = start; i <= end; i++)
@@ -51,7 +51,7 @@ namespace BlueOnionSoftware
                 var text = line.Snapshot.GetText(snapshotSpan);
                 if (string.IsNullOrWhiteSpace(text) == false)
                 {
-                    var classificationName = _classifiers.First(t => t.Test(text)).Type;
+                    var classificationName = _classifiers.First(classifier => classifier.Test(text)).Type;
                     var type = _classificationTypeRegistry.GetClassificationType(classificationName);
                     spans.Add(new ClassificationSpan(line.Extent, type));
                 }
@@ -59,26 +59,29 @@ namespace BlueOnionSoftware
             return spans;
         }
 
-        private void LoadPatterns()
+        private void LoadClassifiers()
         {
             if (_classifiers == null)
             {
-                var patterns = VsColorOutputOptions.LoadPatterns() ?? new VsColorOutputOptions.RegExClassification[0];
-                var classifiers = patterns.Select(pattern => new Classifier
+                var patterns = Settings.LoadPatterns() ?? new RegExClassification[0];
+                var classifiers = new List<Classifier>();
+                foreach (var pattern in patterns)
                 {
-                    Type = pattern.ClassificationType.ToString(),
-                    Test = text => Regex.IsMatch(text, pattern.RegExPattern, pattern.IgnoreCase
-                        ? RegexOptions.IgnoreCase
-                        : RegexOptions.None)
-                });
-                _classifiers = classifiers.Concat(new[]
-                {
-                    new Classifier
+                    var test = new Regex(pattern.RegExPattern, pattern.IgnoreCase 
+                        ? RegexOptions.IgnoreCase 
+                        : RegexOptions.None);
+                    classifiers.Add(new Classifier
                     {
-                        Type = OutputClassificationDefinitions.BuildText,
-                        Test = t => true
-                    }
-                }).ToArray();
+                        Type = pattern.ClassificationType.ToString(),
+                        Test = text => test.IsMatch(text)
+                    });
+                }
+                classifiers.Add(new Classifier
+                {
+                    Type = OutputClassificationDefinitions.BuildText,
+                    Test = t => true
+                });
+                _classifiers = classifiers;
             }
         }
     }

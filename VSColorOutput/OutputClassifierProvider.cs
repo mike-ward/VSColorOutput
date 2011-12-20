@@ -8,9 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace BlueOnionSoftware
 {
-    [ContentType("TestOutput")]
-    [ContentType("BuildOutput")]
-    [ContentType("DebugOutput")]
+    [ContentType("output")]
     [Export(typeof(IClassifierProvider))]
     public class OutputClassifierProvider : IClassifierProvider
     {

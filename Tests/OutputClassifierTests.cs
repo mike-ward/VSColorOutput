@@ -67,7 +67,7 @@ namespace Tests
             mockSnapshotLine.SetupGet(l => l.Snapshot).Returns(mockSnapshot.Object);
 
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 1);
-            VsColorOutputOptions.UseDefaultPatterns = true;
+            Settings.UseDefaultPatterns = true;
             var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
             mockClassificationTypeRegistryService.VerifyAll();

@@ -76,6 +76,7 @@
     <Compile Include="OutputClassifierProviderTests.cs" />
     <Compile Include="OutputClassifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegExClassificationTests.cs" />
     <Compile Include="TextManagerEventsTests.cs" />
   </ItemGroup>
   <ItemGroup>
