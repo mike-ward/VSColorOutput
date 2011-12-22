@@ -12,9 +12,10 @@ namespace BlueOnionSoftware
         public const string SubCategory = "General";
 
         [DisplayName("RegEx Patterns")]
-        [Description("Specify patterns (Regular Expressions) and assoicate with classification types. " +
-                     "The order of the patterns is significant. " +
-                     "Delete all patterns to restore default patterns.")]
+        [Description(
+            "Specify patterns (Regular Expressions) and assoicate with classification types. " +
+            "The order of the patterns is significant. " +
+            "Delete all patterns to restore default patterns.")]
         public RegExClassification[] RegExPatterns { get; set; }
 
         public override void LoadSettingsFromStorage()

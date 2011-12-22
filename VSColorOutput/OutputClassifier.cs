@@ -12,6 +12,7 @@ namespace BlueOnionSoftware
 {
     public class OutputClassifier : IClassifier
     {
+        private bool _classifiersLoaded;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
 
@@ -28,9 +29,9 @@ namespace BlueOnionSoftware
 
         private IEnumerable<Classifier> _classifiers;
 
-        public void ClearClassifiers()
+        public void ReloadClassifiers()
         {
-            _classifiers = null;
+            _classifiersLoaded = false;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -47,7 +48,7 @@ namespace BlueOnionSoftware
             for (var i = start; i <= end; i++)
             {
                 var line = snapshot.GetLineFromLineNumber(i);
-                var snapshotSpan = new SnapshotSpan(line.Start, Math.Min(150, line.Length));
+                var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
                 var text = line.Snapshot.GetText(snapshotSpan);
                 if (string.IsNullOrWhiteSpace(text) == false)
                 {
@@ -61,28 +62,28 @@ namespace BlueOnionSoftware
 
         private void LoadClassifiers()
         {
-            if (_classifiers == null)
+            if (_classifiersLoaded)
             {
-                var patterns = Settings.LoadPatterns() ?? new RegExClassification[0];
-                var classifiers = new List<Classifier>();
-                foreach (var pattern in patterns)
-                {
-                    var test = new Regex(pattern.RegExPattern, pattern.IgnoreCase 
-                        ? RegexOptions.IgnoreCase 
-                        : RegexOptions.None);
-                    classifiers.Add(new Classifier
-                    {
-                        Type = pattern.ClassificationType.ToString(),
-                        Test = text => test.IsMatch(text)
-                    });
-                }
-                classifiers.Add(new Classifier
-                {
-                    Type = OutputClassificationDefinitions.BuildText,
-                    Test = t => true
-                });
-                _classifiers = classifiers;
+                return;
             }
+            var patterns = Settings.LoadPatterns() ?? new RegExClassification[0];
+            var classifiers =
+                (from pattern in patterns
+                 let test = new Regex(pattern.RegExPattern, pattern.IgnoreCase 
+                     ? RegexOptions.IgnoreCase 
+                     : RegexOptions.None)
+                 select new Classifier
+                 {
+                     Type = pattern.ClassificationType.ToString(), 
+                     Test = text => test.IsMatch(text)
+                 }).ToList();
+            classifiers.Add(new Classifier
+            {
+                Type = OutputClassificationDefinitions.BuildText,
+                Test = t => true
+            });
+            _classifiers = classifiers;
+            _classifiersLoaded = true;
         }
     }
 }

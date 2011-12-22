@@ -61,13 +61,15 @@ namespace BlueOnionSoftware
                 serializer.WriteObject(ms, regExPatterns);
                 var json = Encoding.Default.GetString(ms.ToArray());
                 using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, true))
-                using (var settings = root.OpenSubKey(RegistryPath, true) ?? root.CreateSubKey(RegistryPath))
                 {
-                    settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
+                    using (var settings = root.OpenSubKey(RegistryPath, true) ?? root.CreateSubKey(RegistryPath))
+                    {
+                        settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
+                    }
                 }
                 if (OutputClassifierProvider.OutputClassifier != null)
                 {
-                    OutputClassifierProvider.OutputClassifier.ClearClassifiers();
+                    OutputClassifierProvider.OutputClassifier.ReloadClassifiers();
                 }
             }
         }

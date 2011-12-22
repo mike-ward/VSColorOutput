@@ -1,4 +1,5 @@
 ﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+using System;
 using BlueOnionSoftware;
 using FluentAssertions;
 using NUnit.Framework;
@@ -21,15 +22,22 @@ namespace Tests
         }
 
         [Test]
-        public void ToStringFormatWithNull()
+        public void ToStringFormatNullRegexShouldPrintNull()
         {
-            var rc = new RegExClassification
-            {
-                RegExPattern = null,
-                ClassificationType = ClassificationTypes.LogCustom4,
-                IgnoreCase = false
-            };
-            rc.ToString().Should().Be("\"null\",LogCustom4,False");
+            var rc = new RegExClassification();
+            rc.ToString().Should().Be("\"null\",BuildText,False");
+        }
+
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void RegExPatternCannotBeSetToNull()
+        {
+            new RegExClassification {RegExPattern = null};
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void BadRegExExpressionShouldRaiseException()
+        {
+            new RegExClassification {RegExPattern = @"(\d"};
         }
     }
 }
