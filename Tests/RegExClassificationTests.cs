@@ -21,13 +21,6 @@ namespace Tests
             rc.ToString().Should().Be("\"/d\",BuildText,True");
         }
 
-        [Test]
-        public void ToStringFormatNullRegexShouldPrintNull()
-        {
-            var rc = new RegExClassification();
-            rc.ToString().Should().Be("\"null\",BuildText,False");
-        }
-
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void RegExPatternCannotBeSetToNull()
         {

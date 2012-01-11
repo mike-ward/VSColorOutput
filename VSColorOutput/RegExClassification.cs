@@ -8,6 +8,11 @@ namespace BlueOnionSoftware
     {
         private string _regExPattern;
 
+        public RegExClassification()
+        {
+            _regExPattern = ".*";
+        }
+
         public string RegExPattern
         {
             get { return _regExPattern; }

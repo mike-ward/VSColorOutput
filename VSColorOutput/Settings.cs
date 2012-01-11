@@ -1,4 +1,5 @@
 ﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -45,11 +46,18 @@ namespace BlueOnionSoftware
 
         private static RegExClassification[] LoadPatternsFromJson(string json)
         {
-            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+            try
             {
-                var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
-                var patterns = serializer.ReadObject(ms) as RegExClassification[];
-                return patterns ?? DefaultPatterns();
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+                {
+                    var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
+                    var patterns = serializer.ReadObject(ms) as RegExClassification[];
+                    return patterns ?? DefaultPatterns();
+                }
+            }
+            catch (Exception)
+            {
+                return DefaultPatterns();
             }
         }
 
