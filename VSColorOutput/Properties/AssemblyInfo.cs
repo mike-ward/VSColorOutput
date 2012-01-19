@@ -11,5 +11,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("VSColorOutput is a trademark of Blue Onion Software")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.1.*")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.*")]
+[assembly: AssemblyFileVersion("1.2.0.0")]

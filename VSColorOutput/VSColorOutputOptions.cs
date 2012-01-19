@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
@@ -11,6 +11,7 @@ namespace BlueOnionSoftware
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
 
+        [Category("Patterns")]
         [DisplayName("RegEx Patterns")]
         [Description(
             "Specify patterns (Regular Expressions) and assoicate with classification types. " +
@@ -18,14 +19,27 @@ namespace BlueOnionSoftware
             "Delete all patterns to restore default patterns.")]
         public RegExClassification[] RegExPatterns { get; set; }
 
+        [Category("Actions")]
+        [DisplayName("Stop Build on First Error")]
+        [Description("Stops the build on the first project error")]
+        public bool StopOnFirstBuildError { get; set; }
+
         public override void LoadSettingsFromStorage()
         {
-            RegExPatterns = Settings.LoadPatterns();
+            var settings = new Settings();
+            settings.Load();
+            RegExPatterns = settings.Patterns;
+            StopOnFirstBuildError = settings.EnableStopOnBuildError;
         }
 
         public override void SaveSettingsToStorage()
         {
-            Settings.SaveSettingsToStorage(RegExPatterns);
+            var settings = new Settings
+            {
+                Patterns = RegExPatterns, 
+                EnableStopOnBuildError = StopOnFirstBuildError
+            };
+            settings.Save();
         }
     }
 }

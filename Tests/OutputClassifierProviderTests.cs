@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System.ComponentModel.Composition;
 using BlueOnionSoftware;
 using FluentAssertions;
@@ -26,7 +26,6 @@ namespace Tests
             var mockTextManager2 = new Mock<IVsTextManager2>();
             var mockConnectionPointContainer = mockTextManager2.As<IConnectionPointContainer>();
             TextManagerEvents.Override = mockTextManager2.Object;
-
             try
             {
                 var eventGuid = typeof(IVsTextManagerEvents).GUID;

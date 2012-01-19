@@ -1,34 +1,61 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 
 namespace BlueOnionSoftware
 {
-    public static class Settings
+    public class Settings
     {
         private const string RegExPatternsKey = "RegExPatterns";
+        private const string StopOnBuildErrorKey = "StopOnBuildError";
         private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
-        public static bool UseDefaultPatterns { get; set; } // Used for testing
+        public static IRegistryKey OverrideRegistryKey { get; set; }
 
-        public static RegExClassification[] LoadPatterns()
+        public RegExClassification[] Patterns { get; set; }
+        public bool EnableStopOnBuildError { get; set; }
+
+        public void Load()
         {
-            if (UseDefaultPatterns)
+            using (var key = OpenRegistry(false))
             {
-                return DefaultPatterns();
+                var json = (key != null) ? key.GetValue(RegExPatternsKey) as string : null;
+                Patterns = (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
+                var value = key.GetValue(StopOnBuildErrorKey) as string;
+                EnableStopOnBuildError = string.IsNullOrEmpty(value) == false && value == bool.TrueString;
             }
-            using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, false))
+        }
+
+        public void Save()
+        {
+            using (var ms = new MemoryStream())
             {
-                using (var settings = root.OpenSubKey(RegistryPath))
+                var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
+                serializer.WriteObject(ms, Patterns);
+                var json = Encoding.Default.GetString(ms.ToArray());
+                using (var key = OpenRegistry(true))
                 {
-                    var json = (settings != null) ? settings.GetValue(RegExPatternsKey) as string : null;
-                    return (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
+                    key.SetValue(RegExPatternsKey, json);
+                    key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString());
+                }
+                if (OutputClassifierProvider.OutputClassifier != null)
+                {
+                    OutputClassifierProvider.OutputClassifier.ClearSettings();
                 }
             }
+        }
+
+        private static IRegistryKey OpenRegistry(bool writeable)
+        {
+            if (OverrideRegistryKey != null)
+            {
+                return OverrideRegistryKey;
+            }
+            var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, writeable);
+            return new RegistryKeyImpl(root.OpenSubKey(RegistryPath, writeable));
         }
 
         private static RegExClassification[] DefaultPatterns()
@@ -60,27 +87,6 @@ namespace BlueOnionSoftware
             catch (Exception)
             {
                 return DefaultPatterns();
-            }
-        }
-
-        public static void SaveSettingsToStorage(RegExClassification[] regExPatterns)
-        {
-            using (var ms = new MemoryStream())
-            {
-                var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
-                serializer.WriteObject(ms, regExPatterns);
-                var json = Encoding.Default.GetString(ms.ToArray());
-                using (var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, true))
-                {
-                    using (var settings = root.OpenSubKey(RegistryPath, true) ?? root.CreateSubKey(RegistryPath))
-                    {
-                        settings.SetValue(RegExPatternsKey, json, RegistryValueKind.String);
-                    }
-                }
-                if (OutputClassifierProvider.OutputClassifier != null)
-                {
-                    OutputClassifierProvider.OutputClassifier.ReloadClassifiers();
-                }
             }
         }
     }
