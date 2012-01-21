@@ -16,15 +16,22 @@ namespace BlueOnionSoftware
     {
         private bool _settingsLoaded;
         private IEnumerable<Classifier> _classifiers;
-        private readonly IServiceProvider _serviceProvider;
-        private StopOnFirstBuildError _stopOnFirstBuildError;
+        private readonly StopOnFirstBuildError _stopOnFirstBuildError;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         public OutputClassifier(IClassificationTypeRegistryService registry, IServiceProvider serviceProvider)
         {
-            _classificationTypeRegistry = registry;
-            _serviceProvider = serviceProvider;
+            try
+            {
+                _classificationTypeRegistry = registry;
+                _stopOnFirstBuildError = new StopOnFirstBuildError(serviceProvider);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex.ToString());
+                throw;
+            }
         }
 
         private struct Classifier
@@ -35,28 +42,36 @@ namespace BlueOnionSoftware
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            var spans = new List<ClassificationSpan>();
-            var snapshot = span.Snapshot;
-            if (snapshot == null || snapshot.Length == 0)
+            try
             {
+                var spans = new List<ClassificationSpan>();
+                var snapshot = span.Snapshot;
+                if (snapshot == null || snapshot.Length == 0)
+                {
+                    return spans;
+                }
+                LoadSettings();
+                var start = span.Start.GetContainingLine().LineNumber;
+                var end = (span.End - 1).GetContainingLine().LineNumber;
+                for (var i = start; i <= end; i++)
+                {
+                    var line = snapshot.GetLineFromLineNumber(i);
+                    var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
+                    var text = line.Snapshot.GetText(snapshotSpan);
+                    if (string.IsNullOrEmpty(text) == false)
+                    {
+                        var classificationName = _classifiers.First(classifier => classifier.Test(text)).Type;
+                        var type = _classificationTypeRegistry.GetClassificationType(classificationName);
+                        spans.Add(new ClassificationSpan(line.Extent, type));
+                    }
+                }
                 return spans;
             }
-            LoadSettings();
-            var start = span.Start.GetContainingLine().LineNumber;
-            var end = (span.End - 1).GetContainingLine().LineNumber;
-            for (var i = start; i <= end; i++)
+            catch (Exception ex)
             {
-                var line = snapshot.GetLineFromLineNumber(i);
-                var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
-                var text = line.Snapshot.GetText(snapshotSpan);
-                if (string.IsNullOrEmpty(text) == false)
-                {
-                    var classificationName = _classifiers.First(classifier => classifier.Test(text)).Type;
-                    var type = _classificationTypeRegistry.GetClassificationType(classificationName);
-                    spans.Add(new ClassificationSpan(line.Extent, type));
-                }
+                LogError(ex.ToString());
+                throw;
             }
-            return spans;
         }
 
         private void LoadSettings()
@@ -80,22 +95,7 @@ namespace BlueOnionSoftware
                     Test = t => true
                 });
                 _classifiers = classifiers;
-
-                if (_stopOnFirstBuildError == null && _serviceProvider != null)
-                {
-                    try
-                    {
-                        _stopOnFirstBuildError = new StopOnFirstBuildError(_serviceProvider);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError(ex.ToString());
-                    }
-                }
-                if (_stopOnFirstBuildError != null)
-                {
-                    _stopOnFirstBuildError.Enabled = settings.EnableStopOnBuildError;
-                }
+                _stopOnFirstBuildError.Enabled = settings.EnableStopOnBuildError;
             }
             _settingsLoaded = true;
         }
@@ -105,7 +105,7 @@ namespace BlueOnionSoftware
             _settingsLoaded = false;
         }
 
-        private static void LogError(string message)
+        public static void LogError(string message)
         {
             try
             {

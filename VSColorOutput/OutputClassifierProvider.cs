@@ -1,4 +1,5 @@
-// Copyright (c) 2011 Blue Onion Software, All rights reserved
+// Copyright (c) 2012 Blue Onion Software, All rights reserved
+using System;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -23,10 +24,18 @@ namespace BlueOnionSoftware
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
-            if (OutputClassifier == null)
+            try
             {
-                OutputClassifier = new OutputClassifier(ClassificationRegistry, ServiceProvider);
-                TextManagerEvents.RegisterForTextManagerEvents();
+                if (OutputClassifier == null)
+                {
+                    OutputClassifier = new OutputClassifier(ClassificationRegistry, ServiceProvider);
+                    TextManagerEvents.RegisterForTextManagerEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputClassifier.LogError(ex.ToString());
+                throw;
             }
             return OutputClassifier;
         }
