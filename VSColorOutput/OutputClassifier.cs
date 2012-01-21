@@ -1,11 +1,13 @@
 // Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
+// ReSharper disable EmptyGeneralCatchClause
 #pragma warning disable 67
 
 namespace BlueOnionSoftware
@@ -14,25 +16,21 @@ namespace BlueOnionSoftware
     {
         private bool _settingsLoaded;
         private IEnumerable<Classifier> _classifiers;
-        private readonly StopOnFirstBuildError _stopOnFirstBuildError;
+        private readonly IServiceProvider _serviceProvider;
+        private StopOnFirstBuildError _stopOnFirstBuildError;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         public OutputClassifier(IClassificationTypeRegistryService registry, IServiceProvider serviceProvider)
         {
             _classificationTypeRegistry = registry;
-            _stopOnFirstBuildError = new StopOnFirstBuildError(serviceProvider);
+            _serviceProvider = serviceProvider;
         }
 
         private struct Classifier
         {
             public string Type { get; set; }
             public Predicate<string> Test { get; set; }
-        }
-
-        public void ClearSettings()
-        {
-            _settingsLoaded = false;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -43,7 +41,7 @@ namespace BlueOnionSoftware
             {
                 return spans;
             }
-            LoadClassifiers();
+            LoadSettings();
             var start = span.Start.GetContainingLine().LineNumber;
             var end = (span.End - 1).GetContainingLine().LineNumber;
             for (var i = start; i <= end; i++)
@@ -61,7 +59,7 @@ namespace BlueOnionSoftware
             return spans;
         }
 
-        private void LoadClassifiers()
+        private void LoadSettings()
         {
             if (_settingsLoaded == false)
             {
@@ -82,8 +80,44 @@ namespace BlueOnionSoftware
                     Test = t => true
                 });
                 _classifiers = classifiers;
-                _stopOnFirstBuildError.Enabled = settings.EnableStopOnBuildError;
-                _settingsLoaded = true;
+
+                if (_stopOnFirstBuildError == null && _serviceProvider != null)
+                {
+                    try
+                    {
+                        _stopOnFirstBuildError = new StopOnFirstBuildError(_serviceProvider);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError(ex.ToString());
+                    }
+                }
+                if (_stopOnFirstBuildError != null)
+                {
+                    _stopOnFirstBuildError.Enabled = settings.EnableStopOnBuildError;
+                }
+            }
+            _settingsLoaded = true;
+        }
+
+        public void ClearSettings()
+        {
+            _settingsLoaded = false;
+        }
+
+        private static void LogError(string message)
+        {
+            try
+            {
+                // I'm co-opting the Visual Studio event source because I can't register
+                // my own from a .VSIX installer.
+                EventLog.WriteEntry("Microsoft Visual Studio", 
+                    "VSColorOutput: " + (message ?? "null"), 
+                    EventLogEntryType.Error);
+            }
+            catch
+            {
+                // Don't kill extension on logging errors
             }
         }
     }

@@ -9,7 +9,7 @@ namespace BlueOnionSoftware
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideOptionPage(typeof(VsColorOutputOptions), VsColorOutputOptions.Category, VsColorOutputOptions.SubCategory, 1000, 1001, true)]
     [ProvideProfile(typeof(VsColorOutputOptions), VsColorOutputOptions.Category, VsColorOutputOptions.SubCategory, 1000, 1001, true)]
-    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows", "1.2")]
+    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows", "1.3")]
     public class VsColorOutputPackage : Package
     {
     }
