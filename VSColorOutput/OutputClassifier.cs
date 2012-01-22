@@ -16,7 +16,7 @@ namespace BlueOnionSoftware
     {
         private bool _settingsLoaded;
         private IEnumerable<Classifier> _classifiers;
-        private readonly StopOnFirstBuildError _stopOnFirstBuildError;
+        private readonly BuildEvents _buildEvents;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
@@ -25,7 +25,7 @@ namespace BlueOnionSoftware
             try
             {
                 _classificationTypeRegistry = registry;
-                _stopOnFirstBuildError = new StopOnFirstBuildError(serviceProvider);
+                _buildEvents = new BuildEvents(serviceProvider);
             }
             catch (Exception ex)
             {
@@ -95,7 +95,8 @@ namespace BlueOnionSoftware
                     Test = t => true
                 });
                 _classifiers = classifiers;
-                _stopOnFirstBuildError.Enabled = settings.EnableStopOnBuildError;
+                _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
+                _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
             }
             _settingsLoaded = true;
         }

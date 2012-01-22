@@ -7,14 +7,14 @@ using EnvDTE80;
 
 namespace BlueOnionSoftware
 {
-    public class StopOnFirstBuildError
+    public class BuildEvents
     {
-        private const string CancelBuildCommand = "Build.Cancel";
         private readonly DTE2 _dte2;
-        public bool Enabled { get; set; }
         private DateTime _buildStartTime;
+        public bool StopOnBuildErrorEnabled { get; set; }
+        public bool ShowElapsedBuildTimeEnabled { get; set; }
 
-        public StopOnFirstBuildError(IServiceProvider serviceProvider)
+        public BuildEvents(IServiceProvider serviceProvider)
         {
             if (serviceProvider == null)
             {
@@ -39,7 +39,7 @@ namespace BlueOnionSoftware
 
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            if (scope == vsBuildScope.vsBuildScopeSolution)
+            if (scope == vsBuildScope.vsBuildScopeSolution && ShowElapsedBuildTimeEnabled)
             {
                 var elapsed = DateTime.Now - _buildStartTime;
                 const string buildPaneGuid = "{1BD8A850-02D1-11D1-BEE7-00A0C913D1F8}";
@@ -48,8 +48,8 @@ namespace BlueOnionSoftware
                     if (pane.Guid == buildPaneGuid)
                     {
                         var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
-                        var text = string.Format("Time Elapsed {0}\r\n", time);
-                        pane.OutputString(text);
+                        var text = string.Format("Time Elapsed {0}", time);
+                        pane.OutputString("\r\n" + text + "\r\n");
                         break;
                     }
                 }
@@ -58,9 +58,10 @@ namespace BlueOnionSoftware
 
         private void OnBuildProjectDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
-            if (Enabled && success == false)
+            if (StopOnBuildErrorEnabled && success == false)
             {
-                _dte2.ExecuteCommand(CancelBuildCommand);
+                const string cancelBuildCommand = "Build.Cancel";
+                _dte2.ExecuteCommand(cancelBuildCommand);
             }
         }
     }

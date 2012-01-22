@@ -12,11 +12,13 @@ namespace BlueOnionSoftware
     {
         private const string RegExPatternsKey = "RegExPatterns";
         private const string StopOnBuildErrorKey = "StopOnBuildError";
+        private const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
         private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
         public static IRegistryKey OverrideRegistryKey { get; set; }
 
         public RegExClassification[] Patterns { get; set; }
         public bool EnableStopOnBuildError { get; set; }
+        public bool ShowElapsedBuildTime { get; set; }
 
         public void Load()
         {
@@ -24,8 +26,10 @@ namespace BlueOnionSoftware
             {
                 var json = (key != null) ? key.GetValue(RegExPatternsKey) as string : null;
                 Patterns = (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
-                var value = key.GetValue(StopOnBuildErrorKey) as string;
-                EnableStopOnBuildError = string.IsNullOrEmpty(value) == false && value == bool.TrueString;
+                var stopOnBuildError = key.GetValue(StopOnBuildErrorKey) as string;
+                EnableStopOnBuildError = string.IsNullOrEmpty(stopOnBuildError) == false && stopOnBuildError == bool.TrueString;
+                var showElapsedBuildTime = key.GetValue(ShowElapsedBuildTimeKey) as string;
+                ShowElapsedBuildTime = string.IsNullOrEmpty(showElapsedBuildTime) == false && showElapsedBuildTime == bool.TrueString;
             }
         }
 
@@ -40,6 +44,7 @@ namespace BlueOnionSoftware
                 {
                     key.SetValue(RegExPatternsKey, json);
                     key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString());
+                    key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString());
                 }
                 if (OutputClassifierProvider.OutputClassifier != null)
                 {

@@ -84,7 +84,7 @@
     <Compile Include="OutputClassifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegExClassificationTests.cs" />
-    <Compile Include="StopBuildOnFirstErrorTests.cs" />
+    <Compile Include="BuildEventsTests.cs" />
     <Compile Include="TextManagerEventsTests.cs" />
   </ItemGroup>
   <ItemGroup>

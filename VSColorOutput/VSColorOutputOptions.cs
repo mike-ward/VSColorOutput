@@ -24,12 +24,18 @@ namespace BlueOnionSoftware
         [Description("Stops the build on the first project error")]
         public bool StopOnFirstBuildError { get; set; }
 
+        [Category("Actions")]
+        [DisplayName("Show Elapsed Build Time")]
+        [Description("Shows the elapsed build time when the build finishes")]
+        public bool ShowElapsedBuildTime { get; set; }
+
         public override void LoadSettingsFromStorage()
         {
             var settings = new Settings();
             settings.Load();
             RegExPatterns = settings.Patterns;
             StopOnFirstBuildError = settings.EnableStopOnBuildError;
+            ShowElapsedBuildTime = settings.ShowElapsedBuildTime;
         }
 
         public override void SaveSettingsToStorage()
@@ -37,7 +43,8 @@ namespace BlueOnionSoftware
             var settings = new Settings
             {
                 Patterns = RegExPatterns, 
-                EnableStopOnBuildError = StopOnFirstBuildError
+                EnableStopOnBuildError = StopOnFirstBuildError,
+                ShowElapsedBuildTime = ShowElapsedBuildTime
             };
             settings.Save();
         }
