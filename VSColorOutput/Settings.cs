@@ -1,5 +1,6 @@
 ﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -13,12 +14,14 @@ namespace BlueOnionSoftware
         private const string RegExPatternsKey = "RegExPatterns";
         private const string StopOnBuildErrorKey = "StopOnBuildError";
         private const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
+        private const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
         private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
         public static IRegistryKey OverrideRegistryKey { get; set; }
 
         public RegExClassification[] Patterns { get; set; }
         public bool EnableStopOnBuildError { get; set; }
         public bool ShowElapsedBuildTime { get; set; }
+        public bool ShowDebugWindowOnDebug { get; set; }
 
         public void Load()
         {
@@ -26,10 +29,15 @@ namespace BlueOnionSoftware
             {
                 var json = (key != null) ? key.GetValue(RegExPatternsKey) as string : null;
                 Patterns = (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
-                var stopOnBuildError = key.GetValue(StopOnBuildErrorKey) as string;
+                
+                var stopOnBuildError = (key != null) ? key.GetValue(StopOnBuildErrorKey) as string : bool.FalseString;
                 EnableStopOnBuildError = string.IsNullOrEmpty(stopOnBuildError) == false && stopOnBuildError == bool.TrueString;
-                var showElapsedBuildTime = key.GetValue(ShowElapsedBuildTimeKey) as string;
+
+                var showElapsedBuildTime = (key != null) ? key.GetValue(ShowElapsedBuildTimeKey) as string : bool.FalseString;
                 ShowElapsedBuildTime = string.IsNullOrEmpty(showElapsedBuildTime) == false && showElapsedBuildTime == bool.TrueString;
+                
+                var showDebugWindowOnDebug = (key != null) ? key.GetValue(ShowDebugWindowOnDebugKey) as string : bool.FalseString;
+                ShowDebugWindowOnDebug = string.IsNullOrEmpty(showDebugWindowOnDebug) == false && showDebugWindowOnDebug == bool.TrueString;
             }
         }
 
@@ -43,8 +51,9 @@ namespace BlueOnionSoftware
                 using (var key = OpenRegistry(true))
                 {
                     key.SetValue(RegExPatternsKey, json);
-                    key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString());
-                    key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString());
+                    key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString(CultureInfo.InvariantCulture));
+                    key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString(CultureInfo.InvariantCulture));
+                    key.SetValue(ShowDebugWindowOnDebugKey, ShowDebugWindowOnDebug.ToString(CultureInfo.InvariantCulture));
                 }
                 if (OutputClassifierProvider.OutputClassifier != null)
                 {

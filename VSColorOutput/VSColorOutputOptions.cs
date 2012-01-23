@@ -8,10 +8,12 @@ namespace BlueOnionSoftware
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptions : DialogPage
     {
+        private const string ActionSubCategory = "Actions";
+        private const string PatternsSubCategory = "Patterns";
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
 
-        [Category("Patterns")]
+        [Category(PatternsSubCategory)]
         [DisplayName("RegEx Patterns")]
         [Description(
             "Specify patterns (Regular Expressions) and assoicate with classification types. " +
@@ -19,15 +21,20 @@ namespace BlueOnionSoftware
             "Delete all patterns to restore default patterns.")]
         public RegExClassification[] RegExPatterns { get; set; }
 
-        [Category("Actions")]
+        [Category(ActionSubCategory)]
         [DisplayName("Stop Build on First Error")]
         [Description("Stops the build on the first project error")]
         public bool StopOnFirstBuildError { get; set; }
 
-        [Category("Actions")]
+        [Category(ActionSubCategory)]
         [DisplayName("Show Elapsed Build Time")]
         [Description("Shows the elapsed build time when the build finishes")]
         public bool ShowElapsedBuildTime { get; set; }
+
+        [Category(ActionSubCategory)]
+        [DisplayName("Show Debug Window on Debug")]
+        [Description("Shows the debug window when the debug session starts")]
+        public bool ShowDebugWindowOnDebug { get; set; }
 
         public override void LoadSettingsFromStorage()
         {
@@ -36,6 +43,7 @@ namespace BlueOnionSoftware
             RegExPatterns = settings.Patterns;
             StopOnFirstBuildError = settings.EnableStopOnBuildError;
             ShowElapsedBuildTime = settings.ShowElapsedBuildTime;
+            ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
         }
 
         public override void SaveSettingsToStorage()
@@ -44,7 +52,8 @@ namespace BlueOnionSoftware
             {
                 Patterns = RegExPatterns, 
                 EnableStopOnBuildError = StopOnFirstBuildError,
-                ShowElapsedBuildTime = ShowElapsedBuildTime
+                ShowElapsedBuildTime = ShowElapsedBuildTime,
+                ShowDebugWindowOnDebug = ShowDebugWindowOnDebug
             };
             settings.Save();
         }

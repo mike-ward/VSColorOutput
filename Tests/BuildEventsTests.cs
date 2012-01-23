@@ -2,6 +2,7 @@
 using System;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Moq;
 using NUnit.Framework;
 
@@ -17,16 +18,19 @@ namespace Tests
         {
             var mockDte2 = new Mock<DTE2>();
             var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
             var mockBuildEvents = new Mock<BuildEvents>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockDte2.SetupGet(d => d.Events).Returns(mockEvents.Object);
+            mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
             new BlueOnionSoftware.BuildEvents(mockServiceProvider.Object);
 
             mockDte2.VerifyAll();
             mockEvents.VerifyAll();
+            mockDteEvents.VerifyAll();
             mockBuildEvents.VerifyAll();
             mockServiceProvider.VerifyAll();
         }
@@ -38,16 +42,23 @@ namespace Tests
             event _dispBuildEvents_OnBuildProjConfigDoneEventHandler BuildProjConfigEvent;
         }
 
+        public interface IDispDteEvents
+        {
+            event _dispDTEEvents_ModeChangedEventHandler ModeChanged;
+        }
+
         [Test]
         public void OnBuildProjectDoneCancelsBuildOnErrorWhenEnabled()
         {
             var mockDte2 = new Mock<DTE2>();
             var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
             var mockBuildEvents = new Mock<BuildEvents>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockDte2.SetupGet(d => d.Events).Returns(mockEvents.Object);
             mockDte2.Setup(d => d.ExecuteCommand("Build.Cancel", ""));
+            mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
             var buildEvents = new BlueOnionSoftware.BuildEvents(mockServiceProvider.Object);
@@ -56,6 +67,7 @@ namespace Tests
 
             mockDte2.VerifyAll();
             mockEvents.VerifyAll();
+            mockDteEvents.VerifyAll();
             mockBuildEvents.VerifyAll();
             mockServiceProvider.VerifyAll();
         }
@@ -65,6 +77,7 @@ namespace Tests
         {
             var mockDte2 = new Mock<DTE2>();
             var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
             var mockBuildEvents = new Mock<BuildEvents>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var mockToolWindows = new Mock<ToolWindows>();
@@ -76,10 +89,11 @@ namespace Tests
             mockDte2.SetupGet(d => d.ToolWindows).Returns(mockToolWindows.Object);
             mockToolWindows.SetupGet(t => t.OutputWindow).Returns(mockOutputWindow.Object);
             mockOutputWindow.SetupGet(o => o.OutputWindowPanes).Returns(mockOutputWindowPanes.Object);
-            mockOutputWindowPane.SetupGet(op => op.Guid).Returns("{1BD8A850-02D1-11D1-BEE7-00A0C913D1F8}");
+            mockOutputWindowPane.SetupGet(op => op.Guid).Returns(VSConstants.OutputWindowPaneGuid.BuildOutputPane_string);
             mockOutputWindowPane.Setup(op => op.OutputString(It.IsAny<string>()));
             var panes = new [] {mockOutputWindowPane.Object};
             mockOutputWindowPanes.Setup(op => op.GetEnumerator()).Returns(panes.GetEnumerator());
+            mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
             var buildEvents = new BlueOnionSoftware.BuildEvents(mockServiceProvider.Object);
@@ -89,12 +103,56 @@ namespace Tests
 
             mockDte2.VerifyAll();
             mockEvents.VerifyAll();
+            mockDteEvents.VerifyAll();
             mockBuildEvents.VerifyAll();
             mockServiceProvider.VerifyAll();
             mockToolWindows.VerifyAll();
             mockOutputWindow.VerifyAll();
             mockOutputWindowPane.VerifyAll();
             mockOutputWindowPanes.VerifyAll();
+        }
+
+        [Test]
+        public void DteEventsModeChangeActivatesDebugOutputWindowWhenEnabled()
+        {
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockToolWindows = new Mock<ToolWindows>();
+            var mockOutputWindow = new Mock<OutputWindow>();
+            var mockOutputWindowPanes = new Mock<OutputWindowPanes>();
+            var mockOutputWindowPane = new Mock<OutputWindowPane>();
+            var mockWindow = new Mock<Window>();
+            mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
+            mockDte2.SetupGet(d => d.Events).Returns(mockEvents.Object);
+            mockDte2.SetupGet(d => d.ToolWindows).Returns(mockToolWindows.Object);
+            mockToolWindows.SetupGet(t => t.OutputWindow).Returns(mockOutputWindow.Object);
+            mockOutputWindow.SetupGet(o => o.OutputWindowPanes).Returns(mockOutputWindowPanes.Object);
+            mockOutputWindow.SetupGet(o => o.Parent).Returns(mockWindow.Object);
+            mockWindow.Setup(w => w.Activate());
+            mockOutputWindowPane.SetupGet(op => op.Guid).Returns(VSConstants.OutputWindowPaneGuid.DebugPane_string);
+            mockOutputWindowPane.Setup(op => op.Activate());
+            var panes = new[] { mockOutputWindowPane.Object };
+            mockOutputWindowPanes.Setup(op => op.GetEnumerator()).Returns(panes.GetEnumerator());
+            mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
+            mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
+
+            var buildEvents = new BlueOnionSoftware.BuildEvents(mockServiceProvider.Object);
+            buildEvents.ShowDebugWindowOnDebug = true;
+            mockDteEvents.Raise(de => de.ModeChanged += null, vsIDEMode.vsIDEModeDesign);
+
+            mockDte2.VerifyAll();
+            mockEvents.VerifyAll();
+            mockDteEvents.VerifyAll();
+            mockBuildEvents.VerifyAll();
+            mockServiceProvider.VerifyAll();
+            mockToolWindows.VerifyAll();
+            mockOutputWindow.VerifyAll();
+            mockOutputWindowPane.VerifyAll();
+            mockOutputWindowPanes.VerifyAll();
+            mockWindow.VerifyAll();
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using System;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 
 #pragma warning disable 649
 
@@ -13,6 +15,7 @@ namespace BlueOnionSoftware
         private DateTime _buildStartTime;
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
+        public bool ShowDebugWindowOnDebug { get; set; }
 
         public BuildEvents(IServiceProvider serviceProvider)
         {
@@ -26,12 +29,13 @@ namespace BlueOnionSoftware
                 _dte2.Events.BuildEvents.OnBuildBegin += OnBuildBegin;
                 _dte2.Events.BuildEvents.OnBuildDone += OnBuildDone;
                 _dte2.Events.BuildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
+                _dte2.Events.DTEEvents.ModeChanged += OnModeChanged;
             }
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
-            if (scope == vsBuildScope.vsBuildScopeSolution)
+            if (scope != vsBuildScope.vsBuildScopeProject)
             {
                 _buildStartTime = DateTime.Now;
             }
@@ -39,13 +43,12 @@ namespace BlueOnionSoftware
 
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            if (scope == vsBuildScope.vsBuildScopeSolution && ShowElapsedBuildTimeEnabled)
+            if (scope != vsBuildScope.vsBuildScopeProject && ShowElapsedBuildTimeEnabled)
             {
                 var elapsed = DateTime.Now - _buildStartTime;
-                const string buildPaneGuid = "{1BD8A850-02D1-11D1-BEE7-00A0C913D1F8}";
                 foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                 {
-                    if (pane.Guid == buildPaneGuid)
+                    if (pane.Guid == VSConstants.OutputWindowPaneGuid.BuildOutputPane_string)
                     {
                         var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
                         var text = string.Format("Time Elapsed {0}", time);
@@ -62,6 +65,22 @@ namespace BlueOnionSoftware
             {
                 const string cancelBuildCommand = "Build.Cancel";
                 _dte2.ExecuteCommand(cancelBuildCommand);
+            }
+        }
+
+        private void OnModeChanged(vsIDEMode lastMode)
+        {
+            if (lastMode == vsIDEMode.vsIDEModeDesign && ShowDebugWindowOnDebug)
+            {
+                _dte2.ToolWindows.OutputWindow.Parent.Activate();
+                foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
+                {
+                    if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
+                    {
+                        pane.Activate();
+                        break;
+                    }
+                }
             }
         }
     }
