@@ -12,6 +12,9 @@ namespace BlueOnionSoftware
     public class BuildEvents
     {
         private readonly DTE2 _dte2;
+        private readonly Events _events;
+        private readonly EnvDTE.BuildEvents _buildEvents;
+        private readonly DTEEvents _dteEvents;
         private DateTime _buildStartTime;
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
@@ -26,10 +29,14 @@ namespace BlueOnionSoftware
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
             if (_dte2 != null)
             {
-                _dte2.Events.BuildEvents.OnBuildBegin += OnBuildBegin;
-                _dte2.Events.BuildEvents.OnBuildDone += OnBuildDone;
-                _dte2.Events.BuildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
-                _dte2.Events.DTEEvents.ModeChanged += OnModeChanged;
+                _events = _dte2.Events;
+                _buildEvents = _events.BuildEvents;
+                _dteEvents = _events.DTEEvents;
+
+                _buildEvents.OnBuildBegin += OnBuildBegin;
+                _buildEvents.OnBuildDone += OnBuildDone;
+                _buildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
+                _dteEvents.ModeChanged += OnModeChanged;
             }
         }
 
