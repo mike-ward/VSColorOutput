@@ -29,6 +29,8 @@ namespace BlueOnionSoftware
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
             if (_dte2 != null)
             {
+                // These event sources have to be rooted or the GC will collect them.
+                // http://social.msdn.microsoft.com/Forums/en-US/vsx/thread/fd2f9108-1df3-4d96-a65d-67a69347ca27
                 _events = _dte2.Events;
                 _buildEvents = _events.BuildEvents;
                 _dteEvents = _events.DTEEvents;
@@ -42,15 +44,12 @@ namespace BlueOnionSoftware
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
-            if (scope != vsBuildScope.vsBuildScopeProject)
-            {
-                _buildStartTime = DateTime.Now;
-            }
+            _buildStartTime = DateTime.Now;
         }
 
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            if (scope != vsBuildScope.vsBuildScopeProject && ShowElapsedBuildTimeEnabled)
+            if (ShowElapsedBuildTimeEnabled)
             {
                 var elapsed = DateTime.Now - _buildStartTime;
                 foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)

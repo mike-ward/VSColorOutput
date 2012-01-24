@@ -69,7 +69,10 @@ namespace BlueOnionSoftware
                 return OverrideRegistryKey;
             }
             var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, writeable);
-            return new RegistryKeyImpl(root.OpenSubKey(RegistryPath, writeable));
+            var subKey = writeable 
+                ? root.CreateSubKey(RegistryPath)
+                : root.OpenSubKey(RegistryPath);
+            return (subKey != null) ? new RegistryKeyImpl(subKey) : null;
         }
 
         private static RegExClassification[] DefaultPatterns()
