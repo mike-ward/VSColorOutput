@@ -21,6 +21,9 @@ namespace BlueOnionSoftware
         public const string LogCustom3 = "LogCustom3";
         public const string LogCustom4 = "LogCustom4";
 
+        public const string FindResultsSearchTerm = "FindResultsSearchTerm";
+        public const string FindResultsFilename = "FindResultsFilename";
+
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(BuildHead)]
         public static ClassificationTypeDefinition BuildHeaderDefinition { get; set; }
@@ -171,6 +174,42 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Custom4";
                 ForegroundColor = Colors.Brown;
+            }
+        }
+
+        [Export]
+        [Name(FindResultsSearchTerm)]
+        public static ClassificationTypeDefinition FindResultsSearchTermDefinition { get; set; }
+
+        [Name(FindResultsSearchTerm)]
+        [UserVisible(true)]
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = FindResultsSearchTerm)]
+        public sealed class FindResultsSearchTermFormat : ClassificationFormatDefinition
+        {
+            public FindResultsSearchTermFormat()
+            {
+                DisplayName = VsColorOut + "Find Results Search Term";
+                ForegroundColor = Colors.Blue;
+                IsBold = true;
+            }
+        }
+
+        [Export]
+        [Name(FindResultsFilename)]
+        public static ClassificationTypeDefinition FindFilenameDefinition { get; set; }
+
+        [Name(FindResultsFilename)]
+        [UserVisible(true)]
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = FindResultsFilename)]
+
+        public sealed class FindResultsFilenameFormat : ClassificationFormatDefinition
+        {
+            public FindResultsFilenameFormat()
+            {
+                DisplayName = VsColorOut + "Find Results Filename";
+                ForegroundOpacity = 0.6;
             }
         }
     }

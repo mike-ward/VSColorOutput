@@ -80,5 +80,22 @@ namespace Tests
             format.DisplayName.Should().Be("VSColorOutput Log Custom4");
             format.ForegroundColor.Should().Be(Colors.Brown);
         }
+
+        [Test]
+        public void FindResultsSearchTermFormat()
+        {
+            var format = new OutputClassificationDefinitions.FindResultsSearchTermFormat();
+            format.DisplayName.Should().Be("VSColorOutput Find Results Search Term");
+            format.ForegroundColor.Should().Be(Colors.Blue);
+            format.IsBold.Should().BeTrue();
+        }
+
+        [Test]
+        public void FindResultsFilenameFormat()
+        {
+            var format = new OutputClassificationDefinitions.FindResultsFilenameFormat();
+            format.DisplayName.Should().Be("VSColorOutput Find Results Filename");
+            format.ForegroundOpacity.Should().BeInRange(0.6, 0.6);
+        }
     }
 }
