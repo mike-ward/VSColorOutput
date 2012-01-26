@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FindResultsClassifierProviderTests.cs" />
     <Compile Include="FontAndColorStorageTests.cs" />
     <Compile Include="OutputClassificationDefinitionsTests.cs" />
     <Compile Include="OutputClassifierProviderTests.cs" />

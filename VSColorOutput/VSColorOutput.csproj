@@ -105,6 +105,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassificationTypes.cs" />
+    <Compile Include="FindResultsClassifier.cs" />
+    <Compile Include="FindResultsClassifierProvider.cs" />
     <Compile Include="FontAndColorStorage.cs" />
     <Compile Include="IRegistryKey.cs" />
     <Compile Include="RegExClassification.cs" />
