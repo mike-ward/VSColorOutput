@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+  <Identifier Id="CD56B219-38CB-482A-9B2D-7582DF4AAF1E">
+    <Name>VSColorOutput</Name>
+    <Author>Blue Onion Software</Author>
+    <Version>1.3</Version>
+    <Description xml:space="preserve">Color output for build and debug windows.</Description>
+    <Locale>1033</Locale>
+    <MoreInfoUrl>http://blueonionsoftware.com</MoreInfoUrl>
+    <License>License.txt</License>
+    <GettingStartedGuide>http://blueonionsoftware.com/blog.aspx?p=ca139a92-e8d5-4c49-9e0f-bea7d97d6115</GettingStartedGuide>
+    <Icon>crayons.jpg</Icon>
+    <PreviewImage>preview.png</PreviewImage>
+    <InstalledByMsi>false</InstalledByMsi>
+    <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+      </VisualStudio>
+      <VisualStudio Version="11.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+    <SystemComponent>false</SystemComponent>
+  </Identifier>
+  <References>
+    <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
+      <Name>Visual Studio MPF</Name>
+    </Reference>
+  </References>
+  <Content>
+    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+    <MefComponent>|%CurrentProject%|</MefComponent>
+  </Content>
+</Vsix>
