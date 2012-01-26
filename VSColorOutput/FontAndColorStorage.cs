@@ -25,7 +25,9 @@ namespace BlueOnionSoftware
             {OutputClassificationDefinitions.LogCustom1, new[] {new ColorableItemInfo()}},
             {OutputClassificationDefinitions.LogCustom2, new[] {new ColorableItemInfo()}},
             {OutputClassificationDefinitions.LogCustom3, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogCustom4, new[] {new ColorableItemInfo()}}
+            {OutputClassificationDefinitions.LogCustom4, new[] {new ColorableItemInfo()}},
+            {OutputClassificationDefinitions.FindResultsFilename, new[] {new ColorableItemInfo()}},
+            {OutputClassificationDefinitions.FindResultsSearchTerm, new[] {new ColorableItemInfo()}}
         };
 
         public static void UpdateColors()

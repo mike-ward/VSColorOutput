@@ -35,6 +35,8 @@ namespace Tests
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom2, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom3, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.LogCustom4, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.FindResultsFilename, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.GetItem(OutputClassificationDefinitions.FindResultsSearchTerm, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.CloseCategory(), Times.Exactly(2));
 
                 var ouputWindowGuid = DefGuidList.guidOutputWindowFontCategory;
@@ -48,6 +50,8 @@ namespace Tests
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom2, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom3, It.IsAny<ColorableItemInfo[]>()));
                 mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.LogCustom4, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.FindResultsFilename, It.IsAny<ColorableItemInfo[]>()));
+                mockStore.Verify(s => s.SetItem(OutputClassificationDefinitions.FindResultsSearchTerm, It.IsAny<ColorableItemInfo[]>()));
             }
             finally
             {
