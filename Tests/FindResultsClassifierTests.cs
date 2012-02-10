@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Moq;
 using NUnit.Framework;
 using FluentAssertions;
+using System.Linq;
 
 namespace Tests
 {
@@ -77,9 +78,26 @@ namespace Tests
 
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
+            spans = spans.Where(IsSearchTerm).ToList();
+
             spans.Count.Should().Be(1);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
+        }
+
+        [Test]
+        public void SearchTermContainingRegularExpressionCharactersDoesNotThrowException()
+        {
+            const string searchTerm = @"\P][^";
+            var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+
+            var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans = spans.Where(IsSearchTerm).ToList();
+
+            spans.Count.Should().Be(0);
         }
 
         [Test]
@@ -94,6 +112,8 @@ namespace Tests
 
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans = spans.Where(IsSearchTerm).ToList();
 
             spans.Count.Should().Be(1);
 
@@ -113,6 +133,8 @@ namespace Tests
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 2);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
+            spans = spans.Where(IsSearchTerm).ToList();
+
             spans.Count.Should().Be(1);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
@@ -131,6 +153,8 @@ namespace Tests
 
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans = spans.Where(IsSearchTerm).ToList();
 
             spans.Count.Should().Be(2);
 
@@ -154,7 +178,7 @@ namespace Tests
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
-            spans.Count.Should().Be(4);
+            spans.Count(IsSearchTerm).Should().Be(4);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
             AssertSearchTermClassified(spans[1], snapshotSpan, searchTerm, offset2);
@@ -175,6 +199,8 @@ namespace Tests
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
+            spans = spans.Where(IsSearchTerm).ToList();
+
             spans.Count.Should().Be(1);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
@@ -193,16 +219,71 @@ namespace Tests
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
+            spans = spans.Where(IsSearchTerm).ToList();
+
             spans.Count.Should().Be(1);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
+        [Test]
+        public void ClassifiesFilename()
+        {
+            const string searchTerm = "not found";
+            var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+            PrimeClassifierSearchOptionsWithFirstLine(text);
+
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans.Count.Should().Be(1);
+
+            AssertFilenameClassified(spans[0], snapshotSpan);
+        }
+
+        //[Test]
+        //public void DoesNotClassifySearchTermInFilename()
+        //{
+        //    const string searchTerm = @"C:\Projects";
+        //    var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+        //    PrimeClassifierSearchOptionsWithFirstLine(text);
+
+        //    var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+        //    var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+        //    var searchSpans = spans.Where(IsSearchTerm);
+        //    searchSpans.Count().Should().Be(0);
+
+        //    spans.Count.Should().Be(1);
+
+        //    AssertFilenameClassified(spans[0], snapshotSpan);
+        //}
+
+        private static bool IsSearchTerm(ClassificationSpan s)
+        {
+            return s.ClassificationType.Classification == OutputClassificationDefinitions.FindResultsSearchTerm;
+        }
+
+        private static void AssertFilenameClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan)
+        {
+            var text = snapshotSpan.GetText();
+            var index = text.IndexOf(':');
+            index = text.IndexOf(':', index + 1);
+            AssertClassification(classificationSpan, OutputClassificationDefinitions.FindResultsFilename, snapshotSpan.Start.Position, index + 1);
+        }
+
         private static void AssertSearchTermClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan, string searchTerm, int searchTermStart)
         {
-            classificationSpan.ClassificationType.Classification.Should().Match(OutputClassificationDefinitions.FindResultsSearchTerm);
-            classificationSpan.Span.Start.Position.Should().Be(snapshotSpan.Start.Position + searchTermStart);
-            classificationSpan.Span.Length.Should().Be(searchTerm.Length);
+            AssertClassification(classificationSpan, OutputClassificationDefinitions.FindResultsSearchTerm, snapshotSpan.Start.Position + searchTermStart, searchTerm.Length);
+        }
+
+        private static void AssertClassification(ClassificationSpan classificationSpan, string classificationType, int spanStart, int spanLength)
+        {
+            classificationSpan.ClassificationType.Classification.Should().Match(classificationType);
+            classificationSpan.Span.Start.Position.Should().Be(spanStart);
+            classificationSpan.Span.Length.Should().Be(spanLength);
         }
 
         private void PrimeClassifierSearchOptionsWithFirstLine(string text)

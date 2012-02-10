@@ -14,7 +14,7 @@ namespace BlueOnionSoftware
     {
         private readonly IClassificationTypeRegistryService classificationRegistry;
         private static readonly Regex SearchOptionsRegex;
-        private static Regex FilenameRegex;
+        private static readonly Regex FilenameRegex;
 
         private SearchOptions searchOptions;
         private Regex searchTextRegex;
@@ -23,7 +23,7 @@ namespace BlueOnionSoftware
         {
             // TODO: What about localised instances of VS?
             SearchOptionsRegex = new Regex("Find all \"(?<searchTerm>[^\"]+)\", (?<casing>Match case, )?(?<wholeWord>Whole word, )?", RegexOptions.Compiled);
-            FilenameRegex = new Regex(@"^(.*:.*\(\d+\):)", RegexOptions.Compiled);
+            FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
         }
 
         public FindResultsClassifier(IClassificationTypeRegistryService classificationRegistry)
@@ -47,7 +47,7 @@ namespace BlueOnionSoftware
                 var text = span.GetText();
 
                 classifications.AddRange(GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType));
-                //classifications.AddRange(GetMatches(text, FilenameRegex, span.Start, filenameClassificationType));
+                classifications.AddRange(GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType));
             }   
          
             return classifications;
@@ -69,7 +69,7 @@ namespace BlueOnionSoftware
                                             MatchCase = match.Groups["casing"].Success,
                                             MatchWholeWord = match.Groups["wholeWord"].Success
                                         };
-                    var regex = searchOptions.MatchWholeWord ? string.Format(@"\b{0}\b", searchOptions.SearchTerm) : searchOptions.SearchTerm;
+                    var regex = searchOptions.MatchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchOptions.SearchTerm)) : Regex.Escape(searchOptions.SearchTerm);
                     var casing = searchOptions.MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
                     searchTextRegex = new Regex(regex, RegexOptions.None | casing);
                 }
@@ -87,6 +87,11 @@ namespace BlueOnionSoftware
             get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsSearchTerm); }
         }
 
+        private IClassificationType FilenameClassificationType
+        {
+            get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsFilename); }
+        }
+
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         private class SearchOptions
@@ -94,8 +99,11 @@ namespace BlueOnionSoftware
             public string SearchTerm;
             public bool MatchCase;
             public bool MatchWholeWord;
+
+            // We could simulate wildcards using .net regex, but Visual Studio's
+            // regex is just WAY TOO SCARY
             //public bool UsingRegex;
-            //public bool UsingWildcards;     // What the heck is this?
+            //public bool UsingWildcards;
         }
     }
 }
