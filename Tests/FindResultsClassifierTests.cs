@@ -178,7 +178,9 @@ namespace Tests
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
-            spans.Count(IsSearchTerm).Should().Be(4);
+            spans = spans.Where(IsSearchTerm).ToList();
+
+            spans.Count.Should().Be(4);
 
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
             AssertSearchTermClassified(spans[1], snapshotSpan, searchTerm, offset2);
@@ -242,24 +244,24 @@ namespace Tests
             AssertFilenameClassified(spans[0], snapshotSpan);
         }
 
-        //[Test]
-        //public void DoesNotClassifySearchTermInFilename()
-        //{
-        //    const string searchTerm = @"C:\Projects";
-        //    var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+        [Test]
+        public void DoesNotClassifySearchTermInFilename()
+        {
+            const string searchTerm = @"C:\Projects";
+            var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
 
-        //    PrimeClassifierSearchOptionsWithFirstLine(text);
+            PrimeClassifierSearchOptionsWithFirstLine(text);
 
-        //    var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
-        //    var spans = classifier.GetClassificationSpans(snapshotSpan);
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var spans = classifier.GetClassificationSpans(snapshotSpan);
 
-        //    var searchSpans = spans.Where(IsSearchTerm);
-        //    searchSpans.Count().Should().Be(0);
+            var searchSpans = spans.Where(IsSearchTerm);
+            searchSpans.Count().Should().Be(0);
 
-        //    spans.Count.Should().Be(1);
+            spans.Count.Should().Be(1);
 
-        //    AssertFilenameClassified(spans[0], snapshotSpan);
-        //}
+            AssertFilenameClassified(spans[0], snapshotSpan);
+        }
 
         private static bool IsSearchTerm(ClassificationSpan s)
         {

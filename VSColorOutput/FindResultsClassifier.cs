@@ -46,8 +46,16 @@ namespace BlueOnionSoftware
             {
                 var text = span.GetText();
 
-                classifications.AddRange(GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType));
-                classifications.AddRange(GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType));
+                var filenameSpans = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
+                var searchTermSpans = GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType).ToList();
+
+                var toRemove = (from searchSpan in searchTermSpans
+                                from filenameSpan in filenameSpans
+                                where filenameSpan.Span.Contains(searchSpan.Span)
+                                select searchSpan).ToList();
+
+                classifications.AddRange(filenameSpans);
+                classifications.AddRange(searchTermSpans.Except(toRemove));
             }   
          
             return classifications;

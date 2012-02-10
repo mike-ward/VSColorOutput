@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
 
@@ -15,6 +16,8 @@ namespace Tests
         {
             this.text = text;
             lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+
+            Lines = lines.Select((t, i) => GetLineFromLineNumber(i)).ToList();
 
             TextBuffer = new FakeTextBuffer();
             Version = new FakeVersion(1);
@@ -88,6 +91,7 @@ namespace Tests
             get { return text[position]; }
         }
 
+        public IEnumerable<ITextSnapshotLine> Lines { get; private set; }
         public ITextBuffer TextBuffer { get; private set; }
         public ITextVersion Version { get; private set; }
 
@@ -139,11 +143,6 @@ namespace Tests
         }
 
         public IContentType ContentType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IEnumerable<ITextSnapshotLine> Lines
         {
             get { throw new NotImplementedException(); }
         }
