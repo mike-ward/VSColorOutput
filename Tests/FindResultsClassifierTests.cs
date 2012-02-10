@@ -32,6 +32,8 @@ namespace Tests
 
         private const string MixedCaseResults = @"  C:\Projects\App\Program.cs(366): // casing Casing CASING casing";
 
+        private const string CaseInsensitiveWholeWordResults = @"  C:\Projects\App\Program.cs(200):public class Classifier // subclass";
+
         [SetUp]
         public void Setup()
         {
@@ -68,13 +70,16 @@ namespace Tests
         {
             const string searchTerm = "using";
             var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+            var offset1 = text.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
+
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 0);
 
             var spans = classifier.GetClassificationSpans(snapshotSpan);
+
             spans.Count.Should().Be(1);
-            spans[0].ClassificationType.Classification.Should().Match(OutputClassificationDefinitions.FindResultsSearchTerm);
-            spans[0].Span.Start.Position.Should().Be(ResultsPreamble.Length);
-            spans[0].Span.Length.Should().Be(searchTerm.Length);
+
+            AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
         [Test]
@@ -82,17 +87,17 @@ namespace Tests
         {
             const string searchTerm = "using";
             var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+            var offset1 = UsingResultsLine1.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
+
             PrimeClassifierSearchOptionsWithFirstLine(text);
 
             var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
-            var searchTermStart = snapshotSpan.GetText().IndexOf(searchTerm, StringComparison.Ordinal);
-
             spans.Count.Should().Be(1);
-            spans[0].ClassificationType.Classification.Should().Match(OutputClassificationDefinitions.FindResultsSearchTerm);
-            spans[0].Span.Start.Position.Should().Be(snapshotSpan.Start.Position + searchTermStart);
-            spans[0].Span.Length.Should().Be(searchTerm.Length);
+
+            AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
         [Test]
@@ -100,17 +105,17 @@ namespace Tests
         {
             const string searchTerm = "using";
             var text = GetCaseInsensitiveResultsText(searchTerm, UsingResultsLine1, UsingResultsLine2);
+
+            var offset1 = UsingResultsLine2.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
+
             PrimeClassifierSearchOptionsWithFirstLine(text);
 
-            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 2);
             var spans = classifier.GetClassificationSpans(snapshotSpan);
 
-            var searchTermStart = snapshotSpan.GetText().IndexOf(searchTerm, StringComparison.Ordinal);
-
             spans.Count.Should().Be(1);
-            spans[0].ClassificationType.Classification.Should().Match(OutputClassificationDefinitions.FindResultsSearchTerm);
-            spans[0].Span.Start.Position.Should().Be(snapshotSpan.Start.Position + searchTermStart);
-            spans[0].Span.Length.Should().Be(searchTerm.Length);
+
+            AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
         [Test]
@@ -175,6 +180,24 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
+        [Test]
+        public void ClassifiesWholeWordsOnly()
+        {
+            const string searchTerm = "class";
+            var text = GetCaseInsensitiveWholeWordResultsText(searchTerm, CaseInsensitiveWholeWordResults);
+
+            var offset1 = CaseInsensitiveWholeWordResults.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
+
+            PrimeClassifierSearchOptionsWithFirstLine(text);
+
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans.Count.Should().Be(1);
+
+            AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
+        }
+
         private static void AssertSearchTermClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan, string searchTerm, int searchTermStart)
         {
             classificationSpan.ClassificationType.Classification.Should().Match(OutputClassificationDefinitions.FindResultsSearchTerm);
@@ -197,6 +220,12 @@ namespace Tests
         private static string GetCaseSensitiveResultsText(string searchTerm, params string[] resultLines)
         {
             var intro = BuildFindResultsBanner(searchTerm, caseSensitive: true);
+            return BuildResultsLines(intro, resultLines);
+        }
+
+        private static string GetCaseInsensitiveWholeWordResultsText(string searchTerm, params string[] resultLines)
+        {
+            var intro = BuildFindResultsBanner(searchTerm, matchWord: true);
             return BuildResultsLines(intro, resultLines);
         }
 

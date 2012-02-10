@@ -22,7 +22,7 @@ namespace BlueOnionSoftware
         static FindResultsClassifier()
         {
             // TODO: What about localised instances of VS?
-            SearchOptionsRegex = new Regex("Find all \"(?<searchTerm>[^\"]+)\", (?<casing>Match case)?", RegexOptions.Compiled);
+            SearchOptionsRegex = new Regex("Find all \"(?<searchTerm>[^\"]+)\", (?<casing>Match case, )?(?<wholeWord>Whole word, )?", RegexOptions.Compiled);
             FilenameRegex = new Regex(@"^(.*:.*\(\d+\):)", RegexOptions.Compiled);
         }
 
@@ -66,10 +66,12 @@ namespace BlueOnionSoftware
                     searchOptions = new SearchOptions
                                         {
                                             SearchTerm = match.Groups["searchTerm"].Value,
-                                            MatchCase = match.Groups["casing"].Success
+                                            MatchCase = match.Groups["casing"].Success,
+                                            MatchWholeWord = match.Groups["wholeWord"].Success
                                         };
+                    var regex = searchOptions.MatchWholeWord ? string.Format(@"\b{0}\b", searchOptions.SearchTerm) : searchOptions.SearchTerm;
                     var casing = searchOptions.MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
-                    searchTextRegex = new Regex(searchOptions.SearchTerm, RegexOptions.None | casing);
+                    searchTextRegex = new Regex(regex, RegexOptions.None | casing);
                 }
             }
         }
@@ -91,7 +93,7 @@ namespace BlueOnionSoftware
         {
             public string SearchTerm;
             public bool MatchCase;
-            //public bool MatchWholeWord;
+            public bool MatchWholeWord;
             //public bool UsingRegex;
             //public bool UsingWildcards;     // What the heck is this?
         }
