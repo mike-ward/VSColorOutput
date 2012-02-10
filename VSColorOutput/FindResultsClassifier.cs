@@ -16,12 +16,13 @@ namespace BlueOnionSoftware
         private static readonly Regex SearchOptionsRegex;
         private static readonly Regex FilenameRegex;
 
-        private SearchOptions searchOptions;
         private Regex searchTextRegex;
 
         static FindResultsClassifier()
         {
             // TODO: What about localised instances of VS?
+            // We could also support searching by wildcard, it looks like it could be parsed into .net regex
+            // But searching by regex? You're on your own. VS has implemented their own regex language. Sheesh.
             SearchOptionsRegex = new Regex("Find all \"(?<searchTerm>[^\"]+)\", (?<casing>Match case, )?(?<wholeWord>Whole word, )?", RegexOptions.Compiled);
             FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
         }
@@ -36,55 +37,51 @@ namespace BlueOnionSoftware
             var classifications = new List<ClassificationSpan>();
 
             var snapshot = span.Snapshot;
-            if (snapshot == null || snapshot.Length == 0)
-            {
+            if (snapshot == null || snapshot.Length == 0 || !CanSearch(span))
                 return classifications;
-            }
 
-            ResetSearchOptions(span);
-            if (searchOptions != null)
-            {
-                var text = span.GetText();
+            var text = span.GetText();
 
-                var filenameSpans = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
-                var searchTermSpans = GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType).ToList();
+            var filenameSpans = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
+            var searchTermSpans = GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType).ToList();
 
-                var toRemove = (from searchSpan in searchTermSpans
-                                from filenameSpan in filenameSpans
-                                where filenameSpan.Span.Contains(searchSpan.Span)
-                                select searchSpan).ToList();
+            var toRemove = (from searchSpan in searchTermSpans
+                            from filenameSpan in filenameSpans
+                            where filenameSpan.Span.Contains(searchSpan.Span)
+                            select searchSpan).ToList();
 
-                classifications.AddRange(filenameSpans);
-                classifications.AddRange(searchTermSpans.Except(toRemove));
-            }   
+            classifications.AddRange(filenameSpans);
+            classifications.AddRange(searchTermSpans.Except(toRemove));
          
             return classifications;
         }
 
-        private void ResetSearchOptions(SnapshotSpan span)
+        private bool CanSearch(SnapshotSpan span)
         {
-            if (span.Start.Position == 0)
-            {
-                searchOptions = null;
+            if (span.Start.Position != 0 && searchTextRegex != null)
+                return true;
 
-                var firstLine = span.Snapshot.GetLineFromLineNumber(0).GetText();
-                var match = SearchOptionsRegex.Match(firstLine);
-                if (match.Success)
-                {
-                    searchOptions = new SearchOptions
-                                        {
-                                            SearchTerm = match.Groups["searchTerm"].Value,
-                                            MatchCase = match.Groups["casing"].Success,
-                                            MatchWholeWord = match.Groups["wholeWord"].Success
-                                        };
-                    var regex = searchOptions.MatchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchOptions.SearchTerm)) : Regex.Escape(searchOptions.SearchTerm);
-                    var casing = searchOptions.MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
-                    searchTextRegex = new Regex(regex, RegexOptions.None | casing);
-                }
+            searchTextRegex = null;
+
+            var firstLine = span.Snapshot.GetLineFromLineNumber(0).GetText();
+            var match = SearchOptionsRegex.Match(firstLine);
+            if (match.Success)
+            {
+                var searchTerm = match.Groups["searchTerm"].Value;
+                var matchCase = match.Groups["casing"].Success;
+                var matchWholeWord = match.Groups["wholeWord"].Success;
+
+                var regex = matchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchTerm)) : Regex.Escape(searchTerm);
+                var casing = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
+                searchTextRegex = new Regex(regex, RegexOptions.None | casing);
+
+                return true;
             }
+
+            return false;
         }
 
-        private IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)
+        private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)
         {
             return from match in regex.Matches(text).Cast<Match>()
                    select new ClassificationSpan(new SnapshotSpan(snapStart + match.Index, match.Length), classificationType);
@@ -101,17 +98,5 @@ namespace BlueOnionSoftware
         }
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-
-        private class SearchOptions
-        {
-            public string SearchTerm;
-            public bool MatchCase;
-            public bool MatchWholeWord;
-
-            // We could simulate wildcards using .net regex, but Visual Studio's
-            // regex is just WAY TOO SCARY
-            //public bool UsingRegex;
-            //public bool UsingWildcards;
-        }
     }
 }
