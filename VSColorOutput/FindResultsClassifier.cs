@@ -12,18 +12,18 @@ namespace BlueOnionSoftware
 {
     public class FindResultsClassifier : IClassifier
     {
+        private const string FindAll = "Find all \"";
+        private const string MatchCase = "Match case";
+        private const string WholeWord = "Whole word";
+        private const string ListFilenamesOnly = "List filenames only";
+
         private readonly IClassificationTypeRegistryService classificationRegistry;
-        private static readonly Regex SearchOptionsRegex;
         private static readonly Regex FilenameRegex;
 
         private Regex searchTextRegex;
 
         static FindResultsClassifier()
         {
-            // TODO: What about localised instances of VS?
-            // We could also support searching by wildcard, it looks like it could be parsed into .net regex
-            // But searching by regex? You're on your own. VS has implemented their own regex language. Sheesh.
-            SearchOptionsRegex = new Regex("Find all \"(?<searchTerm>[^\"]+)\", (?<casing>Match case, )?(?<wholeWord>Whole word, )?", RegexOptions.Compiled);
             FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
         }
 
@@ -64,18 +64,25 @@ namespace BlueOnionSoftware
             searchTextRegex = null;
 
             var firstLine = span.Snapshot.GetLineFromLineNumber(0).GetText();
-            var match = SearchOptionsRegex.Match(firstLine);
-            if (match.Success)
+            if (firstLine.StartsWith(FindAll))
             {
-                var searchTerm = match.Groups["searchTerm"].Value;
-                var matchCase = match.Groups["casing"].Success;
-                var matchWholeWord = match.Groups["wholeWord"].Success;
+                var strings = (from s in firstLine.Split(',')
+                               select s.Trim()).ToList();
 
-                var regex = matchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchTerm)) : Regex.Escape(searchTerm);
-                var casing = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
-                searchTextRegex = new Regex(regex, RegexOptions.None | casing);
+                var start = strings[0].IndexOf('"');
+                var searchTerm = strings[0].Substring(start + 1, strings[0].Length - start - 2);
+                var matchCase = strings.Contains(MatchCase);
+                var matchWholeWord = strings.Contains(WholeWord);
+                var filenamesOnly = strings.Contains(ListFilenamesOnly);
 
-                return true;
+                if (!filenamesOnly)
+                {
+                    var regex = matchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchTerm)) : Regex.Escape(searchTerm);
+                    var casing = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
+                    searchTextRegex = new Regex(regex, RegexOptions.None | casing);
+
+                    return true;
+                }
             }
 
             return false;
