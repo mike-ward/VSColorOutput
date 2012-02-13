@@ -263,6 +263,21 @@ namespace Tests
             AssertFilenameClassified(spans[0], snapshotSpan);
         }
 
+        [Test]
+        public void DoesNotClassifyAnythingWhenListingFilenamesOnly()
+        {
+            const string searchTerm = "using";
+            var intro = BuildFindResultsBanner(searchTerm, filenamesOnly: true);
+            var text = BuildResultsLines(intro, UsingResultsLine1, UsingResultsLine2);
+
+            PrimeClassifierSearchOptionsWithFirstLine(text);
+
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var spans = classifier.GetClassificationSpans(snapshotSpan);
+
+            spans.Count.Should().Be(0);
+        }
+
         private static bool IsSearchTerm(ClassificationSpan s)
         {
             return s.ClassificationType.Classification == OutputClassificationDefinitions.FindResultsSearchTerm;
