@@ -242,6 +242,7 @@ namespace Tests
                 get { throw new NotImplementedException(); }
             }
 
+#pragma warning disable 67
             public event EventHandler<SnapshotSpanEventArgs> ReadOnlyRegionsChanged;
             public event EventHandler<TextContentChangedEventArgs> Changed;
             public event EventHandler<TextContentChangedEventArgs> ChangedLowPriority;
@@ -250,6 +251,7 @@ namespace Tests
             public event EventHandler PostChanged;
             public event EventHandler<ContentTypeChangedEventArgs> ContentTypeChanged;
         }
+#pragma warning restore 67
 
         private class FakeVersion : ITextVersion
         {
