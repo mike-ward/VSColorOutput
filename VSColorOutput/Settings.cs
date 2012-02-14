@@ -11,11 +11,11 @@ namespace BlueOnionSoftware
 {
     public class Settings
     {
-        private const string RegExPatternsKey = "RegExPatterns";
-        private const string StopOnBuildErrorKey = "StopOnBuildError";
-        private const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
-        private const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
-        private const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
+        public const string RegExPatternsKey = "RegExPatterns";
+        public const string StopOnBuildErrorKey = "StopOnBuildError";
+        public const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
+        public const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
+        public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
         public static IRegistryKey OverrideRegistryKey { get; set; }
 
         public RegExClassification[] Patterns { get; set; }
