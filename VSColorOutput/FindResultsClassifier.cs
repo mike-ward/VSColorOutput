@@ -1,3 +1,5 @@
+// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +40,9 @@ namespace BlueOnionSoftware
 
             var snapshot = span.Snapshot;
             if (snapshot == null || snapshot.Length == 0 || !CanSearch(span))
+            {
                 return classifications;
+            }
 
             var text = span.GetText();
 
@@ -52,17 +56,16 @@ namespace BlueOnionSoftware
 
             classifications.AddRange(filenameSpans);
             classifications.AddRange(searchTermSpans.Except(toRemove));
-         
             return classifications;
         }
 
         private bool CanSearch(SnapshotSpan span)
         {
             if (span.Start.Position != 0 && searchTextRegex != null)
+            {
                 return true;
-
+            }
             searchTextRegex = null;
-
             var firstLine = span.Snapshot.GetLineFromLineNumber(0).GetText();
             if (firstLine.StartsWith(FindAll))
             {
@@ -84,7 +87,6 @@ namespace BlueOnionSoftware
                     return true;
                 }
             }
-
             return false;
         }
 

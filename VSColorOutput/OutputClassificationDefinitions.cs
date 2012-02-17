@@ -191,7 +191,6 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Find Results Search Term";
                 ForegroundColor = Colors.Blue;
-                IsBold = true;
             }
         }
 
@@ -209,7 +208,7 @@ namespace BlueOnionSoftware
             public FindResultsFilenameFormat()
             {
                 DisplayName = VsColorOut + "Find Results Filename";
-                ForegroundOpacity = 0.6;
+                ForegroundColor = Colors.Gray;
             }
         }
     }
