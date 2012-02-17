@@ -1,3 +1,5 @@
+// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -12,7 +14,7 @@ namespace BlueOnionSoftware
     [Export(typeof(IClassifierProvider))]
     public class FindResultsClassifierProvider : IClassifierProvider
     {
-        [Import]
+        [Import] 
         internal IClassificationTypeRegistryService ClassificationRegistry;
 
         public static IClassifier FindResultsClassifier { get; private set; }

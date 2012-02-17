@@ -87,7 +87,6 @@ namespace Tests
             var format = new OutputClassificationDefinitions.FindResultsSearchTermFormat();
             format.DisplayName.Should().Be("VSColorOutput Find Results Search Term");
             format.ForegroundColor.Should().Be(Colors.Blue);
-            format.IsBold.Should().BeTrue();
         }
 
         [Test]
@@ -95,7 +94,7 @@ namespace Tests
         {
             var format = new OutputClassificationDefinitions.FindResultsFilenameFormat();
             format.DisplayName.Should().Be("VSColorOutput Find Results Filename");
-            format.ForegroundOpacity.Should().BeInRange(0.6, 0.6);
+            format.ForegroundColor.Should().Be(Colors.Gray);
         }
     }
 }
