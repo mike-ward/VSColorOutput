@@ -47,7 +47,7 @@ namespace BlueOnionSoftware
             {
                 var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
                 serializer.WriteObject(ms, Patterns);
-                var json = Encoding.Default.GetString(ms.ToArray());
+                var json = Encoding.UTF8.GetString(ms.ToArray());
                 using (var key = OpenRegistry(true))
                 {
                     key.SetValue(RegExPatternsKey, json);
@@ -94,7 +94,7 @@ namespace BlueOnionSoftware
         {
             try
             {
-                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+                using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
                 {
                     var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
                     var patterns = serializer.ReadObject(ms) as RegExClassification[];
