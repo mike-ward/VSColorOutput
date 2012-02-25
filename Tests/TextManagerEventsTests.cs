@@ -1,4 +1,5 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using System;
 using System.Runtime.InteropServices;
 using BlueOnionSoftware;
@@ -25,17 +26,16 @@ namespace Tests
             };
             Marshal.StructureToPtr(DefGuidList.guidTextEditorFontCategory, fontResource.pguidFontCategory, true);
             Marshal.StructureToPtr(Guid.NewGuid(), fontResource.pguidColorService, true);
-            var fontResources = new[] { fontResource };
+            var fontResources = new[] {fontResource};
             try
             {
                 var mockStore = new Mock<IVsFontAndColorStorage>();
                 FontAndColorStorage.Override = mockStore.Object;
                 textManagerEvents.OnUserPreferencesChanged(null, null, null, fontResources);
 
-                const uint flags = (uint)(
+                const uint flags = (uint) (
                     __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
-                        __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS |
-                            __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
+                        __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
 
                 var textEditorGuid = DefGuidList.guidTextEditorFontCategory;
                 mockStore.Verify(s => s.OpenCategory(ref textEditorGuid, flags));
@@ -60,12 +60,12 @@ namespace Tests
                 };
                 Marshal.StructureToPtr(DefGuidList.guidPrinterFontCategory, fontResource.pguidFontCategory, true);
                 Marshal.StructureToPtr(Guid.NewGuid(), fontResource.pguidColorService, true);
-                var fontResources = new[] { fontResource };
+                var fontResources = new[] {fontResource};
                 var mockStore = new Mock<IVsFontAndColorStorage>();
                 FontAndColorStorage.Override = mockStore.Object;
                 textManagerEvents.OnUserPreferencesChanged(null, null, null, fontResources);
 
-                const uint flags = (uint)(
+                const uint flags = (uint) (
                     __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
                         __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS |
                             __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
