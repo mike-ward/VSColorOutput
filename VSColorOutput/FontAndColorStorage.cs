@@ -1,4 +1,5 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
@@ -32,10 +33,9 @@ namespace BlueOnionSoftware
 
         public static void UpdateColors()
         {
-            const uint flags = (uint)(
+            const uint flags = (uint) (
                 __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
-                    __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS |
-                        __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
+                    __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
 
             var store = GetFontAndColorStorageService();
             if (store != null)

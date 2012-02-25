@@ -1,4 +1,5 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
+﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
+
 using BlueOnionSoftware;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -19,10 +20,9 @@ namespace Tests
                 FontAndColorStorage.Override = mockStore.Object;
                 FontAndColorStorage.UpdateColors();
 
-                const uint flags = (uint)(
+                const uint flags = (uint) (
                     __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
-                        __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS |
-                            __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
+                        __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
 
                 var textEditorGuid = DefGuidList.guidTextEditorFontCategory;
                 mockStore.Verify(s => s.OpenCategory(ref textEditorGuid, flags));
