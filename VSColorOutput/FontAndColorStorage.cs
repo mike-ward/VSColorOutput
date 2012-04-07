@@ -33,9 +33,10 @@ namespace BlueOnionSoftware
 
         public static void UpdateColors()
         {
-            const uint flags = (uint) (
+            const uint flags = (uint)(
+                __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES |
                 __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
-                    __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES);
+                __FCSTORAGEFLAGS.FCSF_NOAUTOCOLORS);
 
             var store = GetFontAndColorStorageService();
             if (store != null)
