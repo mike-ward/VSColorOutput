@@ -31,8 +31,17 @@ namespace BlueOnionSoftware
             {OutputClassificationDefinitions.FindResultsSearchTerm, new[] {new ColorableItemInfo()}}
         };
 
+        private static volatile bool _isUpdatingColors;
+
         public static void UpdateColors()
         {
+            if (_isUpdatingColors)
+            {
+                return;
+            }
+
+            _isUpdatingColors = true;
+
             const uint flags = (uint)(
                 __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES |
                 __FCSTORAGEFLAGS.FCSF_LOADDEFAULTS |
@@ -60,6 +69,8 @@ namespace BlueOnionSoftware
                     store.CloseCategory();
                 }
             }
+
+            _isUpdatingColors = false;
         }
     }
 }
