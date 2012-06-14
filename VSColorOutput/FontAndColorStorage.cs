@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
 
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -31,16 +32,17 @@ namespace BlueOnionSoftware
             {OutputClassificationDefinitions.FindResultsSearchTerm, new[] {new ColorableItemInfo()}}
         };
 
-        private static volatile bool _isUpdatingColors;
+        private static int _updateState;
+
+        private const int IsUpdating = 1;
+        private const int NotUpdating = 0;
 
         public static void UpdateColors()
         {
-            if (_isUpdatingColors)
+            if (Interlocked.Exchange(ref _updateState, IsUpdating) == IsUpdating)
             {
                 return;
             }
-
-            _isUpdatingColors = true;
 
             const uint flags = (uint)(
                 __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES |
@@ -70,7 +72,7 @@ namespace BlueOnionSoftware
                 }
             }
 
-            _isUpdatingColors = false;
+            Interlocked.Exchange(ref _updateState, NotUpdating);
         }
     }
 }
