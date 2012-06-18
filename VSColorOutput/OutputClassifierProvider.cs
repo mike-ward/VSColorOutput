@@ -30,7 +30,6 @@ namespace BlueOnionSoftware
                 {
                     OutputClassifier = new OutputClassifier(ClassificationRegistry, ServiceProvider);
                     TextManagerEvents.RegisterForTextManagerEvents();
-                    FontAndColorStorage.UpdateColors();
                 }
             }
             catch (Exception ex)
