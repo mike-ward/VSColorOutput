@@ -32,6 +32,11 @@ namespace BlueOnionSoftware
         public bool ShowElapsedBuildTime { get; set; }
 
         [Category(ActionSubCategory)]
+        [DisplayName("Show Build Report")]
+        [Description("Shows the list of projects built at the end of the build")]
+        public bool ShowBuildReport { get; set; }
+
+        [Category(ActionSubCategory)]
         [DisplayName("Show Debug Window on Debug")]
         [Description("Shows the debug window when the debug session starts")]
         public bool ShowDebugWindowOnDebug { get; set; }
@@ -43,6 +48,7 @@ namespace BlueOnionSoftware
             RegExPatterns = settings.Patterns;
             StopOnFirstBuildError = settings.EnableStopOnBuildError;
             ShowElapsedBuildTime = settings.ShowElapsedBuildTime;
+            ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
         }
 
@@ -53,6 +59,7 @@ namespace BlueOnionSoftware
                 Patterns = RegExPatterns, 
                 EnableStopOnBuildError = StopOnFirstBuildError,
                 ShowElapsedBuildTime = ShowElapsedBuildTime,
+                ShowBuildReport = ShowBuildReport,
                 ShowDebugWindowOnDebug = ShowDebugWindowOnDebug
             };
             settings.Save();

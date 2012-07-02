@@ -97,6 +97,7 @@ namespace BlueOnionSoftware
                 _classifiers = classifiers;
                 _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
                 _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
+                _buildEvents.ShowBuildReport = settings.ShowBuildReport;
                 _buildEvents.ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             }
             _settingsLoaded = true;
