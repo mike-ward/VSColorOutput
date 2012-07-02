@@ -4,6 +4,7 @@ using System;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using System.Collections.Generic;
 
 #pragma warning disable 649
 
@@ -16,8 +17,10 @@ namespace BlueOnionSoftware
         private readonly EnvDTE.BuildEvents _buildEvents;
         private readonly DTEEvents _dteEvents;
         private DateTime _buildStartTime;
+        private List<string> _ProjectsBuildReport;
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
+        public bool ShowBuildReport { get; set; }
         public bool ShowDebugWindowOnDebug { get; set; }
 
         public BuildEvents(IServiceProvider serviceProvider)
@@ -40,28 +43,51 @@ namespace BlueOnionSoftware
                 _buildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
                 _dteEvents.ModeChanged += OnModeChanged;
             }
+
+            _ProjectsBuildReport = new List<string>();
+
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
+            _ProjectsBuildReport.Clear();
             _buildStartTime = DateTime.Now;
         }
 
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
+            OutputWindowPane BuildOutputPane = null;
+            foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
+            {
+                if (pane.Guid == VSConstants.OutputWindowPaneGuid.BuildOutputPane_string)
+                {
+                    BuildOutputPane = pane;
+                    break;
+                }
+            }
+
+            if (BuildOutputPane == null)
+            {
+                return;
+            }
+
+            if (ShowBuildReport)
+            {
+                BuildOutputPane.OutputString("\r\nProjects build report:\r\n");
+                BuildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
+                BuildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
+                foreach (string ReportItem in _ProjectsBuildReport)
+                {
+                    BuildOutputPane.OutputString(ReportItem + "\r\n");
+                }
+            }
+
             if (ShowElapsedBuildTimeEnabled)
             {
                 var elapsed = DateTime.Now - _buildStartTime;
-                foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
-                {
-                    if (pane.Guid == VSConstants.OutputWindowPaneGuid.BuildOutputPane_string)
-                    {
-                        var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
-                        var text = string.Format("Time Elapsed {0}", time);
-                        pane.OutputString("\r\n" + text + "\r\n");
-                        break;
-                    }
-                }
+                var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
+                var text = string.Format("Time Elapsed {0}", time);
+                BuildOutputPane.OutputString("\r\n" + text + "\r\n");
             }
         }
 
@@ -71,6 +97,11 @@ namespace BlueOnionSoftware
             {
                 const string cancelBuildCommand = "Build.Cancel";
                 _dte2.ExecuteCommand(cancelBuildCommand);
+            }
+
+            if (ShowBuildReport)
+            {
+                _ProjectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]" );
             }
         }
 

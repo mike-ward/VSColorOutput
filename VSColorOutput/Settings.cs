@@ -14,6 +14,7 @@ namespace BlueOnionSoftware
         public const string RegExPatternsKey = "RegExPatterns";
         public const string StopOnBuildErrorKey = "StopOnBuildError";
         public const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
+        public const string ShowBuildReportKey = "ShowBuildReport";
         public const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
         public static IRegistryKey OverrideRegistryKey { get; set; }
@@ -21,6 +22,7 @@ namespace BlueOnionSoftware
         public RegExClassification[] Patterns { get; set; }
         public bool EnableStopOnBuildError { get; set; }
         public bool ShowElapsedBuildTime { get; set; }
+        public bool ShowBuildReport { get; set; }
         public bool ShowDebugWindowOnDebug { get; set; }
 
         public void Load()
@@ -35,7 +37,10 @@ namespace BlueOnionSoftware
 
                 var showElapsedBuildTime = (key != null) ? key.GetValue(ShowElapsedBuildTimeKey) as string : bool.FalseString;
                 ShowElapsedBuildTime = string.IsNullOrEmpty(showElapsedBuildTime) == false && showElapsedBuildTime == bool.TrueString;
-                
+
+                var showBuildReport = (key != null) ? key.GetValue(ShowBuildReportKey) as string : bool.FalseString;
+                ShowBuildReport = string.IsNullOrEmpty(showBuildReport) == false && showBuildReport == bool.TrueString;
+
                 var showDebugWindowOnDebug = (key != null) ? key.GetValue(ShowDebugWindowOnDebugKey) as string : bool.FalseString;
                 ShowDebugWindowOnDebug = string.IsNullOrEmpty(showDebugWindowOnDebug) == false && showDebugWindowOnDebug == bool.TrueString;
             }
@@ -53,6 +58,7 @@ namespace BlueOnionSoftware
                     key.SetValue(RegExPatternsKey, json);
                     key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString(CultureInfo.InvariantCulture));
                     key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString(CultureInfo.InvariantCulture));
+                    key.SetValue(ShowBuildReportKey, ShowBuildReport.ToString(CultureInfo.InvariantCulture));
                     key.SetValue(ShowDebugWindowOnDebugKey, ShowDebugWindowOnDebug.ToString(CultureInfo.InvariantCulture));
                 }
                 if (OutputClassifierProvider.OutputClassifier != null)
@@ -80,8 +86,8 @@ namespace BlueOnionSoftware
             return new[]
             {
                 new RegExClassification {RegExPattern = @"\+\+\+\>", ClassificationType = ClassificationTypes.LogCustom1, IgnoreCase = false},
-                new RegExClassification {RegExPattern = @"(=====|-----)", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = false},
-                new RegExClassification {RegExPattern = @"0 failed", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true},
+                new RegExClassification {RegExPattern = @"(=====|-----|Projects build report|Status    \| Project \[Config\|platform\])", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = false},
+                new RegExClassification {RegExPattern = @"0 failed|Succeeded", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(\W|^)(error|fail|failed|exception)\W", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(exception:|stack trace:)", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"^\s+at\s", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
