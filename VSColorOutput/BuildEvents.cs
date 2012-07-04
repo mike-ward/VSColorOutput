@@ -17,7 +17,7 @@ namespace BlueOnionSoftware
         private readonly EnvDTE.BuildEvents _buildEvents;
         private readonly DTEEvents _dteEvents;
         private DateTime _buildStartTime;
-        private List<string> _ProjectsBuildReport;
+        private readonly List<string> _projectsBuildReport;
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
         public bool ShowBuildReport { get; set; }
@@ -44,13 +44,13 @@ namespace BlueOnionSoftware
                 _dteEvents.ModeChanged += OnModeChanged;
             }
 
-            _ProjectsBuildReport = new List<string>();
+            _projectsBuildReport = new List<string>();
 
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
-            _ProjectsBuildReport.Clear();
+            _projectsBuildReport.Clear();
             _buildStartTime = DateTime.Now;
         }
 
@@ -76,7 +76,7 @@ namespace BlueOnionSoftware
                 BuildOutputPane.OutputString("\r\nProjects build report:\r\n");
                 BuildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
                 BuildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
-                foreach (string ReportItem in _ProjectsBuildReport)
+                foreach (string ReportItem in _projectsBuildReport)
                 {
                     BuildOutputPane.OutputString(ReportItem + "\r\n");
                 }
@@ -101,7 +101,7 @@ namespace BlueOnionSoftware
 
             if (ShowBuildReport)
             {
-                _ProjectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]" );
+                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]" );
             }
         }
 
