@@ -14,7 +14,7 @@ namespace BlueOnionSoftware
 
         public static IVsFontAndColorStorage GetFontAndColorStorageService()
         {
-            return Override ?? Package.GetGlobalService(typeof(SVsFontAndColorStorage)) as IVsFontAndColorStorage;
+            return Override ?? Package.GetGlobalService(typeof (SVsFontAndColorStorage)) as IVsFontAndColorStorage;
         }
 
         private static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
@@ -55,16 +55,10 @@ namespace BlueOnionSoftware
                 try
                 {
                     store.OpenCategory(DefGuidList.guidTextEditorFontCategory, flags);
-                    foreach (var color in _colorMap)
-                    {
-                        store.GetItem(color.Key, color.Value);
-                    }
+                    foreach (var color in _colorMap) store.GetItem(color.Key, color.Value);
                     store.CloseCategory();
                     store.OpenCategory(DefGuidList.guidOutputWindowFontCategory, flags);
-                    foreach (var color in _colorMap)
-                    {
-                        store.SetItem(color.Key, color.Value);
-                    }
+                    foreach (var color in _colorMap) store.SetItem(color.Key, color.Value);
                 }
                 finally
                 {

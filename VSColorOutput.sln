@@ -1,9 +1,14 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22310.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSColorOutput", "VSColorOutput\VSColorOutput.csproj", "{BF205896-9741-4035-B0BA-4030C92036B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4906F798-1AA4-49F8-9E56-38C5B5B7200D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF205896-9741-4035-B0BA-4030C92036B6} = {BF205896-9741-4035-B0BA-4030C92036B6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
