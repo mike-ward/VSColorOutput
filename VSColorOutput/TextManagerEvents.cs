@@ -28,6 +28,8 @@ namespace BlueOnionSoftware
             var textManagerEvents = new TextManagerEvents();
             uint textManagerCookie;
             textManagerEventsConnection.Advise(textManagerEvents, out textManagerCookie);
+
+            FontAndColorStorage.UpdateColors(); //Hotfix for loading colors until visual studio call OnUserPreferencesChanged function
         }
 
         public void OnRegisterMarkerType(int iMarkerType)
