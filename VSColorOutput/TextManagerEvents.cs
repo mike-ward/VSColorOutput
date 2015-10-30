@@ -22,12 +22,18 @@ namespace BlueOnionSoftware
         {
             var textManager = GetService();
             var container = textManager as IConnectionPointContainer;
+
             IConnectionPoint textManagerEventsConnection;
             var eventGuid = typeof(IVsTextManagerEvents).GUID;
+
             container.FindConnectionPoint(ref eventGuid, out textManagerEventsConnection);
+
             var textManagerEvents = new TextManagerEvents();
             uint textManagerCookie;
+
             textManagerEventsConnection.Advise(textManagerEvents, out textManagerCookie);
+
+            FontAndColorStorage.UpdateColors();
         }
 
         public void OnRegisterMarkerType(int iMarkerType)
@@ -50,16 +56,14 @@ namespace BlueOnionSoftware
         {
             if (pColorPrefs != null && pColorPrefs.Length > 0 && pColorPrefs[0].pColorTable != null)
             {
-                var guidFontCategory = (Guid)Marshal.PtrToStructure(pColorPrefs[0].pguidFontCategory, typeof(Guid));
-                var guidColorService = (Guid)Marshal.PtrToStructure(pColorPrefs[0].pguidColorService, typeof(Guid));
+                var guidFontCategory = (Guid) Marshal.PtrToStructure(pColorPrefs[0].pguidFontCategory, typeof(Guid));
+                var guidColorService = (Guid) Marshal.PtrToStructure(pColorPrefs[0].pguidColorService, typeof(Guid));
+
                 if (_guidColorService == Guid.Empty)
-                {
                     _guidColorService = guidColorService;
-                }
+
                 if (guidFontCategory == DefGuidList.guidTextEditorFontCategory && _guidColorService == guidColorService)
-                {
                     FontAndColorStorage.UpdateColors();
-                }
             }
         }
     }

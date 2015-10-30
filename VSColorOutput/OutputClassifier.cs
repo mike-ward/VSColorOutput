@@ -46,18 +46,21 @@ namespace BlueOnionSoftware
             {
                 var spans = new List<ClassificationSpan>();
                 var snapshot = span.Snapshot;
+
                 if (snapshot == null || snapshot.Length == 0)
-                {
                     return spans;
-                }
+
                 LoadSettings();
+
                 var start = span.Start.GetContainingLine().LineNumber;
                 var end = (span.End - 1).GetContainingLine().LineNumber;
+
                 for (var i = start; i <= end; i++)
                 {
                     var line = snapshot.GetLineFromLineNumber(i);
                     var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
                     var text = line.Snapshot.GetText(snapshotSpan);
+
                     if (string.IsNullOrEmpty(text) == false)
                     {
                         var classificationName = _classifiers.First(classifier => classifier.Test(text)).Type;
@@ -65,6 +68,7 @@ namespace BlueOnionSoftware
                         spans.Add(new ClassificationSpan(line.Extent, type));
                     }
                 }
+
                 return spans;
             }
             catch (Exception ex)
@@ -80,7 +84,9 @@ namespace BlueOnionSoftware
             {
                 var settings = new Settings();
                 settings.Load();
+
                 var patterns = settings.Patterns ?? new RegExClassification[0];
+
                 var classifiers =
                     (from pattern in patterns
                      let test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
@@ -89,17 +95,20 @@ namespace BlueOnionSoftware
                          Type = pattern.ClassificationType.ToString(),
                          Test = text => test.IsMatch(text)
                      }).ToList();
+
                 classifiers.Add(new Classifier
                 {
                     Type = OutputClassificationDefinitions.BuildText,
                     Test = t => true
                 });
+
                 _classifiers = classifiers;
                 _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
                 _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
                 _buildEvents.ShowBuildReport = settings.ShowBuildReport;
                 _buildEvents.ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             }
+
             _settingsLoaded = true;
         }
 
@@ -114,9 +123,7 @@ namespace BlueOnionSoftware
             {
                 // I'm co-opting the Visual Studio event source because I can't register
                 // my own from a .VSIX installer.
-                EventLog.WriteEntry("Microsoft Visual Studio", 
-                    "VSColorOutput: " + (message ?? "null"), 
-                    EventLogEntryType.Error);
+                EventLog.WriteEntry("Microsoft Visual Studio", "VSColorOutput: " + (message ?? "null"), EventLogEntryType.Error);
             }
             catch
             {

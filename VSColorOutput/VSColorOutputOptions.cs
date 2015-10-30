@@ -45,6 +45,7 @@ namespace BlueOnionSoftware
         {
             var settings = new Settings();
             settings.Load();
+
             RegExPatterns = settings.Patterns;
             StopOnFirstBuildError = settings.EnableStopOnBuildError;
             ShowElapsedBuildTime = settings.ShowElapsedBuildTime;

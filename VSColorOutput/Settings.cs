@@ -17,6 +17,7 @@ namespace BlueOnionSoftware
         public const string ShowBuildReportKey = "ShowBuildReport";
         public const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
+
         public static IRegistryKey OverrideRegistryKey { get; set; }
 
         public RegExClassification[] Patterns { get; set; }
@@ -61,6 +62,7 @@ namespace BlueOnionSoftware
                     key.SetValue(ShowBuildReportKey, ShowBuildReport.ToString(CultureInfo.InvariantCulture));
                     key.SetValue(ShowDebugWindowOnDebugKey, ShowDebugWindowOnDebug.ToString(CultureInfo.InvariantCulture));
                 }
+
                 if (OutputClassifierProvider.OutputClassifier != null)
                 {
                     OutputClassifierProvider.OutputClassifier.ClearSettings();
@@ -71,13 +73,14 @@ namespace BlueOnionSoftware
         private static IRegistryKey OpenRegistry(bool writeable)
         {
             if (OverrideRegistryKey != null)
-            {
                 return OverrideRegistryKey;
-            }
+
             var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, writeable);
+
             var subKey = writeable 
                 ? root.CreateSubKey(RegistryPath)
                 : root.OpenSubKey(RegistryPath);
+
             return (subKey != null) ? new RegistryKeyImpl(subKey) : null;
         }
 
