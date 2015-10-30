@@ -12,7 +12,7 @@ namespace BlueOnionSoftware
 
     public class RegistryKeyImpl : IRegistryKey
     {
-        private RegistryKey _registryKey;
+        RegistryKey _registryKey;
 
         public RegistryKeyImpl(RegistryKey registryKey)
         {

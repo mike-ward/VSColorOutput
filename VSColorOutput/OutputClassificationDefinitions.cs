@@ -38,6 +38,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Build Header";
                 ForegroundColor = Colors.Green;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -55,6 +56,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Build Text";
                 ForegroundColor = Colors.Gray;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -72,6 +74,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Error";
                 ForegroundColor = Colors.Red;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -89,6 +92,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Warning";
                 ForegroundColor = Colors.Olive;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -106,6 +110,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Information";
                 ForegroundColor = Colors.DarkBlue;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -123,6 +128,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Custom1";
                 ForegroundColor = Colors.Purple;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -140,6 +146,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Custom2";
                 ForegroundColor = Colors.DarkSalmon;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -157,6 +164,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Custom3";
                 ForegroundColor = Colors.DarkOrange;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -174,6 +182,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Log Custom4";
                 ForegroundColor = Colors.Brown;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -191,6 +200,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Find Results Search Term";
                 ForegroundColor = Colors.Blue;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
 
@@ -209,6 +219,7 @@ namespace BlueOnionSoftware
             {
                 DisplayName = VsColorOut + "Find Results Filename";
                 ForegroundColor = Colors.Gray;
+                BackgroundColor = Color.FromRgb(37, 37, 38);
             }
         }
     }

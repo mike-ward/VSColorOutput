@@ -14,15 +14,15 @@ namespace BlueOnionSoftware
 {
     public class FindResultsClassifier : IClassifier
     {
-        private const string FindAll = "Find all \"";
-        private const string MatchCase = "Match case";
-        private const string WholeWord = "Whole word";
-        private const string ListFilenamesOnly = "List filenames only";
+        const string FindAll = "Find all \"";
+        const string MatchCase = "Match case";
+        const string WholeWord = "Whole word";
+        const string ListFilenamesOnly = "List filenames only";
 
-        private readonly IClassificationTypeRegistryService classificationRegistry;
-        private static readonly Regex FilenameRegex;
+        readonly IClassificationTypeRegistryService classificationRegistry;
+        static readonly Regex FilenameRegex;
 
-        private Regex searchTextRegex;
+        Regex searchTextRegex;
 
         static FindResultsClassifier()
         {
@@ -59,7 +59,7 @@ namespace BlueOnionSoftware
             return classifications;
         }
 
-        private bool CanSearch(SnapshotSpan span)
+        bool CanSearch(SnapshotSpan span)
         {
             if (span.Start.Position != 0 && searchTextRegex != null)
             {
@@ -90,18 +90,18 @@ namespace BlueOnionSoftware
             return false;
         }
 
-        private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)
+        static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)
         {
             return from match in regex.Matches(text).Cast<Match>()
                    select new ClassificationSpan(new SnapshotSpan(snapStart + match.Index, match.Length), classificationType);
         }
 
-        private IClassificationType SearchTermClassificationType
+        IClassificationType SearchTermClassificationType
         {
             get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsSearchTerm); }
         }
 
-        private IClassificationType FilenameClassificationType
+        IClassificationType FilenameClassificationType
         {
             get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsFilename); }
         }

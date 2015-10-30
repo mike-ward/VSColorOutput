@@ -12,12 +12,13 @@ namespace BlueOnionSoftware
 {
     public class BuildEvents
     {
-        private readonly DTE2 _dte2;
-        private readonly Events _events;
-        private readonly EnvDTE.BuildEvents _buildEvents;
-        private readonly DTEEvents _dteEvents;
-        private DateTime _buildStartTime;
-        private readonly List<string> _projectsBuildReport;
+        readonly DTE2 _dte2;
+        readonly Events _events;
+        readonly EnvDTE.BuildEvents _buildEvents;
+        readonly DTEEvents _dteEvents;
+        DateTime _buildStartTime;
+        readonly List<string> _projectsBuildReport;
+
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
         public bool ShowBuildReport { get; set; }
@@ -26,9 +27,8 @@ namespace BlueOnionSoftware
         public BuildEvents(IServiceProvider serviceProvider)
         {
             if (serviceProvider == null)
-            {
                 return;
-            }
+
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
             if (_dte2 != null)
             {
@@ -67,19 +67,16 @@ namespace BlueOnionSoftware
             }
 
             if (BuildOutputPane == null)
-            {
                 return;
-            }
 
             if (ShowBuildReport)
             {
                 BuildOutputPane.OutputString("\r\nProjects build report:\r\n");
                 BuildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
                 BuildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
+
                 foreach (string ReportItem in _projectsBuildReport)
-                {
                     BuildOutputPane.OutputString(ReportItem + "\r\n");
-                }
             }
 
             if (ShowElapsedBuildTimeEnabled)
@@ -87,6 +84,7 @@ namespace BlueOnionSoftware
                 var elapsed = DateTime.Now - _buildStartTime;
                 var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
                 var text = string.Format("Time Elapsed {0}", time);
+
                 BuildOutputPane.OutputString("\r\n" + text + "\r\n");
             }
         }
@@ -100,9 +98,7 @@ namespace BlueOnionSoftware
             }
 
             if (ShowBuildReport)
-            {
                 _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]" );
-            }
         }
 
         private void OnModeChanged(vsIDEMode lastMode)

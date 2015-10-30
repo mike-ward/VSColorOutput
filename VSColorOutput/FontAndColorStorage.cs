@@ -17,32 +17,30 @@ namespace BlueOnionSoftware
             return Override ?? Package.GetGlobalService(typeof (SVsFontAndColorStorage)) as IVsFontAndColorStorage;
         }
 
-        private static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
+        static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
         {
-            {OutputClassificationDefinitions.BuildHead, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.BuildText, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogInfo, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogWarn, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogError, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogCustom1, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogCustom2, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogCustom3, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.LogCustom4, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.FindResultsFilename, new[] {new ColorableItemInfo()}},
-            {OutputClassificationDefinitions.FindResultsSearchTerm, new[] {new ColorableItemInfo()}}
+            { OutputClassificationDefinitions.BuildHead, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.BuildText, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogInfo, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogWarn, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogError, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogCustom1, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogCustom2, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogCustom3, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.LogCustom4, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.FindResultsFilename, new[] { new ColorableItemInfo() } },
+            { OutputClassificationDefinitions.FindResultsSearchTerm, new[] { new ColorableItemInfo() } }
         };
 
-        private static int _updateState;
+        static int _updateState;
 
-        private const int IsUpdating = 1;
-        private const int NotUpdating = 0;
+        const int IsUpdating = 1;
+        const int NotUpdating = 0;
 
         public static void UpdateColors()
         {
             if (Interlocked.Exchange(ref _updateState, IsUpdating) == IsUpdating)
-            {
                 return;
-            }
 
             const uint flags = (uint)(
                 __FCSTORAGEFLAGS.FCSF_PROPAGATECHANGES |
@@ -55,10 +53,13 @@ namespace BlueOnionSoftware
                 try
                 {
                     store.OpenCategory(DefGuidList.guidTextEditorFontCategory, flags);
-                    foreach (var color in _colorMap) store.GetItem(color.Key, color.Value);
+                    foreach (var color in _colorMap)
+                        store.GetItem(color.Key, color.Value);
                     store.CloseCategory();
+
                     store.OpenCategory(DefGuidList.guidOutputWindowFontCategory, flags);
-                    foreach (var color in _colorMap) store.SetItem(color.Key, color.Value);
+                    foreach (var color in _colorMap)
+                        store.SetItem(color.Key, color.Value);
                 }
                 finally
                 {
