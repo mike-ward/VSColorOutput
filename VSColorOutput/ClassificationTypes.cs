@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
-namespace BlueOnionSoftware
+﻿namespace BlueOnionSoftware
 {
     public enum ClassificationTypes
     {

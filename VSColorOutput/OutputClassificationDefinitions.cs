@@ -1,4 +1,3 @@
-// Copyright (c) 2011 Blue Onion Software, All rights reserved
 using System.ComponentModel.Composition;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Classification;
@@ -24,13 +23,13 @@ namespace BlueOnionSoftware
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
 
-        [Export(typeof(ClassificationTypeDefinition))]
+        [Export(typeof (ClassificationTypeDefinition))]
         [Name(BuildHead)]
         public static ClassificationTypeDefinition BuildHeaderDefinition { get; set; }
 
         [Name(BuildHead)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = BuildHead)]
         public sealed class BuildHeaderFormat : ClassificationFormatDefinition
         {
@@ -47,7 +46,7 @@ namespace BlueOnionSoftware
 
         [Name(BuildText)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = BuildText)]
         public sealed class BuildTextFormat : ClassificationFormatDefinition
         {
@@ -64,7 +63,7 @@ namespace BlueOnionSoftware
 
         [Name(LogError)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogError)]
         public sealed class LogErrorFormat : ClassificationFormatDefinition
         {
@@ -81,7 +80,7 @@ namespace BlueOnionSoftware
 
         [Name(LogWarn)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogWarn)]
         public sealed class LogWarningFormat : ClassificationFormatDefinition
         {
@@ -98,7 +97,7 @@ namespace BlueOnionSoftware
 
         [Name(LogInfo)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogInfo)]
         public sealed class LogInformationFormat : ClassificationFormatDefinition
         {
@@ -115,7 +114,7 @@ namespace BlueOnionSoftware
 
         [Name(LogCustom1)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogCustom1)]
         public sealed class LogCustom1Format : ClassificationFormatDefinition
         {
@@ -132,7 +131,7 @@ namespace BlueOnionSoftware
 
         [Name(LogCustom2)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogCustom2)]
         public sealed class LogCustom2Format : ClassificationFormatDefinition
         {
@@ -149,7 +148,7 @@ namespace BlueOnionSoftware
 
         [Name(LogCustom3)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogCustom3)]
         public sealed class LogCustom3Format : ClassificationFormatDefinition
         {
@@ -166,7 +165,7 @@ namespace BlueOnionSoftware
 
         [Name(LogCustom4)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = LogCustom4)]
         public sealed class LogCustom4Format : ClassificationFormatDefinition
         {
@@ -183,7 +182,7 @@ namespace BlueOnionSoftware
 
         [Name(FindResultsSearchTerm)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = FindResultsSearchTerm)]
         public sealed class FindResultsSearchTermFormat : ClassificationFormatDefinition
         {
@@ -200,9 +199,8 @@ namespace BlueOnionSoftware
 
         [Name(FindResultsFilename)]
         [UserVisible(true)]
-        [Export(typeof(EditorFormatDefinition))]
+        [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = FindResultsFilename)]
-
         public sealed class FindResultsFilenameFormat : ClassificationFormatDefinition
         {
             public FindResultsFilenameFormat()

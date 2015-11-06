@@ -1,6 +1,4 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
-using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace BlueOnionSoftware
 {
@@ -28,7 +26,7 @@ namespace BlueOnionSoftware
 
         public override string ToString()
         {
-            return String.Format("\"{0}\",{1},{2}", RegExPattern ?? "null", ClassificationType, IgnoreCase);
+            return $"\"{RegExPattern ?? "null"}\",{ClassificationType},{IgnoreCase}";
         }
 
         private static void ValidatePattern(string regex)

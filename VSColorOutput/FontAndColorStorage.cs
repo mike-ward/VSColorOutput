@@ -1,6 +1,4 @@
-﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
@@ -17,7 +15,7 @@ namespace BlueOnionSoftware
             return Override ?? Package.GetGlobalService(typeof (SVsFontAndColorStorage)) as IVsFontAndColorStorage;
         }
 
-        private static readonly Dictionary<string, ColorableItemInfo[]> _colorMap = new Dictionary<string, ColorableItemInfo[]>
+        private static readonly Dictionary<string, ColorableItemInfo[]> ColorMap = new Dictionary<string, ColorableItemInfo[]>
         {
             {OutputClassificationDefinitions.BuildHead, new[] {new ColorableItemInfo()}},
             {OutputClassificationDefinitions.BuildText, new[] {new ColorableItemInfo()}},
@@ -55,10 +53,10 @@ namespace BlueOnionSoftware
                 try
                 {
                     store.OpenCategory(DefGuidList.guidTextEditorFontCategory, flags);
-                    foreach (var color in _colorMap) store.GetItem(color.Key, color.Value);
+                    foreach (var color in ColorMap) store.GetItem(color.Key, color.Value);
                     store.CloseCategory();
                     store.OpenCategory(DefGuidList.guidOutputWindowFontCategory, flags);
-                    foreach (var color in _colorMap) store.SetItem(color.Key, color.Value);
+                    foreach (var color in ColorMap) store.SetItem(color.Key, color.Value);
                 }
                 finally
                 {

@@ -1,4 +1,3 @@
-// Copyright (c) 2012 Blue Onion Software, All rights reserved
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,12 +82,12 @@ namespace BlueOnionSoftware
                 var patterns = settings.Patterns ?? new RegExClassification[0];
                 var classifiers =
                     (from pattern in patterns
-                     let test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
-                     select new Classifier
-                     {
-                         Type = pattern.ClassificationType.ToString(),
-                         Test = text => test.IsMatch(text)
-                     }).ToList();
+                        let test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
+                        select new Classifier
+                        {
+                            Type = pattern.ClassificationType.ToString(),
+                            Test = text => test.IsMatch(text)
+                        }).ToList();
                 classifiers.Add(new Classifier
                 {
                     Type = OutputClassificationDefinitions.BuildText,
@@ -114,8 +113,8 @@ namespace BlueOnionSoftware
             {
                 // I'm co-opting the Visual Studio event source because I can't register
                 // my own from a .VSIX installer.
-                EventLog.WriteEntry("Microsoft Visual Studio", 
-                    "VSColorOutput: " + (message ?? "null"), 
+                EventLog.WriteEntry("Microsoft Visual Studio",
+                    "VSColorOutput: " + (message ?? "null"),
                     EventLogEntryType.Error);
             }
             catch

@@ -1,5 +1,3 @@
-// Copyright (c) 2012 Blue Onion Software. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +17,10 @@ namespace BlueOnionSoftware
         private const string WholeWord = "Whole word";
         private const string ListFilenamesOnly = "List filenames only";
 
-        private readonly IClassificationTypeRegistryService classificationRegistry;
+        private readonly IClassificationTypeRegistryService _classificationRegistry;
         private static readonly Regex FilenameRegex;
 
-        private Regex searchTextRegex;
+        private Regex _searchTextRegex;
 
         static FindResultsClassifier()
         {
@@ -31,7 +29,7 @@ namespace BlueOnionSoftware
 
         public FindResultsClassifier(IClassificationTypeRegistryService classificationRegistry)
         {
-            this.classificationRegistry = classificationRegistry;
+            _classificationRegistry = classificationRegistry;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -47,12 +45,12 @@ namespace BlueOnionSoftware
             var text = span.GetText();
 
             var filenameSpans = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
-            var searchTermSpans = GetMatches(text, searchTextRegex, span.Start, SearchTermClassificationType).ToList();
+            var searchTermSpans = GetMatches(text, _searchTextRegex, span.Start, SearchTermClassificationType).ToList();
 
             var toRemove = (from searchSpan in searchTermSpans
-                            from filenameSpan in filenameSpans
-                            where filenameSpan.Span.Contains(searchSpan.Span)
-                            select searchSpan).ToList();
+                from filenameSpan in filenameSpans
+                where filenameSpan.Span.Contains(searchSpan.Span)
+                select searchSpan).ToList();
 
             classifications.AddRange(filenameSpans);
             classifications.AddRange(searchTermSpans.Except(toRemove));
@@ -61,16 +59,16 @@ namespace BlueOnionSoftware
 
         private bool CanSearch(SnapshotSpan span)
         {
-            if (span.Start.Position != 0 && searchTextRegex != null)
+            if (span.Start.Position != 0 && _searchTextRegex != null)
             {
                 return true;
             }
-            searchTextRegex = null;
+            _searchTextRegex = null;
             var firstLine = span.Snapshot.GetLineFromLineNumber(0).GetText();
             if (firstLine.StartsWith(FindAll))
             {
                 var strings = (from s in firstLine.Split(',')
-                               select s.Trim()).ToList();
+                    select s.Trim()).ToList();
 
                 var start = strings[0].IndexOf('"');
                 var searchTerm = strings[0].Substring(start + 1, strings[0].Length - start - 2);
@@ -80,9 +78,9 @@ namespace BlueOnionSoftware
 
                 if (!filenamesOnly)
                 {
-                    var regex = matchWholeWord ? string.Format(@"\b{0}\b", Regex.Escape(searchTerm)) : Regex.Escape(searchTerm);
+                    var regex = matchWholeWord ? $@"\b{Regex.Escape(searchTerm)}\b" : Regex.Escape(searchTerm);
                     var casing = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
-                    searchTextRegex = new Regex(regex, RegexOptions.None | casing);
+                    _searchTextRegex = new Regex(regex, RegexOptions.None | casing);
 
                     return true;
                 }
@@ -93,18 +91,12 @@ namespace BlueOnionSoftware
         private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)
         {
             return from match in regex.Matches(text).Cast<Match>()
-                   select new ClassificationSpan(new SnapshotSpan(snapStart + match.Index, match.Length), classificationType);
+                select new ClassificationSpan(new SnapshotSpan(snapStart + match.Index, match.Length), classificationType);
         }
 
-        private IClassificationType SearchTermClassificationType
-        {
-            get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsSearchTerm); }
-        }
+        private IClassificationType SearchTermClassificationType => _classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsSearchTerm);
 
-        private IClassificationType FilenameClassificationType
-        {
-            get { return classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsFilename); }
-        }
+        private IClassificationType FilenameClassificationType => _classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsFilename);
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
     }

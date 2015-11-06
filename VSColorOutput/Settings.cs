@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Json;
@@ -29,9 +28,9 @@ namespace BlueOnionSoftware
         {
             using (var key = OpenRegistry(false))
             {
-                var json = (key != null) ? key.GetValue(RegExPatternsKey) as string : null;
+                var json = key?.GetValue(RegExPatternsKey) as string;
                 Patterns = (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
-                
+
                 var stopOnBuildError = (key != null) ? key.GetValue(StopOnBuildErrorKey) as string : bool.FalseString;
                 EnableStopOnBuildError = string.IsNullOrEmpty(stopOnBuildError) == false && stopOnBuildError == bool.TrueString;
 
@@ -50,7 +49,7 @@ namespace BlueOnionSoftware
         {
             using (var ms = new MemoryStream())
             {
-                var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
+                var serializer = new DataContractJsonSerializer(typeof (RegExClassification[]));
                 serializer.WriteObject(ms, Patterns);
                 var json = Encoding.UTF8.GetString(ms.ToArray());
                 using (var key = OpenRegistry(true))
@@ -75,7 +74,7 @@ namespace BlueOnionSoftware
                 return OverrideRegistryKey;
             }
             var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, writeable);
-            var subKey = writeable 
+            var subKey = writeable
                 ? root.CreateSubKey(RegistryPath)
                 : root.OpenSubKey(RegistryPath);
             return (subKey != null) ? new RegistryKeyImpl(subKey) : null;
@@ -102,7 +101,7 @@ namespace BlueOnionSoftware
             {
                 using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
                 {
-                    var serializer = new DataContractJsonSerializer(typeof(RegExClassification[]));
+                    var serializer = new DataContractJsonSerializer(typeof (RegExClassification[]));
                     var patterns = serializer.ReadObject(ms) as RegExClassification[];
                     return patterns ?? DefaultPatterns();
                 }

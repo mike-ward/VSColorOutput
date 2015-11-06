@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2012 Blue Onion Software. All rights reserved.
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
-using System.Collections.Generic;
+// ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 
 #pragma warning disable 649
 
@@ -18,10 +17,10 @@ namespace BlueOnionSoftware
         private readonly DTEEvents _dteEvents;
         private DateTime _buildStartTime;
         private readonly List<string> _projectsBuildReport;
-        public bool StopOnBuildErrorEnabled { get; set; }
-        public bool ShowElapsedBuildTimeEnabled { get; set; }
-        public bool ShowBuildReport { get; set; }
-        public bool ShowDebugWindowOnDebug { get; set; }
+        public bool StopOnBuildErrorEnabled { private get; set; }
+        public bool ShowElapsedBuildTimeEnabled { private get; set; }
+        public bool ShowBuildReport { private get; set; }
+        public bool ShowDebugWindowOnDebug { private get; set; }
 
         public BuildEvents(IServiceProvider serviceProvider)
         {
@@ -29,7 +28,7 @@ namespace BlueOnionSoftware
             {
                 return;
             }
-            _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
+            _dte2 = serviceProvider.GetService(typeof (DTE)) as DTE2;
             if (_dte2 != null)
             {
                 // These event sources have to be rooted or the GC will collect them.
@@ -45,7 +44,6 @@ namespace BlueOnionSoftware
             }
 
             _projectsBuildReport = new List<string>();
-
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
@@ -56,29 +54,30 @@ namespace BlueOnionSoftware
 
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            OutputWindowPane BuildOutputPane = null;
+            OutputWindowPane buildOutputPane = null;
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
             {
                 if (pane.Guid == VSConstants.OutputWindowPaneGuid.BuildOutputPane_string)
                 {
-                    BuildOutputPane = pane;
+                    buildOutputPane = pane;
                     break;
                 }
             }
 
-            if (BuildOutputPane == null)
+            if (buildOutputPane == null)
             {
                 return;
             }
 
             if (ShowBuildReport)
             {
-                BuildOutputPane.OutputString("\r\nProjects build report:\r\n");
-                BuildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
-                BuildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
-                foreach (string ReportItem in _projectsBuildReport)
+                buildOutputPane.OutputString("\r\nProjects build report:\r\n");
+                buildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
+                buildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
+                foreach (var reportItem in _projectsBuildReport)
                 {
-                    BuildOutputPane.OutputString(ReportItem + "\r\n");
+                    buildOutputPane.OutputString(reportItem + "\r\n");
                 }
             }
 
@@ -86,8 +85,8 @@ namespace BlueOnionSoftware
             {
                 var elapsed = DateTime.Now - _buildStartTime;
                 var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
-                var text = string.Format("Time Elapsed {0}", time);
-                BuildOutputPane.OutputString("\r\n" + text + "\r\n");
+                var text = $"Time Elapsed {time}";
+                buildOutputPane.OutputString("\r\n" + text + "\r\n");
             }
         }
 
@@ -101,7 +100,7 @@ namespace BlueOnionSoftware
 
             if (ShowBuildReport)
             {
-                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]" );
+                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]");
             }
         }
 
@@ -110,6 +109,7 @@ namespace BlueOnionSoftware
             if (lastMode == vsIDEMode.vsIDEModeDesign && ShowDebugWindowOnDebug)
             {
                 _dte2.ToolWindows.OutputWindow.Parent.Activate();
+                // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                 {
                     if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)

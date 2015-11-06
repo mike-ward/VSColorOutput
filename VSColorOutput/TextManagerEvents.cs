@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.OLE.Interop;

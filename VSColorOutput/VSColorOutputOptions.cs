@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
