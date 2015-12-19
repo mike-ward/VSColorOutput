@@ -57,6 +57,7 @@ namespace BlueOnionSoftware
                     var line = snapshot.GetLineFromLineNumber(i);
                     var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
                     var text = line.Snapshot.GetText(snapshotSpan);
+
                     if (string.IsNullOrEmpty(text) == false)
                     {
                         var classificationName = _classifiers.First(classifier => classifier.Test(text)).Type;
@@ -80,19 +81,26 @@ namespace BlueOnionSoftware
                 var settings = new Settings();
                 settings.Load();
                 var patterns = settings.Patterns ?? new RegExClassification[0];
-                var classifiers =
-                    (from pattern in patterns
-                        let test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
-                        select new Classifier
-                        {
-                            Type = pattern.ClassificationType.ToString(),
-                            Test = text => test.IsMatch(text)
-                        }).ToList();
+
+                var classifiers = patterns.Select(
+                    pattern => new
+                    {
+                        pattern,
+                        test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
+                    })
+                    .Select(pattern => new Classifier
+                    {
+                        Type = pattern.pattern.ClassificationType.ToString(),
+                        Test = text => pattern.test.IsMatch(text)
+                    })
+                    .ToList();
+
                 classifiers.Add(new Classifier
                 {
                     Type = OutputClassificationDefinitions.BuildText,
                     Test = t => true
                 });
+
                 _classifiers = classifiers;
                 _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
                 _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
