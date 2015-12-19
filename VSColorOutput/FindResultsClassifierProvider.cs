@@ -14,7 +14,7 @@ namespace BlueOnionSoftware
     {
         [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
 
-        private static IClassifier FindResultsClassifier { get; set; }
+        public static FindResultsClassifier FindResultsClassifier { get; set; }
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {

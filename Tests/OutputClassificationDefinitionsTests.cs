@@ -86,7 +86,7 @@ namespace Tests
         {
             var format = new OutputClassificationDefinitions.FindResultsSearchTermFormat();
             format.DisplayName.Should().Be("VSColorOutput Find Results Search Term");
-            format.ForegroundColor.Should().Be(Colors.Blue);
+            format.ForegroundColor.Should().Be(Colors.Green);
         }
 
         [Test]

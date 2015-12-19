@@ -15,6 +15,7 @@ namespace BlueOnionSoftware
         public const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
         public const string ShowBuildReportKey = "ShowBuildReport";
         public const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
+        public const string HighlightFindResultsKey = "HighlightFindResults";
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
         public static IRegistryKey OverrideRegistryKey { get; set; }
 
@@ -23,6 +24,7 @@ namespace BlueOnionSoftware
         public bool ShowElapsedBuildTime { get; set; }
         public bool ShowBuildReport { get; set; }
         public bool ShowDebugWindowOnDebug { get; set; }
+        public bool HighlightFindResults { get; set; }
 
         public void Load()
         {
@@ -42,6 +44,9 @@ namespace BlueOnionSoftware
 
                 var showDebugWindowOnDebug = (key != null) ? key.GetValue(ShowDebugWindowOnDebugKey) as string : bool.FalseString;
                 ShowDebugWindowOnDebug = string.IsNullOrEmpty(showDebugWindowOnDebug) == false && showDebugWindowOnDebug == bool.TrueString;
+
+                var highlightFindResults = (key != null) ? key.GetValue(HighlightFindResultsKey) as string : bool.FalseString;
+                HighlightFindResults = string.IsNullOrEmpty(highlightFindResults) == false && highlightFindResults == bool.TrueString;
             }
         }
 
@@ -59,11 +64,10 @@ namespace BlueOnionSoftware
                     key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString(CultureInfo.InvariantCulture));
                     key.SetValue(ShowBuildReportKey, ShowBuildReport.ToString(CultureInfo.InvariantCulture));
                     key.SetValue(ShowDebugWindowOnDebugKey, ShowDebugWindowOnDebug.ToString(CultureInfo.InvariantCulture));
+                    key.SetValue(HighlightFindResultsKey, HighlightFindResults.ToString(CultureInfo.InvariantCulture));
                 }
-                if (OutputClassifierProvider.OutputClassifier != null)
-                {
-                    OutputClassifierProvider.OutputClassifier.ClearSettings();
-                }
+                if (OutputClassifierProvider.OutputClassifier != null) OutputClassifierProvider.OutputClassifier.ClearSettings();
+                if (FindResultsClassifierProvider.FindResultsClassifier != null) FindResultsClassifierProvider.FindResultsClassifier.ClearSettings();
             }
         }
 

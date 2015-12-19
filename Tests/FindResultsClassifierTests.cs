@@ -48,6 +48,16 @@ namespace Tests
                 .Returns((string classificationType) => new FakeClassificationType(classificationType));
 
             classifier = new FindResultsClassifier(mockClassificationTypeRegistryService.Object);
+
+            var mockRegistryKey = new Mock<IRegistryKey>();
+            mockRegistryKey.Setup(r => r.GetValue(Settings.HighlightFindResultsKey)).Returns(bool.TrueString);
+            Settings.OverrideRegistryKey = mockRegistryKey.Object;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Settings.OverrideRegistryKey = null;
         }
 
         [Test]

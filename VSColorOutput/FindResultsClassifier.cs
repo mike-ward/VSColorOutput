@@ -17,6 +17,8 @@ namespace BlueOnionSoftware
         private const string WholeWord = "Whole word";
         private const string ListFilenamesOnly = "List filenames only";
 
+        private bool _settingsLoaded;
+        private bool _highlightFindResults;
         private readonly IClassificationTypeRegistryService _classificationRegistry;
         private static readonly Regex FilenameRegex;
 
@@ -34,10 +36,11 @@ namespace BlueOnionSoftware
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
+            LoadSettings();
             var classifications = new List<ClassificationSpan>();
 
             var snapshot = span.Snapshot;
-            if (snapshot == null || snapshot.Length == 0 || !CanSearch(span))
+            if (snapshot == null || snapshot.Length == 0 || !CanSearch(span) || !_highlightFindResults)
             {
                 return classifications;
             }
@@ -86,6 +89,20 @@ namespace BlueOnionSoftware
                 }
             }
             return false;
+        }
+
+        private void LoadSettings()
+        {
+            if (_settingsLoaded) return;
+            var settings = new Settings();
+            settings.Load();
+            _highlightFindResults = settings.HighlightFindResults;
+            _settingsLoaded = true;
+        }
+
+        public void ClearSettings()
+        {
+            _settingsLoaded = false;
         }
 
         private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)

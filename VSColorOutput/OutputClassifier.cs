@@ -76,37 +76,36 @@ namespace BlueOnionSoftware
 
         private void LoadSettings()
         {
-            if (_settingsLoaded == false)
-            {
-                var settings = new Settings();
-                settings.Load();
-                var patterns = settings.Patterns ?? new RegExClassification[0];
+            if (_settingsLoaded) return;
 
-                var classifiers = patterns.Select(
-                    pattern => new
-                    {
-                        pattern,
-                        test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
-                    })
-                    .Select(pattern => new Classifier
-                    {
-                        Type = pattern.pattern.ClassificationType.ToString(),
-                        Test = text => pattern.test.IsMatch(text)
-                    })
-                    .ToList();
+            var settings = new Settings();
+            settings.Load();
+            var patterns = settings.Patterns ?? new RegExClassification[0];
 
-                classifiers.Add(new Classifier
+            var classifiers = patterns.Select(
+                pattern => new
                 {
-                    Type = OutputClassificationDefinitions.BuildText,
-                    Test = t => true
-                });
+                    pattern,
+                    test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
+                })
+                .Select(pattern => new Classifier
+                {
+                    Type = pattern.pattern.ClassificationType.ToString(),
+                    Test = text => pattern.test.IsMatch(text)
+                })
+                .ToList();
 
-                _classifiers = classifiers;
-                _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
-                _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
-                _buildEvents.ShowBuildReport = settings.ShowBuildReport;
-                _buildEvents.ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
-            }
+            classifiers.Add(new Classifier
+            {
+                Type = OutputClassificationDefinitions.BuildText,
+                Test = t => true
+            });
+
+            _classifiers = classifiers;
+            _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
+            _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
+            _buildEvents.ShowBuildReport = settings.ShowBuildReport;
+            _buildEvents.ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             _settingsLoaded = true;
         }
 

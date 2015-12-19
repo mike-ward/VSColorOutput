@@ -189,7 +189,7 @@ namespace BlueOnionSoftware
             public FindResultsSearchTermFormat()
             {
                 DisplayName = VsColorOut + "Find Results Search Term";
-                ForegroundColor = Colors.Blue;
+                ForegroundColor = Colors.Green;
             }
         }
 
