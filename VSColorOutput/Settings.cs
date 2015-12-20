@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Windows.Media;
@@ -35,6 +36,10 @@ namespace BlueOnionSoftware
         private static readonly string AppDataFolder;
         private static readonly string SettingsFile;
 
+        public static event EventHandler SettingsChanged;
+
+        private static void OnSettingsChanged(object sender, EventArgs ea) => SettingsChanged?.Invoke(sender, ea);
+
         static Settings()
         {
             AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -59,6 +64,7 @@ namespace BlueOnionSoftware
                 var serializer = new DataContractJsonSerializer(typeof(Settings));
                 serializer.WriteObject(stream, this);
             }
+            OnSettingsChanged(this, EventArgs.Empty);
         }
 
         private static RegExClassification[] DefaultPatterns()

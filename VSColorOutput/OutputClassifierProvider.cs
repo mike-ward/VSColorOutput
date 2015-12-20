@@ -10,11 +10,10 @@ using Microsoft.VisualStudio.Utilities;
 namespace BlueOnionSoftware
 {
     [ContentType("output")]
-    [Export(typeof (IClassifierProvider))]
+    [Export(typeof(IClassifierProvider))]
     public class OutputClassifierProvider : IClassifierProvider
     {
         [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
-
         [Import] internal SVsServiceProvider ServiceProvider;
 
         public static OutputClassifier OutputClassifier { get; private set; }
@@ -25,7 +24,8 @@ namespace BlueOnionSoftware
             {
                 if (OutputClassifier == null)
                 {
-                    OutputClassifier = new OutputClassifier(ClassificationRegistry, ServiceProvider);
+                    OutputClassifier = new OutputClassifier(ClassificationRegistry);
+                    BuildEventsProvider.ConstructBuildEvents(ServiceProvider); // todo Get MEF to load this
                 }
             }
             catch (Exception ex)

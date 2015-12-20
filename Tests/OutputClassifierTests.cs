@@ -16,7 +16,7 @@ namespace Tests
         [Test]
         public void GetClassificationSpansNullSnapShot()
         {
-            var outputClassifier = new OutputClassifier(null, null);
+            var outputClassifier = new OutputClassifier(null);
             outputClassifier.GetClassificationSpans(new SnapshotSpan()).Should().BeEmpty();
         }
 
@@ -25,7 +25,7 @@ namespace Tests
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
-            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object, mockServiceProvider.Object);
+            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object);
             var mockSnapshot = new Mock<ITextSnapshot>();
             mockSnapshot.SetupGet(s => s.Length).Returns(0);
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 0);
@@ -59,7 +59,7 @@ namespace Tests
                 .Setup(c => c.GetClassificationType(classification))
                 .Returns(new Mock<IClassificationType>().Object);
 
-            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object, mockServiceProvider.Object);
+            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object);
             var mockSnapshot = new Mock<ITextSnapshot>();
             var mockSnapshotLine = new Mock<ITextSnapshotLine>();
 

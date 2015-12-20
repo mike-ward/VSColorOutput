@@ -10,6 +10,8 @@
         LogCustom1,
         LogCustom2,
         LogCustom3,
-        LogCustom4
+        LogCustom4,
+        FindFileName,
+        FindSearchTerm
     }
 }

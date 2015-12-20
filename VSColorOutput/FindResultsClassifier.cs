@@ -32,6 +32,7 @@ namespace BlueOnionSoftware
         public FindResultsClassifier(IClassificationTypeRegistryService classificationRegistry)
         {
             _classificationRegistry = classificationRegistry;
+            Settings.SettingsChanged += (sender, args) => _settingsLoaded = false;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -97,11 +98,6 @@ namespace BlueOnionSoftware
             var settings = Settings.Load();
             _highlightFindResults = settings.HighlightFindResults;
             _settingsLoaded = true;
-        }
-
-        public void ClearSettings()
-        {
-            _settingsLoaded = false;
         }
 
         private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)

@@ -10,7 +10,7 @@ namespace BlueOnionSoftware
     {
         private const string ActionSubCategory = "Actions";
         private const string PatternsSubCategory = "Patterns";
-        private const string ColorsSubCategory = "Colors";
+        private const string ColorsSubCategory = "Colors (Requires restart)";
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
 

@@ -15,16 +15,15 @@ namespace BlueOnionSoftware
     {
         private bool _settingsLoaded;
         private IEnumerable<Classifier> _classifiers;
-        private readonly BuildEvents _buildEvents;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
-        public OutputClassifier(IClassificationTypeRegistryService registry, IServiceProvider serviceProvider)
+        public OutputClassifier(IClassificationTypeRegistryService registry)
         {
             try
             {
                 _classificationTypeRegistry = registry;
-                _buildEvents = new BuildEvents(serviceProvider);
+                Settings.SettingsChanged += (sender, args) => _settingsLoaded = false;
             }
             catch (Exception ex)
             {
@@ -101,16 +100,7 @@ namespace BlueOnionSoftware
             });
 
             _classifiers = classifiers;
-            _buildEvents.StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
-            _buildEvents.ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
-            _buildEvents.ShowBuildReport = settings.ShowBuildReport;
-            _buildEvents.ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             _settingsLoaded = true;
-        }
-
-        public void ClearSettings()
-        {
-            _settingsLoaded = false;
         }
 
         public static void LogError(string message)
