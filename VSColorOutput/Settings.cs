@@ -91,7 +91,7 @@ namespace BlueOnionSoftware
                 new RegExClassification {RegExPattern = @"\+\+\+\>", ClassificationType = ClassificationTypes.LogCustom1, IgnoreCase = false},
                 new RegExClassification {RegExPattern = @"(=====|-----|Projects build report|Status    \| Project \[Config\|platform\])", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = false},
                 new RegExClassification {RegExPattern = @"0 failed|Succeeded", ClassificationType = ClassificationTypes.BuildHead, IgnoreCase = true},
-                new RegExClassification {RegExPattern = @"(\W|^)(error|fail|failed|exception)\W", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
+                new RegExClassification {RegExPattern = @"(\W|^)(error|fail|failed|exception)[^\w\.]", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(exception:|stack trace:)", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"^\s+at\s", ClassificationType = ClassificationTypes.LogError, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(\W|^)warning\W", ClassificationType = ClassificationTypes.LogWarning, IgnoreCase = true},

@@ -90,7 +90,6 @@
     <Compile Include="FakeTextSnapshotLine.cs" />
     <Compile Include="FindResultsClassifierProviderTests.cs" />
     <Compile Include="FindResultsClassifierTests.cs" />
-    <Compile Include="FontAndColorStorageTests.cs" />
     <Compile Include="OutputClassificationDefinitionsTests.cs" />
     <Compile Include="OutputClassifierProviderTests.cs" />
     <Compile Include="OutputClassifierTests.cs" />
@@ -98,7 +97,6 @@
     <Compile Include="RegExClassificationTests.cs" />
     <Compile Include="BuildEventsTests.cs" />
     <Compile Include="SettingsTests.cs" />
-    <Compile Include="TextManagerEventsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
