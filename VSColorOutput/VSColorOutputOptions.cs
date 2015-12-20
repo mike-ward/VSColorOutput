@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
 using Microsoft.VisualStudio.Shell;
 
 namespace BlueOnionSoftware
@@ -9,6 +10,7 @@ namespace BlueOnionSoftware
     {
         private const string ActionSubCategory = "Actions";
         private const string PatternsSubCategory = "Patterns";
+        private const string ColorsSubCategory = "Colors";
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
 
@@ -16,8 +18,8 @@ namespace BlueOnionSoftware
         [DisplayName("RegEx Patterns")]
         [Description(
             "Specify patterns (Regular Expressions) and assoicate with classification types. " +
-            "The order of the patterns is significant. " +
-            "Delete all patterns to restore default patterns.")]
+                "The order of the patterns is significant. " +
+                "Delete all patterns to restore default patterns.")]
         public RegExClassification[] RegExPatterns { get; set; }
 
         [Category(ActionSubCategory)]
@@ -45,28 +47,115 @@ namespace BlueOnionSoftware
         [Description("")]
         public bool HighlightFindResults { get; set; }
 
+        [Category(ColorsSubCategory)]
+        [DisplayName("Build Message Color")]
+        [Description("Used for messages (they usually start with =====)")]
+        public Color BuildMessageColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Build Text Color")]
+        [Description("Other build text")]
+        public Color BuildTextColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Error Text Color")]
+        [Description]
+        public Color ErrorTextColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Warning Text Color")]
+        [Description]
+        public Color WarningTextColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Information Text Color")]
+        [Description]
+        public Color InformationTextColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Custom Text Color 1")]
+        [Description]
+        public Color CustomTextColor1 { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Custom Text Color 2")]
+        [Description]
+        public Color CustomTextColor2 { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Custom Text Color 3")]
+        [Description]
+        public Color CustomTextColor3 { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Custom Text Color 4")]
+        [Description]
+        public Color CustomTextColor4 { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Find File Name Color")]
+        [Description]
+        public Color FindFileNameColor { get; set; }
+
+        [Category(ColorsSubCategory)]
+        [DisplayName("Find Search Color")]
+        [Description]
+        public Color FindSearchTermColor { get; set; }
+
         public override void LoadSettingsFromStorage()
         {
-            var settings = new Settings();
-            settings.Load();
-            RegExPatterns = settings.Patterns;
+            var settings = Settings.Load();
+
             StopOnFirstBuildError = settings.EnableStopOnBuildError;
             ShowElapsedBuildTime = settings.ShowElapsedBuildTime;
             ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             HighlightFindResults = settings.HighlightFindResults;
+
+            RegExPatterns = settings.Patterns;
+
+            BuildMessageColor = settings.BuildMessageColor;
+            BuildTextColor = settings.BuildTextColor;
+
+            ErrorTextColor = settings.ErrorTextColor;
+            WarningTextColor = settings.WarningTextColor;
+            InformationTextColor = settings.InformationTextColor;
+
+            CustomTextColor1 = settings.CustomTextColor1;
+            CustomTextColor2 = settings.CustomTextColor2;
+            CustomTextColor3 = settings.CustomTextColor3;
+            CustomTextColor4 = settings.CustomTextColor4;
+
+            FindFileNameColor = settings.FindFileNameColor;
+            FindSearchTermColor = settings.FindSearchTermColor;
         }
 
         public override void SaveSettingsToStorage()
         {
             var settings = new Settings
             {
-                Patterns = RegExPatterns, 
                 EnableStopOnBuildError = StopOnFirstBuildError,
                 ShowElapsedBuildTime = ShowElapsedBuildTime,
                 ShowBuildReport = ShowBuildReport,
                 ShowDebugWindowOnDebug = ShowDebugWindowOnDebug,
-                HighlightFindResults = HighlightFindResults
+                HighlightFindResults = HighlightFindResults,
+                // ---
+                Patterns = RegExPatterns,
+                // ---
+                BuildMessageColor = BuildMessageColor,
+                BuildTextColor = BuildTextColor,
+                // ---
+                ErrorTextColor = ErrorTextColor,
+                WarningTextColor = WarningTextColor,
+                InformationTextColor = InformationTextColor,
+                // ---
+                CustomTextColor1 = CustomTextColor1,
+                CustomTextColor2 = CustomTextColor2,
+                CustomTextColor3 = CustomTextColor3,
+                CustomTextColor4 = CustomTextColor4,
+                // --
+                FindFileNameColor = FindFileNameColor,
+                FindSearchTermColor = FindSearchTermColor
             };
             settings.Save();
         }

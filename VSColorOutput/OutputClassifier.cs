@@ -78,8 +78,7 @@ namespace BlueOnionSoftware
         {
             if (_settingsLoaded) return;
 
-            var settings = new Settings();
-            settings.Load();
+            var settings = Settings.Load();
             var patterns = settings.Patterns ?? new RegExClassification[0];
 
             var classifiers = patterns.Select(

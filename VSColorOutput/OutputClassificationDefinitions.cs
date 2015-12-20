@@ -28,7 +28,7 @@ namespace BlueOnionSoftware
         public static ClassificationTypeDefinition BuildHeaderDefinition { get; set; }
 
         [Name(BuildHead)]
-        [UserVisible(false)]
+        [UserVisible(true)]
         [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = BuildHead)]
         [Order(Before = Priority.Default)]
@@ -47,7 +47,7 @@ namespace BlueOnionSoftware
         public static ClassificationTypeDefinition BuildTextDefinition { get; set; }
 
         [Name(BuildText)]
-        [UserVisible(false)]
+        [UserVisible(true)]
         [Export(typeof (EditorFormatDefinition))]
         [ClassificationType(ClassificationTypeNames = BuildText)]
         [Order(Before = Priority.Default)]

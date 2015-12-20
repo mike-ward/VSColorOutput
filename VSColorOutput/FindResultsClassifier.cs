@@ -94,8 +94,7 @@ namespace BlueOnionSoftware
         private void LoadSettings()
         {
             if (_settingsLoaded) return;
-            var settings = new Settings();
-            settings.Load();
+            var settings = Settings.Load();
             _highlightFindResults = settings.HighlightFindResults;
             _settingsLoaded = true;
         }

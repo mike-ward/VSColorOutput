@@ -1,87 +1,64 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Json;
-using System.Text;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using System.Windows.Media;
 
 namespace BlueOnionSoftware
 {
     public class Settings
     {
-        public const string RegExPatternsKey = "RegExPatterns";
-        public const string StopOnBuildErrorKey = "StopOnBuildError";
-        public const string ShowElapsedBuildTimeKey = "ShowElapsedBuildTime";
-        public const string ShowBuildReportKey = "ShowBuildReport";
-        public const string ShowDebugWindowOnDebugKey = "ShowDebugWindowOnDebug";
-        public const string HighlightFindResultsKey = "HighlightFindResults";
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
-        public static IRegistryKey OverrideRegistryKey { get; set; }
 
-        public RegExClassification[] Patterns { get; set; }
         public bool EnableStopOnBuildError { get; set; }
         public bool ShowElapsedBuildTime { get; set; }
         public bool ShowBuildReport { get; set; }
         public bool ShowDebugWindowOnDebug { get; set; }
         public bool HighlightFindResults { get; set; }
 
-        public void Load()
+        public RegExClassification[] Patterns { get; set; } = DefaultPatterns();
+
+        public Color BuildMessageColor { get; set; } = Colors.Green;
+        public Color BuildTextColor { get; set; } = Colors.Gray;
+
+        public Color ErrorTextColor { get; set; } = Colors.Red;
+        public Color WarningTextColor { get; set; } = Colors.Olive;
+        public Color InformationTextColor { get; set; } = Colors.DarkBlue;
+
+        public Color CustomTextColor1 { get; set; } = Colors.Purple;
+        public Color CustomTextColor2 { get; set; } = Colors.DarkSalmon;
+        public Color CustomTextColor3 { get; set; } = Colors.DarkOrange;
+        public Color CustomTextColor4 { get; set; } = Colors.Brown;
+
+        public Color FindSearchTermColor { get; set; } = Colors.Green;
+        public Color FindFileNameColor { get; set; } = Colors.Gray;
+
+        private static readonly string AppDataFolder;
+        private static readonly string SettingsFile;
+
+        static Settings()
         {
-            using (var key = OpenRegistry(false))
+            AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            SettingsFile = Path.Combine(AppDataFolder, "VSColorOutput/settings.json");
+        }
+
+        public static Settings Load()
+        {
+            if (!File.Exists(SettingsFile)) new Settings().Save();
+            using (var stream = new FileStream(SettingsFile, FileMode.Open))
             {
-                var json = key?.GetValue(RegExPatternsKey) as string;
-                Patterns = (string.IsNullOrEmpty(json) || json == "[]") ? DefaultPatterns() : LoadPatternsFromJson(json);
-
-                var stopOnBuildError = (key != null) ? key.GetValue(StopOnBuildErrorKey) as string : bool.FalseString;
-                EnableStopOnBuildError = string.IsNullOrEmpty(stopOnBuildError) == false && stopOnBuildError == bool.TrueString;
-
-                var showElapsedBuildTime = (key != null) ? key.GetValue(ShowElapsedBuildTimeKey) as string : bool.FalseString;
-                ShowElapsedBuildTime = string.IsNullOrEmpty(showElapsedBuildTime) == false && showElapsedBuildTime == bool.TrueString;
-
-                var showBuildReport = (key != null) ? key.GetValue(ShowBuildReportKey) as string : bool.FalseString;
-                ShowBuildReport = string.IsNullOrEmpty(showBuildReport) == false && showBuildReport == bool.TrueString;
-
-                var showDebugWindowOnDebug = (key != null) ? key.GetValue(ShowDebugWindowOnDebugKey) as string : bool.FalseString;
-                ShowDebugWindowOnDebug = string.IsNullOrEmpty(showDebugWindowOnDebug) == false && showDebugWindowOnDebug == bool.TrueString;
-
-                var highlightFindResults = (key != null) ? key.GetValue(HighlightFindResultsKey) as string : bool.FalseString;
-                HighlightFindResults = string.IsNullOrEmpty(highlightFindResults) == false && highlightFindResults == bool.TrueString;
+                var deserialize = new DataContractJsonSerializer(typeof(Settings));
+                return (Settings)deserialize.ReadObject(stream);
             }
         }
 
         public void Save()
         {
-            using (var ms = new MemoryStream())
+            Directory.CreateDirectory(AppDataFolder);
+            using (var stream = new FileStream(SettingsFile, FileMode.Create))
             {
-                var serializer = new DataContractJsonSerializer(typeof (RegExClassification[]));
-                serializer.WriteObject(ms, Patterns);
-                var json = Encoding.UTF8.GetString(ms.ToArray());
-                using (var key = OpenRegistry(true))
-                {
-                    key.SetValue(RegExPatternsKey, json);
-                    key.SetValue(StopOnBuildErrorKey, EnableStopOnBuildError.ToString(CultureInfo.InvariantCulture));
-                    key.SetValue(ShowElapsedBuildTimeKey, ShowElapsedBuildTime.ToString(CultureInfo.InvariantCulture));
-                    key.SetValue(ShowBuildReportKey, ShowBuildReport.ToString(CultureInfo.InvariantCulture));
-                    key.SetValue(ShowDebugWindowOnDebugKey, ShowDebugWindowOnDebug.ToString(CultureInfo.InvariantCulture));
-                    key.SetValue(HighlightFindResultsKey, HighlightFindResults.ToString(CultureInfo.InvariantCulture));
-                }
-                if (OutputClassifierProvider.OutputClassifier != null) OutputClassifierProvider.OutputClassifier.ClearSettings();
-                if (FindResultsClassifierProvider.FindResultsClassifier != null) FindResultsClassifierProvider.FindResultsClassifier.ClearSettings();
+                var serializer = new DataContractJsonSerializer(typeof(Settings));
+                serializer.WriteObject(stream, this);
             }
-        }
-
-        private static IRegistryKey OpenRegistry(bool writeable)
-        {
-            if (OverrideRegistryKey != null)
-            {
-                return OverrideRegistryKey;
-            }
-            var root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings, writeable);
-            var subKey = writeable
-                ? root.CreateSubKey(RegistryPath)
-                : root.OpenSubKey(RegistryPath);
-            return (subKey != null) ? new RegistryKeyImpl(subKey) : null;
         }
 
         private static RegExClassification[] DefaultPatterns()
@@ -97,23 +74,6 @@ namespace BlueOnionSoftware
                 new RegExClassification {RegExPattern = @"(\W|^)warning\W", ClassificationType = ClassificationTypes.LogWarning, IgnoreCase = true},
                 new RegExClassification {RegExPattern = @"(\W|^)information\W", ClassificationType = ClassificationTypes.LogInformation, IgnoreCase = true}
             };
-        }
-
-        private static RegExClassification[] LoadPatternsFromJson(string json)
-        {
-            try
-            {
-                using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
-                {
-                    var serializer = new DataContractJsonSerializer(typeof (RegExClassification[]));
-                    var patterns = serializer.ReadObject(ms) as RegExClassification[];
-                    return patterns ?? DefaultPatterns();
-                }
-            }
-            catch (Exception)
-            {
-                return DefaultPatterns();
-            }
         }
     }
 }
