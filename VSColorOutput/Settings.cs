@@ -33,7 +33,7 @@ namespace BlueOnionSoftware
         public Color FindSearchTermColor { get; set; } = Colors.Green;
         public Color FindFileNameColor { get; set; } = Colors.Gray;
 
-        private static readonly string AppDataFolder;
+        private static readonly string ProgramDataFolder;
         private static readonly string SettingsFile;
 
         public static event EventHandler SettingsChanged;
@@ -42,12 +42,13 @@ namespace BlueOnionSoftware
 
         static Settings()
         {
-            AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            SettingsFile = Path.Combine(AppDataFolder, "VSColorOutput/settings.json");
+            ProgramDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSColorOutput");
+            SettingsFile = Path.Combine(ProgramDataFolder, "settings.json");
         }
 
         public static Settings Load()
         {
+            Directory.CreateDirectory(ProgramDataFolder);
             if (!File.Exists(SettingsFile)) new Settings().Save();
             using (var stream = new FileStream(SettingsFile, FileMode.Open))
             {
@@ -58,7 +59,7 @@ namespace BlueOnionSoftware
 
         public void Save()
         {
-            Directory.CreateDirectory(AppDataFolder);
+            Directory.CreateDirectory(ProgramDataFolder);
             using (var stream = new FileStream(SettingsFile, FileMode.Create))
             {
                 var serializer = new DataContractJsonSerializer(typeof(Settings));
