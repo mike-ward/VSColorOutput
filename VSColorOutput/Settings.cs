@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Windows.Media;
 using static System.Environment;
 
 namespace BlueOnionSoftware
@@ -11,8 +11,6 @@ namespace BlueOnionSoftware
     public class Settings
     {
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
-
-        private static Color FromString(string value, Color defaultValue) => (Color?)ColorConverter.ConvertFromString(value) ?? defaultValue;
 
         [DataMember(Order = 0)]
         public bool EnableStopOnBuildError { get; set; }
@@ -29,48 +27,41 @@ namespace BlueOnionSoftware
         [DataMember(Order = 4)]
         public bool HighlightFindResults { get; set; }
 
-        [DataMember(Order = 5)]
+        [DataMember(Order = 5)] 
         public RegExClassification[] Patterns { get; set; } = DefaultPatterns();
 
-        [IgnoreDataMember]
-        public Color BuildMessageColor { get; set; } = Colors.Green;
-
-        [DataMember(Name = "BuildMessageColor", Order = 6)]
-        public string BuildMessageColorAsString
-        {
-            get { return BuildMessageColor.ToString(); }
-            set { BuildMessageColor = FromString(value, BuildMessageColor); }
-        }
+        [DataMember(Order = 6)]
+        public Color BuildMessageColor { get; set; } = Color.Green;
 
         [DataMember(Order = 7)]
-        public Color BuildTextColor { get; set; } = Colors.Gray;
+        public Color BuildTextColor { get; set; } = Color.Gray;
 
         [DataMember(Order = 8)]
-        public Color ErrorTextColor { get; set; } = Colors.Red;
+        public Color ErrorTextColor { get; set; } = Color.Red;
 
         [DataMember(Order = 9)]
-        public Color WarningTextColor { get; set; } = Colors.Olive;
+        public Color WarningTextColor { get; set; } = Color.Olive;
 
         [DataMember(Order = 10)]
-        public Color InformationTextColor { get; set; } = Colors.DarkBlue;
+        public Color InformationTextColor { get; set; } = Color.DarkBlue;
 
         [DataMember(Order = 11)]
-        public Color CustomTextColor1 { get; set; } = Colors.Purple;
+        public Color CustomTextColor1 { get; set; } = Color.Purple;
 
         [DataMember(Order = 12)]
-        public Color CustomTextColor2 { get; set; } = Colors.DarkSalmon;
+        public Color CustomTextColor2 { get; set; } = Color.DarkSalmon;
 
         [DataMember(Order = 13)]
-        public Color CustomTextColor3 { get; set; } = Colors.DarkOrange;
+        public Color CustomTextColor3 { get; set; } = Color.DarkOrange;
 
         [DataMember(Order = 14)]
-        public Color CustomTextColor4 { get; set; } = Colors.Brown;
+        public Color CustomTextColor4 { get; set; } = Color.Brown;
 
         [DataMember(Order = 15)]
-        public Color FindSearchTermColor { get; set; } = Colors.Green;
+        public Color FindSearchTermColor { get; set; } = Color.Green;
 
         [DataMember(Order = 16)]
-        public Color FindFileNameColor { get; set; } = Colors.Gray;
+        public Color FindFileNameColor { get; set; } = Color.Gray;
 
         private static readonly string ProgramDataFolder;
         private static readonly string SettingsFile;

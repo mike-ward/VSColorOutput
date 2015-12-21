@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Windows.Media;
+using System.Drawing;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
@@ -26,7 +26,7 @@ namespace BlueOnionSoftware
 
         private static Dictionary<ClassificationTypes, Color> _colorMap;
 
-        private static Color GetColor(ClassificationTypes classificationType)
+        private static System.Windows.Media.Color GetColor(ClassificationTypes classificationType)
         {
             if (_colorMap == null)
             {
@@ -47,7 +47,8 @@ namespace BlueOnionSoftware
                 };
             }
             Color color;
-            return _colorMap.TryGetValue(classificationType, out color) ? color : Colors.Gray;
+            if (_colorMap.TryGetValue(classificationType, out color)) color = Color.Gray;
+            return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
         [Export(typeof(ClassificationTypeDefinition))]
