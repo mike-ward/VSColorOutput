@@ -18,11 +18,12 @@ namespace BlueOnionSoftware
         private const string ListFilenamesOnly = "List filenames only";
 
         private bool _settingsLoaded;
-        private bool _highlightFindResults;
         private readonly IClassificationTypeRegistryService _classificationRegistry;
         private static readonly Regex FilenameRegex;
 
         private Regex _searchTextRegex;
+
+        public bool HighlightFindResults { get; set; }
 
         static FindResultsClassifier()
         {
@@ -41,7 +42,7 @@ namespace BlueOnionSoftware
             var classifications = new List<ClassificationSpan>();
 
             var snapshot = span.Snapshot;
-            if (snapshot == null || snapshot.Length == 0 || !CanSearch(span) || !_highlightFindResults)
+            if (snapshot == null || snapshot.Length == 0 || !CanSearch(span) || !HighlightFindResults)
             {
                 return classifications;
             }
@@ -96,7 +97,7 @@ namespace BlueOnionSoftware
         {
             if (_settingsLoaded) return;
             var settings = Settings.Load();
-            _highlightFindResults = settings.HighlightFindResults;
+            HighlightFindResults = settings.HighlightFindResults;
             _settingsLoaded = true;
         }
 

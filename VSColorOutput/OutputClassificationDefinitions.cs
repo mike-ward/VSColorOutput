@@ -47,7 +47,7 @@ namespace BlueOnionSoftware
                 };
             }
             Color color;
-            if (_colorMap.TryGetValue(classificationType, out color)) color = Color.Gray;
+            if (!_colorMap.TryGetValue(classificationType, out color)) color = Color.Gray;
             return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) 2011 Siemens Medical Solutions, USA - All rights reserved
+
 using System.Windows.Media;
 using BlueOnionSoftware;
 using FluentAssertions;

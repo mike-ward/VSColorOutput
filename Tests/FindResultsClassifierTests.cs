@@ -48,6 +48,8 @@ namespace Tests
                 .Returns((string classificationType) => new FakeClassificationType(classificationType));
 
             _classifier = new FindResultsClassifier(mockClassificationTypeRegistryService.Object);
+            _classifier.GetClassificationSpans(new SnapshotSpan());
+            _classifier.HighlightFindResults = true;
         }
 
         [Test]

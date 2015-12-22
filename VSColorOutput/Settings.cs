@@ -73,7 +73,7 @@ namespace BlueOnionSoftware
         static Settings()
         {
             ProgramDataFolder = Path.Combine(GetFolderPath(SpecialFolder.ApplicationData), "VSColorOutput");
-            SettingsFile = Path.Combine(ProgramDataFolder, "settings.json");
+            SettingsFile = Path.Combine(ProgramDataFolder, "vscoloroutput.json");
         }
 
         public static Settings Load()
