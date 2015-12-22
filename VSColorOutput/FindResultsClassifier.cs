@@ -33,7 +33,7 @@ namespace BlueOnionSoftware
         public FindResultsClassifier(IClassificationTypeRegistryService classificationRegistry)
         {
             _classificationRegistry = classificationRegistry;
-            Settings.SettingsChanged += (sender, args) => _settingsLoaded = false;
+            Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)

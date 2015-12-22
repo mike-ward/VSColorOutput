@@ -24,11 +24,17 @@ namespace BlueOnionSoftware
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
 
+        private static bool _settingsLoaded;
         private static Dictionary<ClassificationTypes, Color> _colorMap;
+
+        static OutputClassificationDefinitions()
+        {
+            Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
+        }
 
         private static System.Windows.Media.Color GetColor(ClassificationTypes classificationType)
         {
-            if (_colorMap == null)
+            if (_settingsLoaded == false)
             {
                 var settings = Settings.Load();
                 _colorMap = new Dictionary<ClassificationTypes, Color>
@@ -45,6 +51,7 @@ namespace BlueOnionSoftware
                     {ClassificationTypes.FindFileName, settings.FindFileNameColor},
                     {ClassificationTypes.FindSearchTerm, settings.FindSearchTermColor}
                 };
+                _settingsLoaded = true;
             }
             Color color;
             if (!_colorMap.TryGetValue(classificationType, out color)) color = Color.Gray;

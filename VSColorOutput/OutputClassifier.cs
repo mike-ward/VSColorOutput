@@ -23,7 +23,7 @@ namespace BlueOnionSoftware
             try
             {
                 _classificationTypeRegistry = registry;
-                Settings.SettingsChanged += (sender, args) => _settingsLoaded = false;
+                Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
             }
             catch (Exception ex)
             {
@@ -84,7 +84,12 @@ namespace BlueOnionSoftware
                 pattern => new
                 {
                     pattern,
-                    test = new Regex(pattern.RegExPattern, pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None)
+                    test = new Regex(
+                        pattern.RegExPattern,
+                        pattern.IgnoreCase
+                            ? RegexOptions.IgnoreCase
+                            : RegexOptions.None,
+                        TimeSpan.FromMilliseconds(250))
                 })
                 .Select(pattern => new Classifier
                 {

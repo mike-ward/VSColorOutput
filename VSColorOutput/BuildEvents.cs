@@ -46,7 +46,7 @@ namespace BlueOnionSoftware
 
             _projectsBuildReport = new List<string>();
 
-            Settings.SettingsChanged += (sender, args) => LoadSettings();
+            Settings.SettingsUpdated += (sender, args) => LoadSettings();
             LoadSettings();
         }
 
