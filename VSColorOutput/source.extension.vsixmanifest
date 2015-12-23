@@ -40,7 +40,7 @@
         <Edition>Pro</Edition>
       </VisualStudio>
     </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.5" MaxVersion="4.6" />
+    <SupportedFrameworkRuntimeEdition MinVersion="4.6" />
     <SystemComponent>false</SystemComponent>
   </Identifier>
   <References>

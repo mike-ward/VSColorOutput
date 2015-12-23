@@ -66,6 +66,11 @@ namespace BlueOnionSoftware
                 }
                 return spans;
             }
+            catch (RegexMatchTimeoutException)
+            {
+                // eat it.
+                return new List<ClassificationSpan>();
+            }
             catch (Exception ex)
             {
                 LogError(ex.ToString());
