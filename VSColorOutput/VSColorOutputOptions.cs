@@ -5,13 +5,13 @@ using Microsoft.VisualStudio.Shell;
 
 namespace BlueOnionSoftware
 {
-    [TypeConverter(typeof(PropertySorter))]
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptions : DialogPage
     {
         private const string ActionSubCategory = "Build Actions";
         private const string PatternsSubCategory = "Classifier Patterns";
         private const string ColorsSubCategory = "Colors (Requires restart)";
+        private const string FindResultsSubCategory = "Find Results (Requires restart)";
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
 
@@ -46,60 +46,51 @@ namespace BlueOnionSoftware
         public bool HighlightFindResults { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Build Message Color")]
+        [DisplayName("Build Message")]
         [Description("Used for messages (they usually start with =====)")]
-        [PropertyOrder(1)]
         public Color BuildMessageColor { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Build Text Color")]
+        [DisplayName("Build Text")]
         [Description("Other build text")]
-        [PropertyOrder(2)]
         public Color BuildTextColor { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Error Text Color")]
-        [PropertyOrder(3)]
+        [DisplayName("Error")]
         public Color ErrorTextColor { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Warning Text Color")]
-        [PropertyOrder(4)]
+        [DisplayName("Warning")]
         public Color WarningTextColor { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Information Text Color")]
-        [PropertyOrder(5)]
+        [DisplayName("Information")]
         public Color InformationTextColor { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Custom Text Color 1")]
-        [PropertyOrder(6)]
+        [DisplayName("Custom 1")]
         public Color CustomTextColor1 { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Custom Text Color 2")]
-        [PropertyOrder(7)]
+        [DisplayName("Custom 2")]
         public Color CustomTextColor2 { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Custom Text Color 3")]
-        [PropertyOrder(8)]
+        [DisplayName("Custom 3")]
         public Color CustomTextColor3 { get; set; }
 
         [Category(ColorsSubCategory)]
-        [DisplayName("Custom Text Color 4")]
-        [PropertyOrder(9)]
+        [DisplayName("Custom 4")]
         public Color CustomTextColor4 { get; set; }
 
-        [Category(ColorsSubCategory)]
-        [DisplayName("Find File Name Color")]
-        [PropertyOrder(10)]
+        [Category(FindResultsSubCategory)]
+        [DisplayName("File")]
+        [Description("Filename portion of find results")]
         public Color FindFileNameColor { get; set; }
 
-        [Category(ColorsSubCategory)]
-        [DisplayName("Find Search Color")]
-        [PropertyOrder(11)]
+        [Category(FindResultsSubCategory)]
+        [DisplayName("Term")]
+        [Description("Search term portion of find results")]
         public Color FindSearchTermColor { get; set; }
 
         public override void LoadSettingsFromStorage()
