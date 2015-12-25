@@ -14,7 +14,6 @@ namespace BlueOnionSoftware
     public class OutputClassifier : IClassifier
     {
         private bool _patternsLoaded;
-        private bool _updateClassifications;
         private IEnumerable<Classifier> _classifiers;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         private readonly IClassificationFormatMapService _formatMapService;
@@ -30,7 +29,7 @@ namespace BlueOnionSoftware
                 Settings.SettingsUpdated += (sender, args) =>
                 {
                     _patternsLoaded = false;
-                    _updateClassifications = true;
+                    UpdateClassifications();
                 };
             }
             catch (Exception ex)
@@ -55,7 +54,6 @@ namespace BlueOnionSoftware
                 if (snapshot == null || snapshot.Length == 0) return spans;
 
                 UpdatePatterns();
-                UpdateClassifications();
 
                 var start = span.Start.GetContainingLine().LineNumber;
                 var end = (span.End - 1).GetContainingLine().LineNumber;
@@ -121,19 +119,17 @@ namespace BlueOnionSoftware
             _patternsLoaded = true;
         }
 
-
         public void UpdateClassifications()
         {
-            if (_updateClassifications)
+            var colorMap = ColorMap.GetMap();
+            var formatMap = _formatMapService.GetClassificationFormatMap("output");
+            foreach (var category in OutputClassificationDefinitions.Categories)
             {
-                foreach (var category in OutputClassificationDefinitions.Categories)
-                {
-                    var classificationType = _classificationTypeRegistry.GetClassificationType(category);
-                    var formatMap = _formatMapService.GetClassificationFormatMap(category);
-                    var textProperties = formatMap.GetTextProperties(classificationType);
-                    // change values here
-                    formatMap.SetTextProperties(classificationType, textProperties);
-                }
+                var classificationType = _classificationTypeRegistry.GetClassificationType(category);
+                var textProperties = formatMap.GetTextProperties(classificationType);
+                var color = colorMap[category];
+                var wpfColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+                formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
             }
         }
 

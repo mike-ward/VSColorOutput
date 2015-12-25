@@ -30,36 +30,17 @@ namespace BlueOnionSoftware
         };
 
         private static bool _settingsLoaded;
-        private static Dictionary<ClassificationTypes, Color> _colorMap;
+        private static Dictionary<string, Color> _colorMap;
 
-        static OutputClassificationDefinitions()
-        {
-            Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
-        }
-
-        private static System.Windows.Media.Color GetColor(ClassificationTypes classificationType)
+        private static System.Windows.Media.Color GetColor(string classificationName)
         {
             if (_settingsLoaded == false)
             {
-                var settings = Settings.Load();
-                _colorMap = new Dictionary<ClassificationTypes, Color>
-                {
-                    {ClassificationTypes.BuildHead, settings.BuildMessageColor},
-                    {ClassificationTypes.BuildText, settings.BuildTextColor},
-                    {ClassificationTypes.LogError, settings.ErrorTextColor},
-                    {ClassificationTypes.LogWarning, settings.WarningTextColor},
-                    {ClassificationTypes.LogInformation, settings.InformationTextColor},
-                    {ClassificationTypes.LogCustom1, settings.CustomTextColor1},
-                    {ClassificationTypes.LogCustom2, settings.CustomTextColor2},
-                    {ClassificationTypes.LogCustom3, settings.CustomTextColor3},
-                    {ClassificationTypes.LogCustom4, settings.CustomTextColor4},
-                    {ClassificationTypes.FindFileName, settings.FindFileNameColor},
-                    {ClassificationTypes.FindSearchTerm, settings.FindSearchTermColor}
-                };
+                _colorMap = ColorMap.GetMap();
                 _settingsLoaded = true;
             }
             Color color;
-            if (!_colorMap.TryGetValue(classificationType, out color)) color = Color.Gray;
+            if (!_colorMap.TryGetValue(classificationName, out color)) color = Color.Gray;
             return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
@@ -77,7 +58,7 @@ namespace BlueOnionSoftware
             public BuildHeaderFormat()
             {
                 DisplayName = VsColorOut + "Build Header";
-                ForegroundColor = GetColor(ClassificationTypes.BuildHead);
+                ForegroundColor = GetColor(BuildHead);
                 BackgroundOpacity = 0;
             }
         }
@@ -96,7 +77,7 @@ namespace BlueOnionSoftware
             public BuildTextFormat()
             {
                 DisplayName = VsColorOut + "Build Text";
-                ForegroundColor = GetColor(ClassificationTypes.BuildText);
+                ForegroundColor = GetColor(BuildText);
                 BackgroundOpacity = 0;
             }
         }
@@ -115,7 +96,7 @@ namespace BlueOnionSoftware
             public LogErrorFormat()
             {
                 DisplayName = VsColorOut + "Log Error";
-                ForegroundColor = GetColor(ClassificationTypes.LogError);
+                ForegroundColor = GetColor(LogError);
                 BackgroundOpacity = 0;
             }
         }
@@ -134,7 +115,7 @@ namespace BlueOnionSoftware
             public LogWarningFormat()
             {
                 DisplayName = VsColorOut + "Log Warning";
-                ForegroundColor = GetColor(ClassificationTypes.LogWarning);
+                ForegroundColor = GetColor(LogWarn);
                 BackgroundOpacity = 0;
             }
         }
@@ -153,7 +134,7 @@ namespace BlueOnionSoftware
             public LogInformationFormat()
             {
                 DisplayName = VsColorOut + "Log Information";
-                ForegroundColor = GetColor(ClassificationTypes.LogInformation);
+                ForegroundColor = GetColor(LogInfo);
                 BackgroundOpacity = 0;
             }
         }
@@ -172,7 +153,7 @@ namespace BlueOnionSoftware
             public LogCustom1Format()
             {
                 DisplayName = VsColorOut + "Log Custom1";
-                ForegroundColor = GetColor(ClassificationTypes.LogCustom1);
+                ForegroundColor = GetColor(LogCustom1);
                 BackgroundOpacity = 0;
             }
         }
@@ -191,7 +172,7 @@ namespace BlueOnionSoftware
             public LogCustom2Format()
             {
                 DisplayName = VsColorOut + "Log Custom2";
-                ForegroundColor = GetColor(ClassificationTypes.LogCustom2);
+                ForegroundColor = GetColor(LogCustom2);
                 BackgroundOpacity = 0;
             }
         }
@@ -210,7 +191,7 @@ namespace BlueOnionSoftware
             public LogCustom3Format()
             {
                 DisplayName = VsColorOut + "Log Custom3";
-                ForegroundColor = GetColor(ClassificationTypes.LogCustom3);
+                ForegroundColor = GetColor(LogCustom3);
                 BackgroundOpacity = 0;
             }
         }
@@ -229,7 +210,7 @@ namespace BlueOnionSoftware
             public LogCustom4Format()
             {
                 DisplayName = VsColorOut + "Log Custom4";
-                ForegroundColor = GetColor(ClassificationTypes.LogCustom4);
+                ForegroundColor = GetColor(LogCustom4);
                 BackgroundOpacity = 0;
             }
         }
@@ -248,7 +229,7 @@ namespace BlueOnionSoftware
             public FindResultsSearchTermFormat()
             {
                 DisplayName = VsColorOut + "Find Results Search Term";
-                ForegroundColor = GetColor(ClassificationTypes.FindSearchTerm);
+                ForegroundColor = GetColor(FindResultsSearchTerm);
                 BackgroundOpacity = 0;
             }
         }
@@ -267,7 +248,7 @@ namespace BlueOnionSoftware
             public FindResultsFilenameFormat()
             {
                 DisplayName = VsColorOut + "Find Results Filename";
-                ForegroundColor = GetColor(ClassificationTypes.FindFileName);
+                ForegroundColor = GetColor(FindResultsFilename);
                 BackgroundOpacity = 0;
             }
         }

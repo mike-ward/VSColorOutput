@@ -186,6 +186,7 @@
   <ItemGroup>
     <Compile Include="BuildEventsProvider.cs" />
     <Compile Include="ClassificationTypes.cs" />
+    <Compile Include="ColorMap.cs" />
     <Compile Include="FindResultsClassifier.cs" />
     <Compile Include="FindResultsClassifierProvider.cs" />
     <Compile Include="RegExClassification.cs" />
