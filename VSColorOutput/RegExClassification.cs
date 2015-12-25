@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace BlueOnionSoftware
 {
@@ -32,6 +33,14 @@ namespace BlueOnionSoftware
         private static void ValidatePattern(string regex)
         {
             new Regex(regex);
+        }
+
+        public static Regex RegExFactory(RegExClassification pattern)
+        {
+            return new Regex(
+                pattern.RegExPattern, 
+                pattern.IgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None, 
+                TimeSpan.FromMilliseconds(250));
         }
     }
 }
