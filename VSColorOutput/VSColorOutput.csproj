@@ -188,7 +188,6 @@
     <Compile Include="ClassificationTypes.cs" />
     <Compile Include="FindResultsClassifier.cs" />
     <Compile Include="FindResultsClassifierProvider.cs" />
-    <Compile Include="PropertySorter.cs" />
     <Compile Include="RegExClassification.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="BuildEvents.cs" />
