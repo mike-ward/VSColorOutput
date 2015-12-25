@@ -13,17 +13,25 @@ namespace BlueOnionSoftware
 {
     public class OutputClassifier : IClassifier
     {
-        private bool _settingsLoaded;
+        private bool _patternsLoaded;
+        private bool _updateClassifications;
         private IEnumerable<Classifier> _classifiers;
         private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
+        private readonly IClassificationFormatMapService _formatMapService;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
-        public OutputClassifier(IClassificationTypeRegistryService registry)
+        public OutputClassifier(IClassificationTypeRegistryService registry, IClassificationFormatMapService formatMapService)
         {
             try
             {
                 _classificationTypeRegistry = registry;
-                Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
+                _formatMapService = formatMapService;
+
+                Settings.SettingsUpdated += (sender, args) =>
+                {
+                    _patternsLoaded = false;
+                    _updateClassifications = true;
+                };
             }
             catch (Exception ex)
             {
@@ -44,11 +52,11 @@ namespace BlueOnionSoftware
             {
                 var spans = new List<ClassificationSpan>();
                 var snapshot = span.Snapshot;
-                if (snapshot == null || snapshot.Length == 0)
-                {
-                    return spans;
-                }
-                LoadSettings();
+                if (snapshot == null || snapshot.Length == 0) return spans;
+
+                UpdatePatterns();
+                UpdateClassifications();
+
                 var start = span.Start.GetContainingLine().LineNumber;
                 var end = (span.End - 1).GetContainingLine().LineNumber;
                 for (var i = start; i <= end; i++)
@@ -73,9 +81,9 @@ namespace BlueOnionSoftware
             }
         }
 
-        private void LoadSettings()
+        private void UpdatePatterns()
         {
-            if (_settingsLoaded) return;
+            if (_patternsLoaded) return;
 
             var settings = Settings.Load();
             var patterns = settings.Patterns ?? new RegExClassification[0];
@@ -105,7 +113,23 @@ namespace BlueOnionSoftware
             });
 
             _classifiers = classifiers;
-            _settingsLoaded = true;
+            _patternsLoaded = true;
+        }
+
+
+        public void UpdateClassifications()
+        {
+            if (_updateClassifications)
+            {
+                foreach (var category in OutputClassificationDefinitions.Categories)
+                {
+                    var classificationType = _classificationTypeRegistry.GetClassificationType(category);
+                    var formatMap = _formatMapService.GetClassificationFormatMap(category);
+                    var textProperties = formatMap.GetTextProperties(classificationType);
+                    // change values here
+                    formatMap.SetTextProperties(classificationType, textProperties);
+                }
+            }
         }
 
         public static void LogError(string message)
@@ -120,7 +144,7 @@ namespace BlueOnionSoftware
             }
             catch
             {
-                // Don't kill extension on logging errors
+                // Don't kill extension for logging errors
             }
         }
     }

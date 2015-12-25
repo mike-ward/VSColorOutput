@@ -15,6 +15,7 @@ namespace BlueOnionSoftware
     {
         [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
         [Import] internal SVsServiceProvider ServiceProvider;
+        [Import] internal IClassificationFormatMapService ClassificationFormatMapService;
 
         public static OutputClassifier OutputClassifier { get; private set; }
 
@@ -24,7 +25,7 @@ namespace BlueOnionSoftware
             {
                 if (OutputClassifier == null)
                 {
-                    OutputClassifier = new OutputClassifier(ClassificationRegistry);
+                    OutputClassifier = new OutputClassifier(ClassificationRegistry, ClassificationFormatMapService);
                     BuildEventsProvider.ConstructBuildEvents(ServiceProvider); // todo Get MEF to load this
                 }
             }

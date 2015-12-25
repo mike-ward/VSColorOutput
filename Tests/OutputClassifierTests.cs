@@ -16,7 +16,7 @@ namespace Tests
         [Test]
         public void GetClassificationSpansNullSnapShot()
         {
-            var outputClassifier = new OutputClassifier(null);
+            var outputClassifier = new OutputClassifier(null, null);
             outputClassifier.GetClassificationSpans(new SnapshotSpan()).Should().BeEmpty();
         }
 
@@ -25,7 +25,7 @@ namespace Tests
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
-            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object);
+            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object, null);
             var mockSnapshot = new Mock<ITextSnapshot>();
             mockSnapshot.SetupGet(s => s.Length).Returns(0);
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 0);
@@ -59,11 +59,10 @@ namespace Tests
                 .Setup(c => c.GetClassificationType(classification))
                 .Returns(new Mock<IClassificationType>().Object);
 
-            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object);
+            var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object, null);
             var mockSnapshot = new Mock<ITextSnapshot>();
             var mockSnapshotLine = new Mock<ITextSnapshotLine>();
 
-            var mockRegistryKey = new Mock<IRegistryKey>();
 
             mockSnapshot.SetupGet(s => s.Length).Returns(1);
             mockSnapshot.Setup(s => s.GetLineFromPosition(0)).Returns(mockSnapshotLine.Object);
@@ -79,7 +78,6 @@ namespace Tests
             var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
             mockSnapshot.VerifyAll();
-            mockRegistryKey.VerifyAll();
             mockSnapshotLine.VerifyAll();
             mockServiceProvider.VerifyAll();
             mockClassificationTypeRegistryService.VerifyAll();

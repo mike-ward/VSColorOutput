@@ -24,6 +24,11 @@ namespace BlueOnionSoftware
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
 
+        public static string[] Categories =
+        {
+            BuildHead, BuildText, LogInfo, LogWarn, LogError, LogCustom1, LogCustom2, LogCustom3, LogCustom4, FindResultsFilename, FindResultsSearchTerm
+        };
+
         private static bool _settingsLoaded;
         private static Dictionary<ClassificationTypes, Color> _colorMap;
 
