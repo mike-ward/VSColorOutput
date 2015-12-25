@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
@@ -33,7 +32,7 @@ namespace BlueOnionSoftware
             }
             catch (Exception ex)
             {
-                LogError(ex.ToString());
+                Log.LogError(ex.ToString());
                 throw;
             }
         }
@@ -78,7 +77,7 @@ namespace BlueOnionSoftware
             }
             catch (Exception ex)
             {
-                LogError(ex.ToString());
+                Log.LogError(ex.ToString());
                 throw;
             }
         }
@@ -110,7 +109,7 @@ namespace BlueOnionSoftware
             _classifiers = classifiers;
         }
 
-        public void UpdateFormatMap()
+        private void UpdateFormatMap()
         {
             var colorMap = ColorMap.GetMap();
             var formatMap = _formatMapService.GetClassificationFormatMap("output");
@@ -121,22 +120,6 @@ namespace BlueOnionSoftware
                 var color = colorMap[category];
                 var wpfColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
                 formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
-            }
-        }
-
-        public static void LogError(string message)
-        {
-            try
-            {
-                // I'm co-opting the Visual Studio event source because I can't register
-                // my own from a .VSIX installer.
-                EventLog.WriteEntry("Microsoft Visual Studio",
-                    "VSColorOutput: " + (message ?? "null"),
-                    EventLogEntryType.Error);
-            }
-            catch
-            {
-                // Don't kill extension for logging errors
             }
         }
     }

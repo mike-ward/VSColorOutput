@@ -189,6 +189,7 @@
     <Compile Include="ColorMap.cs" />
     <Compile Include="FindResultsClassifier.cs" />
     <Compile Include="FindResultsClassifierProvider.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="RegExClassification.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="BuildEvents.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="OutputClassifier.cs" />
     <Compile Include="OutputClassifierProvider.cs" />
     <Compile Include="OutputClassificationDefinitions.cs" />
-    <Compile Include="VsColorOutputOptions.cs">
+    <Compile Include="VsColorOutputOptionsDialog.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>

@@ -31,7 +31,7 @@ namespace BlueOnionSoftware
             }
             catch (Exception ex)
             {
-                OutputClassifier.LogError(ex.ToString());
+                Log.LogError(ex.ToString());
                 throw;
             }
             return OutputClassifier;
