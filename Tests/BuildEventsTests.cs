@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
-using System;
+﻿using System;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;

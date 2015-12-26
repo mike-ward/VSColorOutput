@@ -8,8 +8,6 @@ namespace BlueOnionSoftware
 {
     public static class OutputClassificationDefinitions
     {
-        private const string VsColorOut = "VSColorOutput ";
-
         public const string BuildHead = "BuildHead";
         public const string BuildText = "BuildText";
 
@@ -23,11 +21,6 @@ namespace BlueOnionSoftware
 
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
-
-        public static string[] Categories =
-        {
-            BuildHead, BuildText, LogInfo, LogWarn, LogError, LogCustom1, LogCustom2, LogCustom3, LogCustom4, FindResultsFilename, FindResultsSearchTerm
-        };
 
         private static bool _settingsLoaded;
         private static Dictionary<string, Color> _colorMap;
@@ -57,7 +50,6 @@ namespace BlueOnionSoftware
         {
             public BuildHeaderFormat()
             {
-                DisplayName = VsColorOut + "Build Header";
                 ForegroundColor = GetColor(BuildHead);
                 BackgroundOpacity = 0;
             }
@@ -76,7 +68,6 @@ namespace BlueOnionSoftware
         {
             public BuildTextFormat()
             {
-                DisplayName = VsColorOut + "Build Text";
                 ForegroundColor = GetColor(BuildText);
                 BackgroundOpacity = 0;
             }
@@ -95,7 +86,6 @@ namespace BlueOnionSoftware
         {
             public LogErrorFormat()
             {
-                DisplayName = VsColorOut + "Log Error";
                 ForegroundColor = GetColor(LogError);
                 BackgroundOpacity = 0;
             }
@@ -114,7 +104,6 @@ namespace BlueOnionSoftware
         {
             public LogWarningFormat()
             {
-                DisplayName = VsColorOut + "Log Warning";
                 ForegroundColor = GetColor(LogWarn);
                 BackgroundOpacity = 0;
             }
@@ -133,7 +122,6 @@ namespace BlueOnionSoftware
         {
             public LogInformationFormat()
             {
-                DisplayName = VsColorOut + "Log Information";
                 ForegroundColor = GetColor(LogInfo);
                 BackgroundOpacity = 0;
             }
@@ -152,7 +140,6 @@ namespace BlueOnionSoftware
         {
             public LogCustom1Format()
             {
-                DisplayName = VsColorOut + "Log Custom1";
                 ForegroundColor = GetColor(LogCustom1);
                 BackgroundOpacity = 0;
             }
@@ -171,7 +158,6 @@ namespace BlueOnionSoftware
         {
             public LogCustom2Format()
             {
-                DisplayName = VsColorOut + "Log Custom2";
                 ForegroundColor = GetColor(LogCustom2);
                 BackgroundOpacity = 0;
             }
@@ -190,7 +176,6 @@ namespace BlueOnionSoftware
         {
             public LogCustom3Format()
             {
-                DisplayName = VsColorOut + "Log Custom3";
                 ForegroundColor = GetColor(LogCustom3);
                 BackgroundOpacity = 0;
             }
@@ -209,7 +194,6 @@ namespace BlueOnionSoftware
         {
             public LogCustom4Format()
             {
-                DisplayName = VsColorOut + "Log Custom4";
                 ForegroundColor = GetColor(LogCustom4);
                 BackgroundOpacity = 0;
             }
@@ -228,7 +212,6 @@ namespace BlueOnionSoftware
         {
             public FindResultsSearchTermFormat()
             {
-                DisplayName = VsColorOut + "Find Results Search Term";
                 ForegroundColor = GetColor(FindResultsSearchTerm);
                 BackgroundOpacity = 0;
             }
@@ -247,7 +230,6 @@ namespace BlueOnionSoftware
         {
             public FindResultsFilenameFormat()
             {
-                DisplayName = VsColorOut + "Find Results Filename";
                 ForegroundColor = GetColor(FindResultsFilename);
                 BackgroundOpacity = 0;
             }

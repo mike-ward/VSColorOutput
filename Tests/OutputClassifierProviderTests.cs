@@ -1,6 +1,4 @@
-﻿// Copyright (c) 2012 Blue Onion Software, All rights reserved
-
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using BlueOnionSoftware;
 using FluentAssertions;
 using Microsoft.VisualStudio.Utilities;

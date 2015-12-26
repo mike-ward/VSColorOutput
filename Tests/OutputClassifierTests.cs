@@ -1,5 +1,3 @@
-// Copyright (c) 2011 Blue Onion Software, All rights reserved
-
 using System;
 using BlueOnionSoftware;
 using FluentAssertions;

@@ -47,7 +47,7 @@ namespace Tests
                 .Setup(c => c.GetClassificationType(It.IsAny<string>()))
                 .Returns((string classificationType) => new FakeClassificationType(classificationType));
 
-            _classifier = new FindResultsClassifier(mockClassificationTypeRegistryService.Object);
+            _classifier = new FindResultsClassifier(mockClassificationTypeRegistryService.Object, null);
             _classifier.GetClassificationSpans(new SnapshotSpan());
             _classifier.HighlightFindResults = true;
         }

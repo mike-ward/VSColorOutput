@@ -13,8 +13,8 @@ namespace BlueOnionSoftware
     [Export(typeof(IClassifierProvider))]
     public class OutputClassifierProvider : IClassifierProvider
     {
-        [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
         [Import] internal SVsServiceProvider ServiceProvider;
+        [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
         [Import] internal IClassificationFormatMapService ClassificationFormatMapService;
 
         public static OutputClassifier OutputClassifier { get; private set; }

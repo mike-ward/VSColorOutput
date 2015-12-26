@@ -115,8 +115,21 @@ namespace BlueOnionSoftware
             var formatMap = _formatMapService.GetClassificationFormatMap("output");
             try
             {
+                var categories = new[]
+                {
+                    OutputClassificationDefinitions.BuildHead,
+                    OutputClassificationDefinitions.BuildText,
+                    OutputClassificationDefinitions.LogInfo,
+                    OutputClassificationDefinitions.LogWarn,
+                    OutputClassificationDefinitions.LogError,
+                    OutputClassificationDefinitions.LogCustom1,
+                    OutputClassificationDefinitions.LogCustom2,
+                    OutputClassificationDefinitions.LogCustom3,
+                    OutputClassificationDefinitions.LogCustom4
+                };
+
                 formatMap.BeginBatchUpdate();
-                foreach (var category in OutputClassificationDefinitions.Categories)
+                foreach (var category in categories)
                 {
                     var classificationType = _classificationTypeRegistry.GetClassificationType(category);
                     var textProperties = formatMap.GetTextProperties(classificationType);

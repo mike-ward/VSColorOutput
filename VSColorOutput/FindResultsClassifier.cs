@@ -19,6 +19,7 @@ namespace BlueOnionSoftware
 
         private bool _settingsLoaded;
         private readonly IClassificationTypeRegistryService _classificationRegistry;
+        private readonly IClassificationFormatMapService _formatMapService;
         private static readonly Regex FilenameRegex;
 
         private Regex _searchTextRegex;
@@ -30,10 +31,26 @@ namespace BlueOnionSoftware
             FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
         }
 
-        public FindResultsClassifier(IClassificationTypeRegistryService classificationRegistry)
+        public FindResultsClassifier(
+            IClassificationTypeRegistryService classificationRegistry,
+            IClassificationFormatMapService formatMapService)
         {
-            _classificationRegistry = classificationRegistry;
-            Settings.SettingsUpdated += (sender, args) => _settingsLoaded = false;
+            try
+            {
+                _classificationRegistry = classificationRegistry;
+                _formatMapService = formatMapService;
+
+                Settings.SettingsUpdated += (sender, args) =>
+                {
+                    _settingsLoaded = false;
+                    UpdateFormatMap();
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.ToString());
+                throw;
+            }
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -91,6 +108,34 @@ namespace BlueOnionSoftware
                 }
             }
             return false;
+        }
+
+        private void UpdateFormatMap()
+        {
+            var colorMap = ColorMap.GetMap();
+            var formatMap = _formatMapService.GetClassificationFormatMap("find results");
+            try
+            {
+                var categories = new[]
+                {
+                    OutputClassificationDefinitions.FindResultsFilename,
+                    OutputClassificationDefinitions.FindResultsSearchTerm
+                };
+
+                formatMap.BeginBatchUpdate();
+                foreach (var category in categories)
+                {
+                    var classificationType = _classificationRegistry.GetClassificationType(category);
+                    var textProperties = formatMap.GetTextProperties(classificationType);
+                    var color = colorMap[category];
+                    var wpfColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+                    formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
+                }
+            }
+            finally
+            {
+                formatMap.EndBatchUpdate();
+            }
         }
 
         private void LoadSettings()

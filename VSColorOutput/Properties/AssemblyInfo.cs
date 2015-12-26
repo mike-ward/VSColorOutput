@@ -1,4 +1,3 @@
-// Copyright (c) 2011 Blue Onion Software, All rights reserved
 using System.Reflection;
 using System.Runtime.InteropServices;
 

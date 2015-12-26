@@ -9,16 +9,18 @@ using Microsoft.VisualStudio.Utilities;
 namespace BlueOnionSoftware
 {
     [ContentType("FindResults")]
-    [Export(typeof (IClassifierProvider))]
+    [Export(typeof(IClassifierProvider))]
     public class FindResultsClassifierProvider : IClassifierProvider
     {
         [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
+        [Import] internal IClassificationFormatMapService ClassificationFormatMapService;
 
         public static FindResultsClassifier FindResultsClassifier { get; set; }
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            return FindResultsClassifier ?? (FindResultsClassifier = new FindResultsClassifier(ClassificationRegistry));
+            return FindResultsClassifier
+                ?? (FindResultsClassifier = new FindResultsClassifier(ClassificationRegistry, ClassificationFormatMapService));
         }
     }
 }

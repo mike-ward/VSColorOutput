@@ -122,7 +122,6 @@ namespace BlueOnionSoftware
             if (lastMode == vsIDEMode.vsIDEModeDesign && ShowDebugWindowOnDebug)
             {
                 _dte2.ToolWindows.OutputWindow.Parent.Activate();
-                // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                 {
                     if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
