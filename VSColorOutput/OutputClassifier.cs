@@ -115,7 +115,7 @@ namespace BlueOnionSoftware
             var formatMap = _formatMapService.GetClassificationFormatMap("output");
             try
             {
-                var categories = new[]
+                var classificationNames = new[]
                 {
                     OutputClassificationDefinitions.BuildHead,
                     OutputClassificationDefinitions.BuildText,
@@ -129,11 +129,11 @@ namespace BlueOnionSoftware
                 };
 
                 formatMap.BeginBatchUpdate();
-                foreach (var category in categories)
+                foreach (var name in classificationNames)
                 {
-                    var classificationType = _classificationTypeRegistry.GetClassificationType(category);
+                    var classificationType = _classificationTypeRegistry.GetClassificationType(name);
                     var textProperties = formatMap.GetTextProperties(classificationType);
-                    var color = colorMap[category];
+                    var color = colorMap[name];
                     var wpfColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
                     formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
                 }
