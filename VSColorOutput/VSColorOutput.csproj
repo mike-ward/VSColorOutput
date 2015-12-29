@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BlueOnionSoftware</RootNamespace>
     <AssemblyName>VSColorOutput</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RegisterWithCodebase>true</RegisterWithCodebase>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
