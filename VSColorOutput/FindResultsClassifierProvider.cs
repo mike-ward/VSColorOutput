@@ -1,4 +1,5 @@
 using System.ComponentModel.Composition;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -15,12 +16,18 @@ namespace BlueOnionSoftware
         [Import] internal IClassificationTypeRegistryService ClassificationRegistry;
         [Import] internal IClassificationFormatMapService ClassificationFormatMapService;
 
-        public static FindResultsClassifier FindResultsClassifier { get; set; }
+        private static FindResultsClassifier _findResultsClassifier;
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            return FindResultsClassifier
-                ?? (FindResultsClassifier = new FindResultsClassifier(ClassificationRegistry, ClassificationFormatMapService));
+            if (_findResultsClassifier == null)
+            {
+                Interlocked.CompareExchange(
+                    ref _findResultsClassifier,
+                    new FindResultsClassifier(ClassificationRegistry, ClassificationFormatMapService), 
+                    null);
+            }
+            return _findResultsClassifier;
         }
     }
 }

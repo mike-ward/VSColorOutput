@@ -184,7 +184,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildEventsProvider.cs" />
     <Compile Include="ClassificationTypes.cs" />
     <Compile Include="ColorMap.cs" />
     <Compile Include="FindResultsClassifier.cs" />
