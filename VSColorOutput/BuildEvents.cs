@@ -8,7 +8,7 @@ using Microsoft.VisualStudio;
 
 #pragma warning disable 649
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public class BuildEvents
     {

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 // Unassigned variables
 #pragma warning disable 649
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     [ContentType("FindResults")]
     [Export(typeof(IClassifierProvider))]

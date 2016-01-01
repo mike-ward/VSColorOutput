@@ -1,10 +1,10 @@
 using System;
-using BlueOnionSoftware;
 using FluentAssertions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Moq;
 using NUnit.Framework;
+using VSColorOutput;
 
 namespace Tests
 {

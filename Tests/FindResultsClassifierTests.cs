@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using BlueOnionSoftware;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Moq;
 using NUnit.Framework;
 using FluentAssertions;
 using System.Linq;
+using VSColorOutput;
 
 namespace Tests
 {

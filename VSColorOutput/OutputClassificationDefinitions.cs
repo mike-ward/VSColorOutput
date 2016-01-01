@@ -4,7 +4,7 @@ using System.Drawing;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public static class OutputClassificationDefinitions
     {

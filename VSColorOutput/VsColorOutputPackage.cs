@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     [Guid("CD56B219-38CB-482A-9B2D-7582DF4AAF1E")]
     [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\14.0")]

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
-using BlueOnionSoftware;
 using FluentAssertions;
 using Microsoft.VisualStudio.Utilities;
 using NUnit.Framework;
+using VSColorOutput;
 
 namespace Tests
 {

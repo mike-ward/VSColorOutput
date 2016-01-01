@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Text.Classification;
 // ReSharper disable EmptyGeneralCatchClause
 #pragma warning disable 67
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public class OutputClassifier : IClassifier
     {

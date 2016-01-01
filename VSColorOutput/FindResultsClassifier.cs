@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Text.Classification;
 // Disable warning for unused ClassificationChanged event
 #pragma warning disable 67
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public class FindResultsClassifier : IClassifier
     {

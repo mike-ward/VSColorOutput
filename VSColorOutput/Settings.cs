@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using static System.Environment;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     [DataContract]
     public class Settings

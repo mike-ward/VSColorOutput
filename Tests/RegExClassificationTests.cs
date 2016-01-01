@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2011 Blue Onion Software, All rights reserved
-using System;
-using BlueOnionSoftware;
+﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
+using VSColorOutput;
 
 namespace Tests
 {

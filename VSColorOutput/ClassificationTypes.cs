@@ -1,4 +1,4 @@
-﻿namespace BlueOnionSoftware
+﻿namespace VSColorOutput
 {
     public enum ClassificationTypes
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public class RegExClassification
     {

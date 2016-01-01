@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 
 #pragma warning disable 649
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     [ContentType("output")]
     [Export(typeof(IClassifierProvider))]

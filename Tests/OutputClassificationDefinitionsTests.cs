@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
-using BlueOnionSoftware;
 using FluentAssertions;
 using NUnit.Framework;
+using VSColorOutput;
 
 namespace Tests
 {

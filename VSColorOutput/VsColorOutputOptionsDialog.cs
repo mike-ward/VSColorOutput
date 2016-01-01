@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptionsDialog : DialogPage

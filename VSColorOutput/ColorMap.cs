@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace BlueOnionSoftware
+namespace VSColorOutput
 {
     public static class ColorMap
     {
