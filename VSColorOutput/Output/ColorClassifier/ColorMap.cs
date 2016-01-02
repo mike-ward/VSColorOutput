@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using VSColorOutput.State;
 
-namespace VSColorOutput
+namespace VSColorOutput.Output.ColorClassifier
 {
     public static class ColorMap
     {

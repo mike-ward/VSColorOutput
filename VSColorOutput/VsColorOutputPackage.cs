@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using VSColorOutput.State;
 
 namespace VSColorOutput
 {

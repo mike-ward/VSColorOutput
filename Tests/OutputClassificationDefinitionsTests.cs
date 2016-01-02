@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using FluentAssertions;
 using NUnit.Framework;
-using VSColorOutput;
+using VSColorOutput.Output.ColorClassifier;
 
 namespace Tests
 {

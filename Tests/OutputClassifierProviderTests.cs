@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.Utilities;
 using NUnit.Framework;
-using VSColorOutput;
+using VSColorOutput.Output.ColorClassifier;
 
 namespace Tests
 {

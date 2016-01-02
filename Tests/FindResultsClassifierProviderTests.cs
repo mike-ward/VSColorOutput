@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.Utilities;
 using NUnit.Framework;
 using VSColorOutput;
+using VSColorOutput.FindResults;
 
 namespace Tests
 {

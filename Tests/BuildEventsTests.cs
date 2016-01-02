@@ -25,7 +25,7 @@ namespace Tests
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
-            new VSColorOutput.BuildEvents(mockServiceProvider.Object);
+            new VSColorOutput.Output.BuildEvents.BuildEvents(mockServiceProvider.Object);
 
             mockDte2.VerifyAll();
             mockEvents.VerifyAll();
@@ -60,7 +60,7 @@ namespace Tests
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
-            var buildEvents = new VSColorOutput.BuildEvents(mockServiceProvider.Object);
+            var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents(mockServiceProvider.Object);
             buildEvents.StopOnBuildErrorEnabled = true;
             mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "", "", "", "", false);
 
@@ -95,7 +95,7 @@ namespace Tests
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
-            var buildEvents = new VSColorOutput.BuildEvents(mockServiceProvider.Object);
+            var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents(mockServiceProvider.Object);
             buildEvents.ShowElapsedBuildTimeEnabled = true;
             mockBuildEvents.Raise(be => be.OnBuildBegin += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
             mockBuildEvents.Raise(be => be.OnBuildDone += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
@@ -137,7 +137,7 @@ namespace Tests
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
-            var buildEvents = new VSColorOutput.BuildEvents(mockServiceProvider.Object);
+            var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents(mockServiceProvider.Object);
             buildEvents.ShowBuildReport = true;
             mockBuildEvents.Raise(be => be.OnBuildBegin += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
             mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "test.proj", "Debug", "Any CPU", "", true);
@@ -181,7 +181,7 @@ namespace Tests
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
-            var buildEvents = new VSColorOutput.BuildEvents(mockServiceProvider.Object);
+            var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents(mockServiceProvider.Object);
             buildEvents.ShowDebugWindowOnDebug = true;
             mockDteEvents.Raise(de => de.ModeChanged += null, vsIDEMode.vsIDEModeDesign);
 

@@ -7,10 +7,10 @@
     <Description xml:space="preserve">Color output for build and debug windows.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://mike-ward.net/vscoloroutput</MoreInfoUrl>
-    <License>License.txt</License>
+    <License>Assets/License.txt</License>
     <GettingStartedGuide>http://mike-ward.net/vscoloroutput</GettingStartedGuide>
-    <Icon>crayons.jpg</Icon>
-    <PreviewImage>preview.png</PreviewImage>
+    <Icon>Assets/crayons.jpg</Icon>
+    <PreviewImage>Assets/preview.png</PreviewImage>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="14.0">

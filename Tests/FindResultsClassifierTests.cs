@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Moq;
 using NUnit.Framework;
-using FluentAssertions;
-using System.Linq;
-using VSColorOutput;
+using VSColorOutput.FindResults;
+using VSColorOutput.Output.ColorClassifier;
 
 namespace Tests
 {
@@ -319,7 +320,7 @@ namespace Tests
 
         private static string GetCaseSensitiveResultsText(string searchTerm, params string[] resultLines)
         {
-            var intro = BuildFindResultsBanner(searchTerm, caseSensitive: true);
+            var intro = BuildFindResultsBanner(searchTerm, true);
             return BuildResultsLines(intro, resultLines);
         }
 
@@ -330,7 +331,7 @@ namespace Tests
         }
 
         private static string BuildFindResultsBanner(string searchTerm, bool caseSensitive = false, bool matchWord = false,
-                                                     bool usingRegularExpressions = false, bool usingWildcards = false, bool filenamesOnly = false, bool filterByFiles = false)
+            bool usingRegularExpressions = false, bool usingWildcards = false, bool filenamesOnly = false, bool filterByFiles = false)
         {
             var strings = new List<string> {ResultsPreamble + searchTerm + ResultsPreambleEnd};
 

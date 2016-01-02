@@ -2,8 +2,9 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using VSColorOutput.Output.ColorClassifier;
 
-namespace VSColorOutput
+namespace VSColorOutput.State
 {
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptionsDialog : DialogPage

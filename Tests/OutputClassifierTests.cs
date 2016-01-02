@@ -4,7 +4,8 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Moq;
 using NUnit.Framework;
-using VSColorOutput;
+using VSColorOutput.Output.ColorClassifier;
+using VSColorOutput.State;
 
 namespace Tests
 {
@@ -60,7 +61,6 @@ namespace Tests
             var outputClassifier = new OutputClassifier(mockClassificationTypeRegistryService.Object, null);
             var mockSnapshot = new Mock<ITextSnapshot>();
             var mockSnapshotLine = new Mock<ITextSnapshotLine>();
-
 
             mockSnapshot.SetupGet(s => s.Length).Returns(1);
             mockSnapshot.Setup(s => s.GetLineFromPosition(0)).Returns(mockSnapshotLine.Object);
