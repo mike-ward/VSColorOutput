@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
@@ -13,23 +14,22 @@ namespace VSColorOutput.Output.BuildEvents
 {
     public class BuildEvents
     {
-        private readonly DTE2 _dte2;
-        private readonly Events _events;
-        private readonly EnvDTE.BuildEvents _buildEvents;
-        private readonly DTEEvents _dteEvents;
+        private DTE2 _dte2;
+        private Events _events;
+        private EnvDTE.BuildEvents _buildEvents;
+        private int _initialized;
+        private DTEEvents _dteEvents;
         private DateTime _buildStartTime;
-        private readonly List<string> _projectsBuildReport;
+        private List<string> _projectsBuildReport;
         public bool StopOnBuildErrorEnabled { private get; set; }
         public bool ShowElapsedBuildTimeEnabled { private get; set; }
         public bool ShowBuildReport { private get; set; }
         public bool ShowDebugWindowOnDebug { private get; set; }
 
-        public BuildEvents(IServiceProvider serviceProvider)
+        public void Initialize(IServiceProvider serviceProvider)
         {
-            if (serviceProvider == null)
-            {
-                return;
-            }
+            if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
+
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
             if (_dte2 != null)
             {

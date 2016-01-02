@@ -24,8 +24,10 @@ namespace VSColorOutput.FindResults
             {
                 Interlocked.CompareExchange(
                     ref _findResultsClassifier,
-                    new FindResultsClassifier(ClassificationRegistry, ClassificationFormatMapService), 
+                    new FindResultsClassifier(),
                     null);
+
+                _findResultsClassifier.Initialize(ClassificationRegistry, ClassificationFormatMapService);
             }
             return _findResultsClassifier;
         }

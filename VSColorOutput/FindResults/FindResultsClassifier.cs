@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using VSColorOutput.Output.ColorClassifier;
@@ -14,14 +15,15 @@ namespace VSColorOutput.FindResults
 {
     public class FindResultsClassifier : IClassifier
     {
+        private int _initialized;
         private const string FindAll = "Find all \"";
         private const string MatchCase = "Match case";
         private const string WholeWord = "Whole word";
         private const string ListFilenamesOnly = "List filenames only";
 
         private bool _settingsLoaded;
-        private readonly IClassificationTypeRegistryService _classificationRegistry;
-        private readonly IClassificationFormatMapService _formatMapService;
+        private IClassificationTypeRegistryService _classificationRegistry;
+        private IClassificationFormatMapService _formatMapService;
         private static readonly Regex FilenameRegex;
 
         private Regex _searchTextRegex;
@@ -33,10 +35,10 @@ namespace VSColorOutput.FindResults
             FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
         }
 
-        public FindResultsClassifier(
-            IClassificationTypeRegistryService classificationRegistry,
-            IClassificationFormatMapService formatMapService)
+        public void Initialize(IClassificationTypeRegistryService classificationRegistry, IClassificationFormatMapService formatMapService)
         {
+            if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
+
             try
             {
                 _classificationRegistry = classificationRegistry;

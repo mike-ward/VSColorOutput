@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using VSColorOutput.State;
@@ -13,13 +14,15 @@ namespace VSColorOutput.Output.ColorClassifier
 {
     public class OutputClassifier : IClassifier
     {
+        private int _initialized;
         private IList<Classifier> _classifiers;
-        private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
-        private readonly IClassificationFormatMapService _formatMapService;
+        private IClassificationTypeRegistryService _classificationTypeRegistry;
+        private IClassificationFormatMapService _formatMapService;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
-        public OutputClassifier(IClassificationTypeRegistryService registry, IClassificationFormatMapService formatMapService)
+        public void Initialize(IClassificationTypeRegistryService registry, IClassificationFormatMapService formatMapService)
         {
+            if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
             try
             {
                 _classificationTypeRegistry = registry;

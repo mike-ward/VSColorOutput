@@ -30,16 +30,20 @@ namespace VSColorOutput.Output.ColorClassifier
                 {
                     Interlocked.CompareExchange(
                         ref _buildEvents, 
-                        new BuildEvents.BuildEvents(ServiceProvider), 
+                        new BuildEvents.BuildEvents(), 
                         null);
+
+                    _buildEvents.Initialize(ServiceProvider);
                 }
 
                 if (_outputClassifier == null)
                 {
                     Interlocked.CompareExchange(
                         ref _outputClassifier,
-                        new OutputClassifier(ClassificationRegistry, ClassificationFormatMapService), 
+                        new OutputClassifier(), 
                         null);
+
+                    _outputClassifier.Initialize(ClassificationRegistry, ClassificationFormatMapService);
                 }
             }
             catch (Exception ex)
