@@ -188,6 +188,8 @@
     <Compile Include="Output\ColorClassifier\ColorMap.cs" />
     <Compile Include="FindResults\FindResultsClassifier.cs" />
     <Compile Include="FindResults\FindResultsClassifierProvider.cs" />
+    <Compile Include="Output\TimeStamp\TimeStampMargin.cs" />
+    <Compile Include="Output\TimeStamp\TimeStampMarginProvider.cs" />
     <Compile Include="State\Log.cs" />
     <Compile Include="Output\ColorClassifier\RegExClassification.cs" />
     <Compile Include="State\Settings.cs" />
@@ -243,9 +245,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Output\TimeStamp\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
