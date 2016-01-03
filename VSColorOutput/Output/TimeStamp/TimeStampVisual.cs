@@ -10,12 +10,13 @@ namespace VSColorOutput.Output.TimeStamp
 {
     public class TimeStampVisual : UIElement
     {
+        private FormattedText _text;
+        private DateTime _timeStamp;
         private double _verticalOffset;
         private double _horizontalOffset;
-        private FormattedText _text;
 
         public object LineTag { get; private set; }
-        public DateTime TimeStamp { get; private set; }
+
 
         public TimeStampVisual()
         {
@@ -32,26 +33,19 @@ namespace VSColorOutput.Output.TimeStamp
             ITextViewLine line,
             IWpfTextView view,
             TextRunProperties formatting,
-            double marginWidth, double verticalOffset,
-            bool showHours,
-            bool showMilliseconds)
+            double marginWidth, double verticalOffset)
         {
             LineTag = line.IdentityTag;
 
-            if (timeStamp != TimeStamp)
+            if (timeStamp != _timeStamp)
             {
-                TimeStamp = timeStamp;
-
-                var text = string.Format(CultureInfo.InvariantCulture, showMilliseconds
-                    ? (showHours ? "{0,2}:{1:D2}:{2:D2}.{3:D3}" : "{1:D2}:{2:D2}.{3:D3}")
-                    : (showHours ? "{0,2}:{1:D2}:{2:D2}" : "{1:D2}:{2:D2}"),
-                    timeStamp.Hour, timeStamp.Minute, timeStamp.Second, timeStamp.Millisecond);
+                _timeStamp = timeStamp;
 
                 _text = new FormattedText(
-                    text,
+                    $"{timeStamp.Minute:D2}:{timeStamp.Second:D2}.{timeStamp.Millisecond:D3}",
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
-                    formatting.Typeface ?? new Typeface("Consolas"),
+                    formatting.Typeface,
                     formatting.FontRenderingEmSize,
                     formatting.ForegroundBrush);
                  
