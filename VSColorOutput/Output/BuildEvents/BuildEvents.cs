@@ -60,6 +60,11 @@ namespace VSColorOutput.Output.BuildEvents
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
         }
 
+        public void OnDebugBegin(Action handler)
+        {
+            _dteEvents.ModeChanged += lastMode => { if (lastMode == vsIDEMode.vsIDEModeDesign) handler(); };
+        }
+
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
             _projectsBuildReport.Clear();
@@ -125,7 +130,8 @@ namespace VSColorOutput.Output.BuildEvents
                 _dte2.ToolWindows.OutputWindow.Parent.Activate();
                 foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                 {
-                    if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
+                    if (pane.Guid ==  VSConstants.OutputWindowPaneGuid.DebugPane_string ||
+                        pane.Guid == VSConstants.DebugOutput.ToString())
                     {
                         pane.Activate();
                         break;

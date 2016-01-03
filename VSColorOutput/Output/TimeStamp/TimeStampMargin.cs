@@ -9,6 +9,7 @@ using System.Windows.Media.TextFormatting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using VSColorOutput.Output.BuildEvents;
 
 namespace VSColorOutput.Output.TimeStamp
 {
@@ -21,6 +22,7 @@ namespace VSColorOutput.Output.TimeStamp
         private readonly IClassificationType _lineNumberClassification;
 
         private bool _disposed;
+        private DateTime _debugStartTime;
         private TextRunProperties _formatting;
         private double _oldViewportTop = double.MinValue;
 
@@ -36,6 +38,7 @@ namespace VSColorOutput.Output.TimeStamp
             _formatMap = timeStampMarginProvider.ClassificationFormatMappingService.GetClassificationFormatMap(_textView);
             _lineNumberClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType("line number");
             IsVisibleChanged += OnVisibleChanged;
+            BuildEventsProvider.AddBuildBeginHandler(() => _debugStartTime = DateTime.Now);
 
             ClipToBounds = true;
             IsHitTestVisible = false;
@@ -80,7 +83,8 @@ namespace VSColorOutput.Output.TimeStamp
             {
                 if (textChange.LineCountDelta > 0)
                 {
-                    var times = Enumerable.Range(0, textChange.LineCountDelta).Select(t => DateTime.Now);
+                    var time = DateTime.Now;
+                    var times = Enumerable.Range(0, textChange.LineCountDelta).Select(t => time);
                     _lineTimeStamps.InsertRange(ea.Before.GetLineFromPosition(textChange.OldPosition).LineNumber, times.ToList());
                 }
                 else if (textChange.LineCountDelta < 0)
@@ -119,6 +123,7 @@ namespace VSColorOutput.Output.TimeStamp
                     if (lineNumber < _lineTimeStamps.Count)
                     {
                         var timeStamp = _lineTimeStamps[lineNumber];
+                        var previousTimeStamp = _lineTimeStamps[Math.Max(lineNumber - 1, 0)];
                         TimeStampVisual timeStampVisual;
                         if (!dictionary.TryGetValue(line.IdentityTag, out timeStampVisual))
                         {
@@ -134,7 +139,9 @@ namespace VSColorOutput.Output.TimeStamp
                                 list1.RemoveAt(index);
                             }
                         }
-                        timeStampVisual?.UpdateVisual(timeStamp, line, _textView, _formatting, MinWidth, _oldViewportTop);
+
+                        timeStampVisual?.Update(lineNumber == 0, _debugStartTime, timeStamp, previousTimeStamp,
+                            line, _textView, _formatting, MinWidth, _oldViewportTop);
                     }
                 }
             }
@@ -163,7 +170,7 @@ namespace VSColorOutput.Output.TimeStamp
         private double CalculateMarginWidth()
         {
             var text = new FormattedText(
-                "MM:MM.MMM",
+                "MM:MM.MMM (MM:MM.MMM)",
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _formatting.Typeface,
