@@ -190,6 +190,7 @@
     <Compile Include="FindResults\FindResultsClassifierProvider.cs" />
     <Compile Include="Output\TimeStamp\TimeStampMargin.cs" />
     <Compile Include="Output\TimeStamp\TimeStampMarginProvider.cs" />
+    <Compile Include="Output\TimeStamp\TimeStampVisual.cs" />
     <Compile Include="State\Log.cs" />
     <Compile Include="Output\ColorClassifier\RegExClassification.cs" />
     <Compile Include="State\Settings.cs" />

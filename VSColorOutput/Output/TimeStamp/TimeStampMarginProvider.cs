@@ -5,23 +5,16 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace VSColorOutput.Output.TimeStamp
 {
-    [Export(typeof(IWpfTextViewMarginProvider))]
     [Name("TimeStampMargin")]
-    [MarginContainer("LeftSelection")]
-    [Order(Before = "Spacer")]
     [ContentType("DebugOutput")]
-    [TextViewRole("INTERACTIVE")]   
+    [Export(typeof(IWpfTextViewMarginProvider))]
+    [Order(Before = PredefinedMarginNames.Spacer)]
+    [TextViewRole(PredefinedTextViewRoles.Interactive)]   
+    [MarginContainer(PredefinedMarginNames.LeftSelection)]
     public class TimeStampMarginProvider : IWpfTextViewMarginProvider
     {
-        public TimeStampMarginProvider()
-        {
-        }
-
-        [Import]
-        internal IClassificationFormatMapService ClassificationFormatMappingService { get; private set; }
-
-        [Import]
-        internal IClassificationTypeRegistryService ClassificationTypeRegistryService { get; private set; }
+        [Import] internal IClassificationFormatMapService ClassificationFormatMappingService { get; private set; }
+        [Import] internal IClassificationTypeRegistryService ClassificationTypeRegistryService { get; private set; }
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
