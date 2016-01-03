@@ -170,7 +170,7 @@ namespace VSColorOutput.Output.TimeStamp
         private double CalculateMarginWidth()
         {
             var text = new FormattedText(
-                "MM:MM.MMM (MM:MM.MMM)",
+                TimeStampVisual.StartingTimeStamp,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _formatting.Typeface,

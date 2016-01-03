@@ -16,6 +16,7 @@ namespace VSColorOutput.Output.TimeStamp
         private double _horizontalOffset;
 
         public object LineTag { get; private set; }
+        public const string StartingTimeStamp = "00:00:000 (00:00:000)";
 
         public TimeStampVisual()
         {
@@ -46,12 +47,10 @@ namespace VSColorOutput.Output.TimeStamp
                 var startDiff = timeStamp - debugStartTime;
                 var lastDiff = timeStamp - previousTimeStamp;
 
-                var text = first
-                    ? "00:00:000 (00:00:000)"
-                    : lastDiff != TimeSpan.Zero
-                        ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
-                            $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
-                        : "";
+                var text = first || lastDiff != TimeSpan.Zero
+                    ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
+                        $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
+                    : "";
 
                 _text = new FormattedText(
                     text,
