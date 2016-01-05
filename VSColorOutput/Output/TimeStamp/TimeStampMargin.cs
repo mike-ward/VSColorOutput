@@ -35,15 +35,21 @@ namespace VSColorOutput.Output.TimeStamp
         {
             _textView = textView;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
+            IsVisibleChanged += OnVisibleChanged;
+            BuildEventsProvider.BuildEvents.DebugBegin += OnBuildEventsOnDebugBegin;
+
             _formatMap = timeStampMarginProvider.ClassificationFormatMappingService.GetClassificationFormatMap(_textView);
             _lineNumberClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType("line number");
-            IsVisibleChanged += OnVisibleChanged;
-            BuildEventsProvider.AddBuildBeginHandler(() => _debugStartTime = DateTime.Now);
 
             ClipToBounds = true;
             IsHitTestVisible = false;
             Children.Add(_translatedCanvas);
             TextOptions.SetTextHintingMode(this, TextHintingMode.Fixed);
+        }
+
+        private void OnBuildEventsOnDebugBegin(object s, EventArgs e)
+        {
+            _debugStartTime = DateTime.Now;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -185,6 +191,8 @@ namespace VSColorOutput.Output.TimeStamp
             if (_disposed) return;
             _disposed = true;
             _textView.TextBuffer.Changed -= TextBufferOnChanged;
+            IsVisibleChanged -= OnVisibleChanged;
+            BuildEventsProvider.BuildEvents.DebugBegin -= OnBuildEventsOnDebugBegin;
         }
     }
 }

@@ -21,10 +21,12 @@ namespace VSColorOutput.Output.BuildEvents
         private DTEEvents _dteEvents;
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
+
         public bool StopOnBuildErrorEnabled { private get; set; }
         public bool ShowElapsedBuildTimeEnabled { private get; set; }
         public bool ShowBuildReport { private get; set; }
         public bool ShowDebugWindowOnDebug { private get; set; }
+        public event EventHandler DebugBegin;
 
         public void Initialize(IServiceProvider serviceProvider)
         {
@@ -58,11 +60,6 @@ namespace VSColorOutput.Output.BuildEvents
             ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
             ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
-        }
-
-        public void OnDebugBegin(Action handler)
-        {
-            _dteEvents.ModeChanged += lastMode => { if (lastMode == vsIDEMode.vsIDEModeDesign) handler(); };
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
@@ -125,16 +122,21 @@ namespace VSColorOutput.Output.BuildEvents
 
         private void OnModeChanged(vsIDEMode lastMode)
         {
-            if (lastMode == vsIDEMode.vsIDEModeDesign && ShowDebugWindowOnDebug)
+            if (lastMode == vsIDEMode.vsIDEModeDesign)
             {
-                _dte2.ToolWindows.OutputWindow.Parent.Activate();
-                foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
+                DebugBegin?.Invoke(this, EventArgs.Empty);
+
+                if (ShowDebugWindowOnDebug)
                 {
-                    if (pane.Guid ==  VSConstants.OutputWindowPaneGuid.DebugPane_string ||
-                        pane.Guid == VSConstants.DebugOutput.ToString())
+                    _dte2.ToolWindows.OutputWindow.Parent.Activate();
+                    foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                     {
-                        pane.Activate();
-                        break;
+                        if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string ||
+                            pane.Guid == VSConstants.DebugOutput.ToString())
+                        {
+                            pane.Activate();
+                            break;
+                        }
                     }
                 }
             }
