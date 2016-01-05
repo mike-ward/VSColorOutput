@@ -22,10 +22,8 @@ namespace VSColorOutput.Output.TimeStamp
         private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
 
         private bool _disposed;
-        private DateTime _debugStartTime;
         private TextRunProperties _formatting;
         private double _oldViewportTop = double.MinValue;
-        private void OnBuildEventsOnDebugBegin(object s, EventArgs e) => _debugStartTime = DateTime.Now;
 
         public bool Enabled { get; } = true;
         public double MarginSize => ActualHeight;
@@ -45,7 +43,6 @@ namespace VSColorOutput.Output.TimeStamp
 
             IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
-            BuildEventsProvider.BuildEvents.DebugBegin += OnBuildEventsOnDebugBegin;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -144,7 +141,7 @@ namespace VSColorOutput.Output.TimeStamp
 
                         if (timeStampVisual != null)
                         {
-                            var startDiff = timeStamp - _debugStartTime;
+                            var startDiff = timeStamp - BuildEventsProvider.BuildEvents.DebugStartTime;
                             var lastDiff = timeStamp - previousTimeStamp;
 
                             var text = lineNumber == 0 || lastDiff != TimeSpan.Zero
@@ -199,7 +196,6 @@ namespace VSColorOutput.Output.TimeStamp
             _disposed = true;
             _textView.TextBuffer.Changed -= TextBufferOnChanged;
             IsVisibleChanged -= OnVisibleChanged;
-            BuildEventsProvider.BuildEvents.DebugBegin -= OnBuildEventsOnDebugBegin;
         }
     }
 }

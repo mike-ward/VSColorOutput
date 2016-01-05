@@ -26,7 +26,7 @@ namespace VSColorOutput.Output.BuildEvents
         public bool ShowElapsedBuildTimeEnabled { private get; set; }
         public bool ShowBuildReport { private get; set; }
         public bool ShowDebugWindowOnDebug { private get; set; }
-        public event EventHandler DebugBegin;
+        public DateTime DebugStartTime { get; private set; }
 
         public void Initialize(IServiceProvider serviceProvider)
         {
@@ -124,7 +124,7 @@ namespace VSColorOutput.Output.BuildEvents
         {
             if (lastMode == vsIDEMode.vsIDEModeDesign)
             {
-                DebugBegin?.Invoke(this, EventArgs.Empty);
+                DebugStartTime = DateTime.Now;
 
                 if (ShowDebugWindowOnDebug)
                 {
