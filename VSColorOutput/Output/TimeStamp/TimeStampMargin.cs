@@ -16,28 +16,25 @@ namespace VSColorOutput.Output.TimeStamp
     public sealed class TimeStampMargin : Canvas, IWpfTextViewMargin
     {
         private readonly IWpfTextView _textView;
-        private readonly Canvas _translatedCanvas = new Canvas();
-        private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
         private readonly IClassificationFormatMap _formatMap;
         private readonly IClassificationType _lineNumberClassification;
+        private readonly Canvas _translatedCanvas = new Canvas();
+        private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
 
         private bool _disposed;
         private DateTime _debugStartTime;
         private TextRunProperties _formatting;
         private double _oldViewportTop = double.MinValue;
+        private void OnBuildEventsOnDebugBegin(object s, EventArgs e) => _debugStartTime = DateTime.Now;
 
-        public double MarginSize => ActualHeight;
         public bool Enabled { get; } = true;
+        public double MarginSize => ActualHeight;
         public FrameworkElement VisualElement => this;
         public ITextViewMargin GetTextViewMargin(string marginName) => marginName == nameof(TimeStampMargin) ? this : null;
 
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
         {
             _textView = textView;
-            _textView.TextBuffer.Changed += TextBufferOnChanged;
-            IsVisibleChanged += OnVisibleChanged;
-            BuildEventsProvider.BuildEvents.DebugBegin += OnBuildEventsOnDebugBegin;
-
             _formatMap = timeStampMarginProvider.ClassificationFormatMappingService.GetClassificationFormatMap(_textView);
             _lineNumberClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType("line number");
 
@@ -45,11 +42,10 @@ namespace VSColorOutput.Output.TimeStamp
             IsHitTestVisible = false;
             Children.Add(_translatedCanvas);
             TextOptions.SetTextHintingMode(this, TextHintingMode.Fixed);
-        }
 
-        private void OnBuildEventsOnDebugBegin(object s, EventArgs e)
-        {
-            _debugStartTime = DateTime.Now;
+            IsVisibleChanged += OnVisibleChanged;
+            _textView.TextBuffer.Changed += TextBufferOnChanged;
+            BuildEventsProvider.BuildEvents.DebugBegin += OnBuildEventsOnDebugBegin;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -146,11 +142,22 @@ namespace VSColorOutput.Output.TimeStamp
                             }
                         }
 
-                        timeStampVisual?.Update(lineNumber == 0, _debugStartTime, timeStamp, previousTimeStamp,
-                            line, _textView, _formatting, MinWidth, _oldViewportTop);
+                        if (timeStampVisual != null)
+                        {
+                            var startDiff = timeStamp - _debugStartTime;
+                            var lastDiff = timeStamp - previousTimeStamp;
+
+                            var text = lineNumber == 0 || lastDiff != TimeSpan.Zero
+                                ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
+                                    $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
+                                : "";
+
+                            timeStampVisual.Update(text, line, _textView, _formatting, MinWidth, _oldViewportTop);
+                        }
                     }
                 }
             }
+
             foreach (var index in list1) _translatedCanvas.Children.RemoveAt(index);
             foreach (var element in list2) _translatedCanvas.Children.Add(element);
         }
@@ -176,7 +183,7 @@ namespace VSColorOutput.Output.TimeStamp
         private double CalculateMarginWidth()
         {
             var text = new FormattedText(
-                TimeStampVisual.StartingTimeStamp,
+                "00:00:000 (00:00:000)",
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _formatting.Typeface,

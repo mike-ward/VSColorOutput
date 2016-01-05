@@ -17,8 +17,8 @@ namespace VSColorOutput.Output.BuildEvents
     {
         [Import] internal SVsServiceProvider ServiceProvider;
 
-        public static BuildEvents BuildEvents => _buildEvents;
         private static BuildEvents _buildEvents;
+        public static BuildEvents BuildEvents => _buildEvents;
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {

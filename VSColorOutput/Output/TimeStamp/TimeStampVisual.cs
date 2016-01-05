@@ -10,13 +10,12 @@ namespace VSColorOutput.Output.TimeStamp
 {
     public class TimeStampVisual : UIElement
     {
-        private FormattedText _text;
-        private DateTime _timeStamp;
+        private string _text;
+        private FormattedText _formattedText;
         private double _verticalOffset;
         private double _horizontalOffset;
 
         public object LineTag { get; private set; }
-        public const string StartingTimeStamp = "00:00:000 (00:00:000)";
 
         public TimeStampVisual()
         {
@@ -25,14 +24,11 @@ namespace VSColorOutput.Output.TimeStamp
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            drawingContext.DrawText(_text, new Point(_horizontalOffset, _verticalOffset));
+            drawingContext.DrawText(_formattedText, new Point(_horizontalOffset, _verticalOffset));
         }
 
         internal void Update(
-            bool first,
-            DateTime debugStartTime,
-            DateTime timeStamp,
-            DateTime previousTimeStamp,
+            string text,
             ITextViewLine line,
             IWpfTextView view,
             TextRunProperties formatting,
@@ -41,26 +37,18 @@ namespace VSColorOutput.Output.TimeStamp
         {
             LineTag = line.IdentityTag;
 
-            if (timeStamp != _timeStamp)
+            if (_text == null || !string.Equals(_text, text, StringComparison.Ordinal))
             {
-                _timeStamp = timeStamp;
-                var startDiff = timeStamp - debugStartTime;
-                var lastDiff = timeStamp - previousTimeStamp;
-
-                var text = first || lastDiff != TimeSpan.Zero
-                    ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
-                        $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
-                    : "";
-
-                _text = new FormattedText(
-                    text,
+                _text = text;
+                _formattedText = new FormattedText(
+                    _text,
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     formatting.Typeface,
                     formatting.FontRenderingEmSize,
                     formatting.ForegroundBrush);
 
-                _horizontalOffset = Math.Round(marginWidth - _text.Width);
+                _horizontalOffset = Math.Round(marginWidth - _formattedText.Width);
                 InvalidateVisual();
             }
 
