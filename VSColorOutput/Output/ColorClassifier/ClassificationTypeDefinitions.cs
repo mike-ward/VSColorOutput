@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace VSColorOutput.Output.ColorClassifier
 {
-    public static class OutputClassificationDefinitions
+    public static class ClassificationTypeDefinitions
     {
         public const string BuildHead = "BuildHead";
         public const string BuildText = "BuildText";
@@ -22,6 +22,8 @@ namespace VSColorOutput.Output.ColorClassifier
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
 
+        public const string Timestamp = "Timestamp";
+
         private static bool _settingsLoaded;
         private static Dictionary<string, Color> _colorMap;
 
@@ -34,6 +36,11 @@ namespace VSColorOutput.Output.ColorClassifier
             }
             Color color;
             if (!_colorMap.TryGetValue(classificationName, out color)) color = Color.Gray;
+            return ToMediaColor(color);
+        }
+
+        public static System.Windows.Media.Color ToMediaColor(Color color)
+        {
             return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
@@ -231,6 +238,24 @@ namespace VSColorOutput.Output.ColorClassifier
             public FindResultsFilenameFormat()
             {
                 ForegroundColor = GetColor(FindResultsFilename);
+                BackgroundOpacity = 0;
+            }
+        }
+
+        [Export]
+        [Name(Timestamp)]
+        public static ClassificationTypeDefinition TimestampDefinition { get; set; }
+
+        [Name(Timestamp)]
+        [UserVisible(false)]
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = Timestamp)]
+        [Order(Before = Priority.Default)]
+        public sealed class TimestampFormat : ClassificationFormatDefinition
+        {
+            public TimestampFormat()
+            {
+                ForegroundColor = GetColor(Timestamp);
                 BackgroundOpacity = 0;
             }
         }

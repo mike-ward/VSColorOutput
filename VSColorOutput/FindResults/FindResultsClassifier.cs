@@ -122,8 +122,8 @@ namespace VSColorOutput.FindResults
             {
                 var classificationNames = new[]
                 {
-                    OutputClassificationDefinitions.FindResultsFilename,
-                    OutputClassificationDefinitions.FindResultsSearchTerm
+                    ClassificationTypeDefinitions.FindResultsFilename,
+                    ClassificationTypeDefinitions.FindResultsSearchTerm
                 };
 
                 formatMap.BeginBatchUpdate();
@@ -156,9 +156,9 @@ namespace VSColorOutput.FindResults
                 select new ClassificationSpan(new SnapshotSpan(snapStart + match.Index, match.Length), classificationType);
         }
 
-        private IClassificationType SearchTermClassificationType => _classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsSearchTerm);
+        private IClassificationType SearchTermClassificationType => _classificationRegistry.GetClassificationType(ClassificationTypeDefinitions.FindResultsSearchTerm);
 
-        private IClassificationType FilenameClassificationType => _classificationRegistry.GetClassificationType(OutputClassificationDefinitions.FindResultsFilename);
+        private IClassificationType FilenameClassificationType => _classificationRegistry.GetClassificationType(ClassificationTypeDefinitions.FindResultsFilename);
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
     }

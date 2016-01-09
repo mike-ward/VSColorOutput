@@ -194,13 +194,14 @@
     <Compile Include="Output\TimeStamp\TimeStampVisual.cs" />
     <Compile Include="State\Log.cs" />
     <Compile Include="Output\ColorClassifier\RegExClassification.cs" />
+    <Compile Include="State\Runtime.cs" />
     <Compile Include="State\Settings.cs" />
     <Compile Include="Output\BuildEvents\BuildEvents.cs" />
     <Compile Include="VsColorOutputPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Output\ColorClassifier\OutputClassifier.cs" />
     <Compile Include="Output\ColorClassifier\OutputClassifierProvider.cs" />
-    <Compile Include="Output\ColorClassifier\OutputClassificationDefinitions.cs" />
+    <Compile Include="Output\ColorClassifier\ClassificationTypeDefinitions.cs" />
     <Compile Include="State\VsColorOutputOptionsDialog.cs">
       <SubType>Component</SubType>
     </Compile>

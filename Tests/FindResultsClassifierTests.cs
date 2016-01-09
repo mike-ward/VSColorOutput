@@ -40,7 +40,7 @@ namespace Tests
         public void Setup()
         {
             var mockSearchTermClassification = new Mock<IClassificationType>();
-            mockSearchTermClassification.Setup(c => c.IsOfType(OutputClassificationDefinitions.FindResultsSearchTerm)).
+            mockSearchTermClassification.Setup(c => c.IsOfType(ClassificationTypeDefinitions.FindResultsSearchTerm)).
                 Returns(true);
 
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
@@ -284,7 +284,7 @@ namespace Tests
 
         private static bool IsSearchTerm(ClassificationSpan s)
         {
-            return s.ClassificationType.Classification == OutputClassificationDefinitions.FindResultsSearchTerm;
+            return s.ClassificationType.Classification == ClassificationTypeDefinitions.FindResultsSearchTerm;
         }
 
         private static void AssertFilenameClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan)
@@ -292,12 +292,12 @@ namespace Tests
             var text = snapshotSpan.GetText();
             var index = text.IndexOf(':');
             index = text.IndexOf(':', index + 1);
-            AssertClassification(classificationSpan, OutputClassificationDefinitions.FindResultsFilename, snapshotSpan.Start.Position, index + 1);
+            AssertClassification(classificationSpan, ClassificationTypeDefinitions.FindResultsFilename, snapshotSpan.Start.Position, index + 1);
         }
 
         private static void AssertSearchTermClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan, string searchTerm, int searchTermStart)
         {
-            AssertClassification(classificationSpan, OutputClassificationDefinitions.FindResultsSearchTerm, snapshotSpan.Start.Position + searchTermStart, searchTerm.Length);
+            AssertClassification(classificationSpan, ClassificationTypeDefinitions.FindResultsSearchTerm, snapshotSpan.Start.Position + searchTermStart, searchTerm.Length);
         }
 
         private static void AssertClassification(ClassificationSpan classificationSpan, string classificationType, int spanStart, int spanLength)

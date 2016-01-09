@@ -106,7 +106,7 @@ namespace VSColorOutput.Output.ColorClassifier
 
             classifiers.Add(new Classifier
             {
-                Type = OutputClassificationDefinitions.BuildText,
+                Type = ClassificationTypeDefinitions.BuildText,
                 Test = t => true
             });
 
@@ -121,15 +121,15 @@ namespace VSColorOutput.Output.ColorClassifier
             {
                 var classificationNames = new[]
                 {
-                    OutputClassificationDefinitions.BuildHead,
-                    OutputClassificationDefinitions.BuildText,
-                    OutputClassificationDefinitions.LogInfo,
-                    OutputClassificationDefinitions.LogWarn,
-                    OutputClassificationDefinitions.LogError,
-                    OutputClassificationDefinitions.LogCustom1,
-                    OutputClassificationDefinitions.LogCustom2,
-                    OutputClassificationDefinitions.LogCustom3,
-                    OutputClassificationDefinitions.LogCustom4
+                    ClassificationTypeDefinitions.BuildHead,
+                    ClassificationTypeDefinitions.BuildText,
+                    ClassificationTypeDefinitions.LogInfo,
+                    ClassificationTypeDefinitions.LogWarn,
+                    ClassificationTypeDefinitions.LogError,
+                    ClassificationTypeDefinitions.LogCustom1,
+                    ClassificationTypeDefinitions.LogCustom2,
+                    ClassificationTypeDefinitions.LogCustom3,
+                    ClassificationTypeDefinitions.LogCustom4
                 };
 
                 formatMap.BeginBatchUpdate();
@@ -138,7 +138,7 @@ namespace VSColorOutput.Output.ColorClassifier
                     var classificationType = _classificationTypeRegistry.GetClassificationType(name);
                     var textProperties = formatMap.GetTextProperties(classificationType);
                     var color = colorMap[name];
-                    var wpfColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+                    var wpfColor = ClassificationTypeDefinitions.ToMediaColor(color);
                     formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
                 }
             }

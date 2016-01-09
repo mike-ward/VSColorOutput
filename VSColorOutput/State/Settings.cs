@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
@@ -63,6 +64,9 @@ namespace VSColorOutput.State
         [DataMember(Order = 16)]
         public Color FindFileNameColor { get; set; } = Color.Gray;
 
+        [DataMember(Order = 17)]
+        public Color TimestampColor { get; set; } = Color.CornflowerBlue;
+
         private static readonly string ProgramDataFolder;
         private static readonly string SettingsFile;
 
@@ -78,6 +82,7 @@ namespace VSColorOutput.State
 
         public static Settings Load()
         {
+            if (Runtime.RunningUnitTests) return new Settings();
             Directory.CreateDirectory(ProgramDataFolder);
             if (!File.Exists(SettingsFile)) new Settings().Save();
             using (var stream = new FileStream(SettingsFile, FileMode.Open))
@@ -89,6 +94,7 @@ namespace VSColorOutput.State
 
         public void Save()
         {
+            if (Runtime.RunningUnitTests) return ;
             Directory.CreateDirectory(ProgramDataFolder);
             using (var stream = new FileStream(SettingsFile, FileMode.Create))
             {

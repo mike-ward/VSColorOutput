@@ -10,6 +10,8 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using VSColorOutput.Output.BuildEvents;
+using VSColorOutput.Output.ColorClassifier;
+using VSColorOutput.State;
 
 namespace VSColorOutput.Output.TimeStamp
 {
@@ -17,12 +19,12 @@ namespace VSColorOutput.Output.TimeStamp
     {
         private readonly IWpfTextView _textView;
         private readonly IClassificationFormatMap _formatMap;
-        private readonly IClassificationType _lineNumberClassification;
+        private readonly IClassificationType _timestampClassification;
         private readonly Canvas _translatedCanvas = new Canvas();
         private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
 
         private bool _disposed;
-        private TextRunProperties _formatting;
+        private TextRunProperties _textRunProperties;
         private double _oldViewportTop = double.MinValue;
 
         public bool Enabled { get; } = true;
@@ -34,7 +36,9 @@ namespace VSColorOutput.Output.TimeStamp
         {
             _textView = textView;
             _formatMap = timeStampMarginProvider.ClassificationFormatMappingService.GetClassificationFormatMap(_textView);
-            _lineNumberClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType("line number");
+
+            _timestampClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType
+                (ClassificationTypeDefinitions.Timestamp);
 
             ClipToBounds = true;
             IsHitTestVisible = false;
@@ -43,26 +47,14 @@ namespace VSColorOutput.Output.TimeStamp
 
             IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
+            Settings.SettingsUpdated += (sender, args) => UpdateFormatMap();
+            UpdateFormatMap();
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool)e.NewValue)
-            {
-                _textView.LayoutChanged += TextViewOnLayoutChanged;
-                _formatMap.ClassificationFormatMappingChanged += OnClassificationFormatMappingChanged;
-                SetFontFromClassification();
-            }
-            else
-            {
-                _textView.LayoutChanged -= TextViewOnLayoutChanged;
-                _formatMap.ClassificationFormatMappingChanged -= OnClassificationFormatMappingChanged;
-            }
-        }
-
-        private void OnClassificationFormatMappingChanged(object sender, EventArgs e)
-        {
-            SetFontFromClassification();
+            if ((bool)e.NewValue) _textView.LayoutChanged += TextViewOnLayoutChanged;
+            else _textView.LayoutChanged -= TextViewOnLayoutChanged;
         }
 
         private void TextViewOnLayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
@@ -80,18 +72,23 @@ namespace VSColorOutput.Output.TimeStamp
         {
             foreach (var textChange in ea.Changes)
             {
+                var lineNumber = ea.Before.GetLineFromPosition(textChange.OldPosition).LineNumber;
+
                 if (textChange.LineCountDelta > 0)
                 {
-                    var time = DateTime.Now;
-                    var times = Enumerable.Range(0, textChange.LineCountDelta).Select(t => time);
-                    _lineTimeStamps.InsertRange(ea.Before.GetLineFromPosition(textChange.OldPosition).LineNumber, times.ToList());
+                    var count =_lineTimeStamps.Count;
+                    _lineTimeStamps.InsertRange(
+                        Math.Min(lineNumber, count), 
+                        Fill(textChange.LineCountDelta + lineNumber - count, DateTime.Now));
                 }
                 else if (textChange.LineCountDelta < 0)
                 {
-                    _lineTimeStamps.RemoveRange(ea.Before.GetLineFromPosition(textChange.OldPosition).LineNumber, -textChange.LineCountDelta);
+                    _lineTimeStamps.RemoveRange(lineNumber, -textChange.LineCountDelta);
                 }
             }
         }
+
+        private static IEnumerable<DateTime> Fill(int count, DateTime time) => Enumerable.Range(0, count).Select(t => time);
 
         private void Update()
         {
@@ -149,7 +146,7 @@ namespace VSColorOutput.Output.TimeStamp
                                     $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
                                 : "";
 
-                            timeStampVisual.Update(text, line, _textView, _formatting, MinWidth, _oldViewportTop);
+                            timeStampVisual.Update(text, line, _textView, _textRunProperties, MinWidth, _oldViewportTop);
                         }
                     }
                 }
@@ -159,20 +156,19 @@ namespace VSColorOutput.Output.TimeStamp
             foreach (var element in list2) _translatedCanvas.Children.Add(element);
         }
 
-        private void SetFontFromClassification()
+        private void UpdateFormatMap()
         {
-            var textProperties = _formatMap.GetTextProperties(_lineNumberClassification);
-            var brush = textProperties.BackgroundBrush;
-            if (brush.Opacity < 1.0)
-            {
-                brush = brush.Clone();
-                brush.Opacity = 1.0;
-                brush.Freeze();
-                textProperties = textProperties.SetBackgroundBrush(brush);
-            }
-            Background = brush;
-            _formatting = textProperties;
+            var colorMap = ColorMap.GetMap();
+            var textProperties = _formatMap.GetTextProperties(_timestampClassification);
+            var color = colorMap[ClassificationTypeDefinitions.Timestamp];
+            var wpfColor = ClassificationTypeDefinitions.ToMediaColor(color);
+            textProperties = textProperties.SetForeground(wpfColor);
+
+            _formatMap.SetTextProperties(_timestampClassification, textProperties);
+            _textRunProperties = textProperties;
             _translatedCanvas.Children.Clear();
+
+            Background = _textRunProperties.BackgroundBrush;
             MinWidth = CalculateMarginWidth();
             Update();
         }
@@ -183,8 +179,8 @@ namespace VSColorOutput.Output.TimeStamp
                 "00:00:000 (00:00:000)",
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
-                _formatting.Typeface,
-                _formatting.FontRenderingEmSize,
+                _textRunProperties.Typeface,
+                _textRunProperties.FontRenderingEmSize,
                 Brushes.Black);
 
             return text.Width + 3;

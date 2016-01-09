@@ -11,17 +11,18 @@ namespace VSColorOutput.Output.ColorClassifier
             var settings = Settings.Load();
             return new Dictionary<string, Color>
             {
-                {OutputClassificationDefinitions.BuildHead, settings.BuildMessageColor},
-                {OutputClassificationDefinitions.BuildText, settings.BuildTextColor},
-                {OutputClassificationDefinitions.LogError, settings.ErrorTextColor},
-                {OutputClassificationDefinitions.LogWarn, settings.WarningTextColor},
-                {OutputClassificationDefinitions.LogInfo, settings.InformationTextColor},
-                {OutputClassificationDefinitions.LogCustom1, settings.CustomTextColor1},
-                {OutputClassificationDefinitions.LogCustom2, settings.CustomTextColor2},
-                {OutputClassificationDefinitions.LogCustom3, settings.CustomTextColor3},
-                {OutputClassificationDefinitions.LogCustom4, settings.CustomTextColor4},
-                {OutputClassificationDefinitions.FindResultsFilename, settings.FindFileNameColor},
-                {OutputClassificationDefinitions.FindResultsSearchTerm, settings.FindSearchTermColor}
+                {ClassificationTypeDefinitions.BuildHead, settings.BuildMessageColor},
+                {ClassificationTypeDefinitions.BuildText, settings.BuildTextColor},
+                {ClassificationTypeDefinitions.LogError, settings.ErrorTextColor},
+                {ClassificationTypeDefinitions.LogWarn, settings.WarningTextColor},
+                {ClassificationTypeDefinitions.LogInfo, settings.InformationTextColor},
+                {ClassificationTypeDefinitions.LogCustom1, settings.CustomTextColor1},
+                {ClassificationTypeDefinitions.LogCustom2, settings.CustomTextColor2},
+                {ClassificationTypeDefinitions.LogCustom3, settings.CustomTextColor3},
+                {ClassificationTypeDefinitions.LogCustom4, settings.CustomTextColor4},
+                {ClassificationTypeDefinitions.FindResultsFilename, settings.FindFileNameColor},
+                {ClassificationTypeDefinitions.FindResultsSearchTerm, settings.FindSearchTermColor},
+                {ClassificationTypeDefinitions.Timestamp, settings.TimestampColor}
             };
         }
     }

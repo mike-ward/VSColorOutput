@@ -9,18 +9,21 @@ namespace VSColorOutput.State
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptionsDialog : DialogPage
     {
-        private const string ActionSubCategory = "Build Actions";
-        private const string PatternsSubCategory = "Classifier Patterns";
-        private const string ColorsSubCategory = "Colors";
-        private const string FindResultsSubCategory = "Find Results";
         public const string Category = "VSColorOutput";
         public const string SubCategory = "General";
+
+        private const string PatternsSubCategory = "Classifier Patterns";
+        // --------------------------------------------------------------------------
 
         [Category(PatternsSubCategory)]
         [DisplayName("RegEx Patterns")]
         [Description("Specify patterns (Regular Expressions) and assoicate with classification types. " +
             "The order of the patterns is significant. ")]
         public RegExClassification[] RegExPatterns { get; set; }
+
+        // --------------------------------------------------------------------------
+
+        private const string ActionSubCategory = "Build Actions";
 
         [Category(ActionSubCategory)]
         [DisplayName("Stop Build on First Error")]
@@ -45,6 +48,10 @@ namespace VSColorOutput.State
         [Category(ActionSubCategory)]
         [DisplayName("Color Find Results")]
         public bool HighlightFindResults { get; set; }
+
+        // --------------------------------------------------------------------------
+
+        private const string ColorsSubCategory = "Colors";
 
         [Category(ColorsSubCategory)]
         [DisplayName("Build Message")]
@@ -84,6 +91,10 @@ namespace VSColorOutput.State
         [DisplayName("Custom 4")]
         public Color CustomTextColor4 { get; set; }
 
+        // --------------------------------------------------------------------------
+
+        private const string FindResultsSubCategory = "Find Results";
+
         [Category(FindResultsSubCategory)]
         [DisplayName("File")]
         [Description("Filename portion of find results")]
@@ -93,6 +104,15 @@ namespace VSColorOutput.State
         [DisplayName("Term")]
         [Description("Search term portion of find results")]
         public Color FindSearchTermColor { get; set; }
+
+        // --------------------------------------------------------------------------
+
+        private const string TimestampSubCategory = "Timestamp";
+
+        [Category(TimestampSubCategory)]
+        [DisplayName("Timestamp")]
+        [Description("Timestamp")]
+        public Color TimestampColor { get; set; }
 
         public override void LoadSettingsFromStorage()
         {
@@ -120,6 +140,8 @@ namespace VSColorOutput.State
 
             FindFileNameColor = settings.FindFileNameColor;
             FindSearchTermColor = settings.FindSearchTermColor;
+
+            TimestampColor = settings.TimestampColor;
         }
 
         public override void SaveSettingsToStorage()
@@ -147,7 +169,9 @@ namespace VSColorOutput.State
                 CustomTextColor4 = CustomTextColor4,
                 // --
                 FindFileNameColor = FindFileNameColor,
-                FindSearchTermColor = FindSearchTermColor
+                FindSearchTermColor = FindSearchTermColor,
+                // --
+                TimestampColor = TimestampColor
             };
             settings.Save();
         }

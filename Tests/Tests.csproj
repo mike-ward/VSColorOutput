@@ -161,12 +161,13 @@
     <Compile Include="FakeTextSnapshotLine.cs" />
     <Compile Include="FindResultsClassifierProviderTests.cs" />
     <Compile Include="FindResultsClassifierTests.cs" />
-    <Compile Include="OutputClassificationDefinitionsTests.cs" />
+    <Compile Include="ClassificationTypeDefinitionsTests.cs" />
     <Compile Include="OutputClassifierProviderTests.cs" />
     <Compile Include="OutputClassifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegExClassificationTests.cs" />
     <Compile Include="BuildEventsTests.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

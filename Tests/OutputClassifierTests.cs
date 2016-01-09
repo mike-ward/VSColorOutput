@@ -36,21 +36,21 @@ namespace Tests
             mockClassificationTypeRegistryService.VerifyAll();
         }
 
-        [TestCase("-----", OutputClassificationDefinitions.BuildHead)]
-        [TestCase("=====", OutputClassificationDefinitions.BuildHead)]
-        [TestCase("0 failed,", OutputClassificationDefinitions.BuildHead)]
-        [TestCase("plain text", OutputClassificationDefinitions.BuildText)]
-        [TestCase("+++>", OutputClassificationDefinitions.LogCustom1)]
-        [TestCase(":Error:", OutputClassificationDefinitions.LogError)]
-        [TestCase("Error ", OutputClassificationDefinitions.LogError)]
-        [TestCase(" Failed ", OutputClassificationDefinitions.LogError)]
-        [TestCase("Failed ", OutputClassificationDefinitions.LogError)]
-        [TestCase(" Fail ", OutputClassificationDefinitions.LogError)]
-        [TestCase("Exception ", OutputClassificationDefinitions.LogError)]
-        [TestCase(":Warning:", OutputClassificationDefinitions.LogWarn)]
-        [TestCase("Warning:", OutputClassificationDefinitions.LogWarn)]
-        [TestCase(":Information:", OutputClassificationDefinitions.LogInfo)]
-        [TestCase("Information:", OutputClassificationDefinitions.LogInfo)]
+        [TestCase("-----", ClassificationTypeDefinitions.BuildHead)]
+        [TestCase("=====", ClassificationTypeDefinitions.BuildHead)]
+        [TestCase("0 failed,", ClassificationTypeDefinitions.BuildHead)]
+        [TestCase("plain text", ClassificationTypeDefinitions.BuildText)]
+        [TestCase("+++>", ClassificationTypeDefinitions.LogCustom1)]
+        [TestCase(":Error:", ClassificationTypeDefinitions.LogError)]
+        [TestCase("Error ", ClassificationTypeDefinitions.LogError)]
+        [TestCase(" Failed ", ClassificationTypeDefinitions.LogError)]
+        [TestCase("Failed ", ClassificationTypeDefinitions.LogError)]
+        [TestCase(" Fail ", ClassificationTypeDefinitions.LogError)]
+        [TestCase("Exception ", ClassificationTypeDefinitions.LogError)]
+        [TestCase(":Warning:", ClassificationTypeDefinitions.LogWarn)]
+        [TestCase("Warning:", ClassificationTypeDefinitions.LogWarn)]
+        [TestCase(":Information:", ClassificationTypeDefinitions.LogInfo)]
+        [TestCase("Information:", ClassificationTypeDefinitions.LogInfo)]
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();
