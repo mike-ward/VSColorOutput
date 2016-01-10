@@ -3,7 +3,7 @@
   <Identifier Id="CD56B219-38CB-482A-9B2D-7582DF4AAF1E">
     <Name>VSColorOutput</Name>
     <Author>Mike Ward</Author>
-    <Version>2.1.1</Version>
+    <Version>2.2.0</Version>
     <Description xml:space="preserve">Color output for build and debug windows.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://mike-ward.net/vscoloroutput</MoreInfoUrl>
