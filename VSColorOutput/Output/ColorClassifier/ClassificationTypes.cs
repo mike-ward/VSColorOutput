@@ -13,6 +13,6 @@
         LogCustom4,
         FindFileName,
         FindSearchTerm,
-        Timestamp
+        TimeStamp
     }
 }

@@ -22,10 +22,11 @@ namespace VSColorOutput.Output.BuildEvents
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
 
-        public bool StopOnBuildErrorEnabled { private get; set; }
-        public bool ShowElapsedBuildTimeEnabled { private get; set; }
-        public bool ShowBuildReport { private get; set; }
-        public bool ShowDebugWindowOnDebug { private get; set; }
+        public bool StopOnBuildErrorEnabled { get; set; }
+        public bool ShowElapsedBuildTimeEnabled { get; set; }
+        public bool ShowBuildReport { get; set; }
+        public bool ShowDebugWindowOnDebug { get; set; }
+        public bool ShowTimeStamps { get; set; }
         public DateTime DebugStartTime { get; private set; }
 
         public void Initialize(IServiceProvider serviceProvider)
@@ -60,6 +61,7 @@ namespace VSColorOutput.Output.BuildEvents
             ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
             ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
+            ShowTimeStamps = settings.ShowTimeStamps;
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
@@ -126,13 +128,12 @@ namespace VSColorOutput.Output.BuildEvents
             {
                 DebugStartTime = DateTime.Now;
 
-                if (ShowDebugWindowOnDebug)
+                if (ShowDebugWindowOnDebug || ShowTimeStamps)
                 {
                     _dte2.ToolWindows.OutputWindow.Parent.Activate();
                     foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
                     {
-                        if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string ||
-                            pane.Guid == VSConstants.DebugOutput.ToString())
+                        if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
                         {
                             pane.Activate();
                             break;

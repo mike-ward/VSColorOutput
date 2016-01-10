@@ -104,10 +104,10 @@ namespace Tests
         }
 
         [Test]
-        public void TimestampFormat()
+        public void TimeStampFormat()
         {
-            var format = new TimestampFormat();
-            format.ForegroundColor.Should().Be(ToMediaColor(_settings.TimestampColor));
+            var format = new TimeStampFormat();
+            format.ForegroundColor.Should().Be(ToMediaColor(_settings.TimeStampColor));
             format.BackgroundOpacity.Should().Be(0);
         }
     }

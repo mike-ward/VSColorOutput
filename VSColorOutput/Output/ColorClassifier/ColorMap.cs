@@ -22,7 +22,7 @@ namespace VSColorOutput.Output.ColorClassifier
                 {ClassificationTypeDefinitions.LogCustom4, settings.CustomTextColor4},
                 {ClassificationTypeDefinitions.FindResultsFilename, settings.FindFileNameColor},
                 {ClassificationTypeDefinitions.FindResultsSearchTerm, settings.FindSearchTermColor},
-                {ClassificationTypeDefinitions.Timestamp, settings.TimestampColor}
+                {ClassificationTypeDefinitions.TimeStamp, settings.TimeStampColor}
             };
         }
     }

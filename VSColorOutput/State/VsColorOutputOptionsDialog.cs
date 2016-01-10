@@ -13,6 +13,7 @@ namespace VSColorOutput.State
         public const string SubCategory = "General";
 
         private const string PatternsSubCategory = "Classifier Patterns";
+        
         // --------------------------------------------------------------------------
 
         [Category(PatternsSubCategory)]
@@ -48,6 +49,11 @@ namespace VSColorOutput.State
         [Category(ActionSubCategory)]
         [DisplayName("Color Find Results")]
         public bool HighlightFindResults { get; set; }
+
+        [Category(ActionSubCategory)]
+        [DisplayName("Show Time stamps (Experimental)")]
+        [Description("Implies -> Shows Debug Window on Debug")]
+        public bool ShowTimeStamps { get; set; }
 
         // --------------------------------------------------------------------------
 
@@ -107,12 +113,11 @@ namespace VSColorOutput.State
 
         // --------------------------------------------------------------------------
 
-        private const string TimestampSubCategory = "Timestamp";
+        private const string TimeStampSubCategory = "Time Stamp";
 
-        [Category(TimestampSubCategory)]
-        [DisplayName("Timestamp")]
-        [Description("Timestamp")]
-        public Color TimestampColor { get; set; }
+        [Category(TimeStampSubCategory)]
+        [DisplayName("Time Stamp")]
+        public Color TimeStampColor { get; set; }
 
         public override void LoadSettingsFromStorage()
         {
@@ -123,6 +128,7 @@ namespace VSColorOutput.State
             ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             HighlightFindResults = settings.HighlightFindResults;
+            ShowTimeStamps = settings.ShowTimeStamps;
 
             RegExPatterns = settings.Patterns;
 
@@ -141,7 +147,7 @@ namespace VSColorOutput.State
             FindFileNameColor = settings.FindFileNameColor;
             FindSearchTermColor = settings.FindSearchTermColor;
 
-            TimestampColor = settings.TimestampColor;
+            TimeStampColor = settings.TimeStampColor;
         }
 
         public override void SaveSettingsToStorage()
@@ -153,6 +159,7 @@ namespace VSColorOutput.State
                 ShowBuildReport = ShowBuildReport,
                 ShowDebugWindowOnDebug = ShowDebugWindowOnDebug,
                 HighlightFindResults = HighlightFindResults,
+                ShowTimeStamps = ShowTimeStamps,
                 // ---
                 Patterns = RegExPatterns,
                 // ---
@@ -171,7 +178,7 @@ namespace VSColorOutput.State
                 FindFileNameColor = FindFileNameColor,
                 FindSearchTermColor = FindSearchTermColor,
                 // --
-                TimestampColor = TimestampColor
+                TimeStampColor = TimeStampColor
             };
             settings.Save();
         }

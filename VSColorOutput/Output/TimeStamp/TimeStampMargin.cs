@@ -35,10 +35,12 @@ namespace VSColorOutput.Output.TimeStamp
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
         {
             _textView = textView;
-            _formatMap = timeStampMarginProvider.ClassificationFormatMappingService.GetClassificationFormatMap(_textView);
 
-            _timestampClassification = timeStampMarginProvider.ClassificationTypeRegistryService.GetClassificationType
-                (ClassificationTypeDefinitions.Timestamp);
+            _formatMap = timeStampMarginProvider.ClassificationFormatMappingService
+                .GetClassificationFormatMap(_textView);
+
+            _timestampClassification = timeStampMarginProvider.ClassificationTypeRegistryService
+                .GetClassificationType(ClassificationTypeDefinitions.TimeStamp);
 
             ClipToBounds = true;
             IsHitTestVisible = false;
@@ -47,7 +49,7 @@ namespace VSColorOutput.Output.TimeStamp
 
             IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
-            Settings.SettingsUpdated += (sender, args) => UpdateFormatMap();
+            Settings.SettingsUpdated += OnSettingsOnSettingsUpdated;
             UpdateFormatMap();
         }
 
@@ -68,8 +70,15 @@ namespace VSColorOutput.Output.TimeStamp
             Update();
         }
 
+        private void OnSettingsOnSettingsUpdated(object sender, EventArgs args)
+        {
+            UpdateFormatMap();
+        }
+
         private void TextBufferOnChanged(object sender, TextContentChangedEventArgs ea)
         {
+            Func<int, DateTime, IEnumerable<DateTime>> fill = (count, time) => Enumerable.Range(0, count).Select(t => time);
+
             foreach (var textChange in ea.Changes)
             {
                 var lineNumber = ea.Before.GetLineFromPosition(textChange.OldPosition).LineNumber;
@@ -79,7 +88,7 @@ namespace VSColorOutput.Output.TimeStamp
                     var count =_lineTimeStamps.Count;
                     _lineTimeStamps.InsertRange(
                         Math.Min(lineNumber, count), 
-                        Fill(textChange.LineCountDelta + lineNumber - count, DateTime.Now));
+                        fill(textChange.LineCountDelta + lineNumber - count, DateTime.Now));
                 }
                 else if (textChange.LineCountDelta < 0)
                 {
@@ -87,8 +96,6 @@ namespace VSColorOutput.Output.TimeStamp
                 }
             }
         }
-
-        private static IEnumerable<DateTime> Fill(int count, DateTime time) => Enumerable.Range(0, count).Select(t => time);
 
         private void Update()
         {
@@ -160,7 +167,7 @@ namespace VSColorOutput.Output.TimeStamp
         {
             var colorMap = ColorMap.GetMap();
             var textProperties = _formatMap.GetTextProperties(_timestampClassification);
-            var color = colorMap[ClassificationTypeDefinitions.Timestamp];
+            var color = colorMap[ClassificationTypeDefinitions.TimeStamp];
             var wpfColor = ClassificationTypeDefinitions.ToMediaColor(color);
             textProperties = textProperties.SetForeground(wpfColor);
 
@@ -175,6 +182,9 @@ namespace VSColorOutput.Output.TimeStamp
 
         private double CalculateMarginWidth()
         {
+            var settings = Settings.Load();
+            if (settings.ShowTimeStamps == false) return 0;
+
             var text = new FormattedText(
                 "00:00:000 (00:00:000)",
                 CultureInfo.InvariantCulture,
@@ -192,6 +202,7 @@ namespace VSColorOutput.Output.TimeStamp
             _disposed = true;
             _textView.TextBuffer.Changed -= TextBufferOnChanged;
             IsVisibleChanged -= OnVisibleChanged;
+            Settings.SettingsUpdated -= OnSettingsOnSettingsUpdated;
         }
     }
 }

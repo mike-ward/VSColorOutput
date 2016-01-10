@@ -22,7 +22,7 @@ namespace VSColorOutput.Output.ColorClassifier
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
         public const string FindResultsFilename = "FindResultsFilename";
 
-        public const string Timestamp = "Timestamp";
+        public const string TimeStamp = "TimeStamp";
 
         private static bool _settingsLoaded;
         private static Dictionary<string, Color> _colorMap;
@@ -243,19 +243,19 @@ namespace VSColorOutput.Output.ColorClassifier
         }
 
         [Export]
-        [Name(Timestamp)]
-        public static ClassificationTypeDefinition TimestampDefinition { get; set; }
+        [Name(TimeStamp)]
+        public static ClassificationTypeDefinition TimeStampDefinition { get; set; }
 
-        [Name(Timestamp)]
+        [Name(TimeStamp)]
         [UserVisible(false)]
         [Export(typeof(EditorFormatDefinition))]
-        [ClassificationType(ClassificationTypeNames = Timestamp)]
+        [ClassificationType(ClassificationTypeNames = TimeStamp)]
         [Order(Before = Priority.Default)]
-        public sealed class TimestampFormat : ClassificationFormatDefinition
+        public sealed class TimeStampFormat : ClassificationFormatDefinition
         {
-            public TimestampFormat()
+            public TimeStampFormat()
             {
-                ForegroundColor = GetColor(Timestamp);
+                ForegroundColor = GetColor(TimeStamp);
                 BackgroundOpacity = 0;
             }
         }
