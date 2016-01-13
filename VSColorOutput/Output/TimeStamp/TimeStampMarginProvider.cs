@@ -16,8 +16,11 @@ namespace VSColorOutput.Output.TimeStamp
         [Import] internal IClassificationFormatMapService ClassificationFormatMappingService { get; private set; }
         [Import] internal IClassificationTypeRegistryService ClassificationTypeRegistryService { get; private set; }
 
+        public static bool Initialized { get; private set; }
+
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
+            Initialized = true;
             return new TimeStampMargin(textViewHost.TextView, this);
         }
     }

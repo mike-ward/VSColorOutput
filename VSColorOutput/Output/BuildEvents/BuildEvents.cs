@@ -4,6 +4,7 @@ using System.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using VSColorOutput.Output.TimeStamp;
 using VSColorOutput.State;
 
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
@@ -128,17 +129,22 @@ namespace VSColorOutput.Output.BuildEvents
             {
                 DebugStartTime = DateTime.Now;
 
-                if (ShowDebugWindowOnDebug || ShowTimeStamps)
+                if (ShowDebugWindowOnDebug || (ShowTimeStamps && !TimeStampMarginProvider.Initialized))
                 {
-                    _dte2.ToolWindows.OutputWindow.Parent.Activate();
-                    foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
-                    {
-                        if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
-                        {
-                            pane.Activate();
-                            break;
-                        }
-                    }
+                    ActivateDebugOutputWindow();
+                }
+            }
+        }
+
+        private void ActivateDebugOutputWindow()
+        {
+            _dte2.ToolWindows.OutputWindow.Parent.Activate();
+            foreach (OutputWindowPane pane in _dte2.ToolWindows.OutputWindow.OutputWindowPanes)
+            {
+                if (pane.Guid == VSConstants.OutputWindowPaneGuid.DebugPane_string)
+                {
+                    pane.Activate();
+                    break;
                 }
             }
         }

@@ -51,8 +51,8 @@ namespace VSColorOutput.State
         public bool HighlightFindResults { get; set; }
 
         [Category(ActionSubCategory)]
-        [DisplayName("Show Time stamps (Experimental)")]
-        [Description("Implies -> Shows Debug Window on Debug")]
+        [DisplayName("Show Time Stamps")]
+        [Description("Shows elapsed and incremental times in debug output window")]
         public bool ShowTimeStamps { get; set; }
 
         // --------------------------------------------------------------------------
