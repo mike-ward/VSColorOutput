@@ -92,7 +92,14 @@ namespace VSColorOutput.Output.TimeStamp
                 }
                 else if (textChange.LineCountDelta < 0)
                 {
-                    _lineTimeStamps.RemoveRange(lineNumber, -textChange.LineCountDelta);
+                    try
+                    {
+                        _lineTimeStamps.RemoveRange(lineNumber, -textChange.LineCountDelta);
+                    }
+                    catch (ArgumentException)
+                    {
+                        _lineTimeStamps.Clear();
+                    }
                 }
             }
         }
