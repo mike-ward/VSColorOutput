@@ -55,6 +55,11 @@ namespace VSColorOutput.State
         [Description("Shows elapsed and incremental times in debug output window")]
         public bool ShowTimeStamps { get; set; }
 
+        [Category(ActionSubCategory)]
+        [DisplayName("Yes, I Donated!")]
+        [Description("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=REEP6X7DSPMZU")]
+        public bool SuppressDonation { get; set; }
+
         // --------------------------------------------------------------------------
 
         private const string ColorsSubCategory = "Colors";
@@ -148,6 +153,7 @@ namespace VSColorOutput.State
             FindSearchTermColor = settings.FindSearchTermColor;
 
             TimeStampColor = settings.TimeStampColor;
+            SuppressDonation = settings.SuppressDonation;
         }
 
         public override void SaveSettingsToStorage()
@@ -178,7 +184,8 @@ namespace VSColorOutput.State
                 FindFileNameColor = FindFileNameColor,
                 FindSearchTermColor = FindSearchTermColor,
                 // --
-                TimeStampColor = TimeStampColor
+                TimeStampColor = TimeStampColor,
+                SuppressDonation = SuppressDonation
             };
             settings.Save();
         }

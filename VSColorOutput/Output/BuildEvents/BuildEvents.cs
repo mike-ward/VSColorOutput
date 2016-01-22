@@ -29,6 +29,7 @@ namespace VSColorOutput.Output.BuildEvents
         public bool ShowDebugWindowOnDebug { get; set; }
         public bool ShowTimeStamps { get; set; }
         public DateTime DebugStartTime { get; private set; }
+        public bool ShowDonation { get; set; }
 
         public void Initialize(IServiceProvider serviceProvider)
         {
@@ -63,6 +64,7 @@ namespace VSColorOutput.Output.BuildEvents
             ShowBuildReport = settings.ShowBuildReport;
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             ShowTimeStamps = settings.ShowTimeStamps;
+            ShowDonation = !settings.SuppressDonation;
         }
 
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
@@ -106,6 +108,15 @@ namespace VSColorOutput.Output.BuildEvents
                 var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
                 var text = $"Time Elapsed {time}";
                 buildOutputPane.OutputString("\r\n" + text + "\r\n");
+            }
+
+            if (ShowDonation)
+            {
+                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                buildOutputPane.OutputString("\r\n+++                    Please consider donating to VSColorOuput                        +++");
+                buildOutputPane.OutputString("\r\n+++ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=REEP6X7DSPMZU +++");
+                buildOutputPane.OutputString("\r\n+++               (this message can be turned off in settings panel)                   +++");
+                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n");
             }
         }
 
