@@ -62,21 +62,25 @@ namespace VSColorOutput.Output.ColorClassifier
                 for (var i = start; i <= end; i++)
                 {
                     var line = snapshot.GetLineFromLineNumber(i);
+                    if (line == null) continue;
                     var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
                     var text = line.Snapshot.GetText(snapshotSpan);
+                    if (string.IsNullOrEmpty(text)) continue;
 
-                    if (string.IsNullOrEmpty(text) == false)
-                    {
-                        var classificationName = classifiers.First(classifier => classifier.Test(text)).Type;
-                        var type = _classificationTypeRegistry.GetClassificationType(classificationName);
-                        spans.Add(new ClassificationSpan(line.Extent, type));
-                    }
+                    var classificationName = classifiers.First(classifier => classifier.Test(text)).Type;
+                    var type = _classificationTypeRegistry.GetClassificationType(classificationName);
+                    if (type != null) spans.Add(new ClassificationSpan(line.Extent, type));
                 }
                 return spans;
             }
             catch (RegexMatchTimeoutException)
             {
                 // eat it.
+                return new List<ClassificationSpan>();
+            }
+            catch (NullReferenceException)
+            {
+                // eat it.    
                 return new List<ClassificationSpan>();
             }
             catch (Exception ex)
