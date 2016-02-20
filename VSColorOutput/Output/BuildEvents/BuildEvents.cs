@@ -112,11 +112,11 @@ namespace VSColorOutput.Output.BuildEvents
 
             if (ShowDonation)
             {
-                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                buildOutputPane.OutputString("\r\n+++                    Please consider donating to VSColorOutput                       +++");
-                buildOutputPane.OutputString("\r\n+++ https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=REEP6X7DSPMZU +++");
-                buildOutputPane.OutputString("\r\n+++              (this message can be turned off in the settings panel)                +++");
-                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n");
+                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                buildOutputPane.OutputString("\r\n+++                 Please consider donating to VSColorOutput                    +++");
+                buildOutputPane.OutputString("\r\n+++                        http://mike-ward.net/donate/                          +++");
+                buildOutputPane.OutputString("\r\n+++            (this message can be turned off in the settings panel)            +++");
+                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n");
             }
         }
 
