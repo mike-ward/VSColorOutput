@@ -97,7 +97,9 @@ namespace VSColorOutput.FindResults
                     select s.Trim()).ToList();
 
                 var start = strings[0].IndexOf('"');
-                var searchTerm = strings[0].Substring(start + 1, strings[0].Length - start - 2);
+                var length = strings[0].Length - start - 2;
+                if (length < 0) return false;
+                var searchTerm = strings[0].Substring(start + 1, length);
                 var matchCase = strings.Contains(MatchCase);
                 var matchWholeWord = strings.Contains(WholeWord);
                 var filenamesOnly = strings.Contains(ListFilenamesOnly);

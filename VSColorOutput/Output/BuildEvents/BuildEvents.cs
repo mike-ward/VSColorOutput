@@ -105,7 +105,7 @@ namespace VSColorOutput.Output.BuildEvents
             if (ShowElapsedBuildTimeEnabled)
             {
                 var elapsed = DateTime.Now - _buildStartTime;
-                var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
+                var time = elapsed.ToString(@"hh\:mm\:ss\.fff");
                 var text = $"Time Elapsed {time}";
                 buildOutputPane.OutputString("\r\n" + text + "\r\n");
             }
