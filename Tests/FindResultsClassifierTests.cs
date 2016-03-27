@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -29,6 +30,9 @@ namespace Tests
 
         private const string UsingResultsLine1 = @"  C:\Projects\App\Program.cs(1):using System;";
         private const string UsingResultsLine2 = @"  C:\Projects\App\Program.cs(20):using System.Collections.Generic;";
+
+        private const string UsingUncResultsLine1 = @"  \\Projects\App\Program.cs(1):using System;";
+        private const string UsingUncResultsLine2 = @"  \\Projects\App\Program.cs(20):using System.Collections.Generic;";
 
         private const string UsingResultsLineWithMultipleHits = @"  C:\Projects\App\Program.cs(2):using System.Collections.Generic; // using UnusedStuff;";
 
@@ -249,6 +253,22 @@ namespace Tests
         }
 
         [Test]
+        public void ClassifiesUncFilename()
+        {
+            const string searchTerm = "not found";
+            var text = GetCaseInsensitiveResultsText(searchTerm, UsingUncResultsLine1, UsingUncResultsLine2);
+
+            PrimeClassifierSearchOptionsWithFirstLine(text);
+
+            var snapshotSpan = BuildSnapshotSpanFromLineNumber(text, 1);
+            var spans = _classifier.GetClassificationSpans(snapshotSpan);
+
+            spans.Count.Should().Be(1);
+
+            AssertFilenameClassified(spans[0], snapshotSpan);
+        }
+
+        [Test]
         public void DoesNotClassifySearchTermInFilename()
         {
             const string searchTerm = @"C:\Projects";
@@ -290,7 +310,7 @@ namespace Tests
         private static void AssertFilenameClassified(ClassificationSpan classificationSpan, SnapshotSpan snapshotSpan)
         {
             var text = snapshotSpan.GetText();
-            var index = text.IndexOf(':');
+            var index = Regex.Match(text, @"[:\\]").Index;
             index = text.IndexOf(':', index + 1);
             AssertClassification(classificationSpan, ClassificationTypeDefinitions.FindResultsFilename, snapshotSpan.Start.Position, index + 1);
         }

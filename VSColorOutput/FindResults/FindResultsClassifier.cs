@@ -32,7 +32,7 @@ namespace VSColorOutput.FindResults
 
         static FindResultsClassifier()
         {
-            FilenameRegex = new Regex(@"^\s*.:.*\(\d+\):", RegexOptions.Compiled);
+            FilenameRegex = new Regex(@"^\s*.[:\\]\\.*\(\d+\):", RegexOptions.Compiled);
         }
 
         public void Initialize(IClassificationTypeRegistryService classificationRegistry, IClassificationFormatMapService formatMapService)
