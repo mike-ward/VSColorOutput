@@ -149,6 +149,18 @@ namespace VSColorOutput.State
                 },
                 new RegExClassification
                 {
+                    RegExPattern = @"^\s*0 error\(s\)\s*$",
+                    ClassificationType = ClassificationTypes.BuildHead,
+                    IgnoreCase = true
+                },
+                new RegExClassification
+                {
+                    RegExPattern = @"^\s*0 warning\(s\)\s*$",
+                    ClassificationType = ClassificationTypes.BuildHead,
+                    IgnoreCase = true
+                },
+                new RegExClassification
+                {
                     RegExPattern = @"0 failed|Succeeded",
                     ClassificationType = ClassificationTypes.BuildHead,
                     IgnoreCase = true

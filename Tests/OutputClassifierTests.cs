@@ -51,6 +51,8 @@ namespace Tests
         [TestCase("Warning:", ClassificationTypeDefinitions.LogWarn)]
         [TestCase(":Information:", ClassificationTypeDefinitions.LogInfo)]
         [TestCase("Information:", ClassificationTypeDefinitions.LogInfo)]
+        [TestCase(" 0 Warning(s)", ClassificationTypeDefinitions.BuildHead)]
+        [TestCase(" 0 Error(s)", ClassificationTypeDefinitions.BuildHead)]
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();
