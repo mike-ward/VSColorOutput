@@ -53,6 +53,7 @@ namespace Tests
         [TestCase("Information:", ClassificationTypeDefinitions.LogInfo)]
         [TestCase(" 0 Warning(s)", ClassificationTypeDefinitions.BuildHead)]
         [TestCase(" 0 Error(s)", ClassificationTypeDefinitions.BuildHead)]
+        [TestCase("Could not find file", ClassificationTypeDefinitions.BuildHead)]
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();

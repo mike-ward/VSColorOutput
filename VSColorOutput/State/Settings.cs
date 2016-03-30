@@ -194,6 +194,12 @@ namespace VSColorOutput.State
                     RegExPattern = @"(\W|^)information\W",
                     ClassificationType = ClassificationTypes.LogInformation,
                     IgnoreCase = true
+                },
+                new RegExClassification
+                {
+                    RegExPattern = @"Could not find file",
+                    ClassificationType = ClassificationTypes.LogError,
+                    IgnoreCase = true
                 }
             };
         }
