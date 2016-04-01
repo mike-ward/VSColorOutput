@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using VSColorOutput.Output.ColorClassifier;
+// ReSharper disable ObjectCreationAsStatement
 
 namespace Tests
 {
@@ -20,16 +21,18 @@ namespace Tests
             rc.ToString().Should().Be("\"/d\",BuildText,True");
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void RegExPatternCannotBeSetToNull()
         {
-            new RegExClassification {RegExPattern = null};
+            Action act = () => new RegExClassification {RegExPattern = null};
+            act.ShouldThrow<ArgumentNullException>();
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void BadRegExExpressionShouldRaiseException()
         {
-            new RegExClassification {RegExPattern = @"(\d"};
+            Action act = () => new RegExClassification {RegExPattern = @"(\d"};
+            act.ShouldThrow<ArgumentException>();
         }
     }
 }
