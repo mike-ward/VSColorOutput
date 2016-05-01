@@ -54,6 +54,7 @@ namespace Tests
         [TestCase(" 0 Warning(s)", ClassificationTypeDefinitions.BuildHead)]
         [TestCase(" 0 Error(s)", ClassificationTypeDefinitions.BuildHead)]
         [TestCase("Could not find file", ClassificationTypeDefinitions.LogError)]
+        [TestCase("warning CS0168: The variable \'exception\'", ClassificationTypeDefinitions.LogWarn)]
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();
