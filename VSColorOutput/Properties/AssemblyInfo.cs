@@ -1,8 +1,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("VSColorOut")]
-[assembly: AssemblyDescription("Colored debug and build window text")]
+[assembly: AssemblyTitle("VSColorOutput")]
+[assembly: AssemblyDescription("Color output for build and debug windows")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mike Ward")]
 [assembly: AssemblyProduct("VSColorOutput")]
