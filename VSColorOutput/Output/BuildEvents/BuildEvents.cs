@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using EnvDTE;
 using EnvDTE80;
@@ -104,10 +105,14 @@ namespace VSColorOutput.Output.BuildEvents
 
             if (ShowElapsedBuildTimeEnabled)
             {
-                var elapsed = DateTime.Now - _buildStartTime;
+                var now = DateTime.Now;
+                var elapsed = now - _buildStartTime;
                 var time = elapsed.ToString(@"hh\:mm\:ss\.fff");
+                var buildTime = now.ToString("yyyy-MM-dd hh:mm:ss tt", new CultureInfo("en-US"));
                 var text = $"Time Elapsed {time}";
+                var text2 = $"Build ended at {buildTime}";
                 buildOutputPane.OutputString("\r\n" + text + "\r\n");
+                buildOutputPane.OutputString(text2 + "\r\n");
             }
 
             if (ShowDonation)
