@@ -187,6 +187,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Output\Classifier.cs" />
+    <Compile Include="Output\GCCErrorList\GCCErrorGenerator.cs" />
+    <Compile Include="Output\GCCErrorList\GCCErrorListItem.cs" />
+    <Compile Include="Output\GCCErrorList\GCCErrorListOutputClassifier.cs" />
+    <Compile Include="Output\GCCErrorList\GCCErrorListOutputClassifierProvider.cs" />
+    <Compile Include="Output\GCCErrorList\GCCErrorType.cs" />
     <Compile Include="Output\BuildEvents\BuildEventsProvider.cs" />
     <Compile Include="Output\ColorClassifier\ClassificationTypes.cs" />
     <Compile Include="Output\ColorClassifier\ColorMap.cs" />
