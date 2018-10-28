@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mike Ward")]
 [assembly: AssemblyProduct("VSColorOutput")]
-[assembly: AssemblyCopyright("Copyright (c) 2016 Mike Ward")]
+[assembly: AssemblyCopyright("Copyright (c) 2018 Mike Ward")]
 [assembly: AssemblyTrademark("VSColorOutput is a trademark of Mike Ward")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
