@@ -1,8 +1,8 @@
 ![Image](http://mike-ward.net/cdn/images/vscoloroutput/vscoloroutputlogo.png) 
 
-###Project Description  
+### Project Description  
 
-VSColorOutput is a Visual Studio 2010/2011 extension that adds color highlighting to Visual Studio's Build and Debug Output Windows. Errors are in Red, Warnings in Yellow, build headers are Green.   
+VSColorOutput is a Visual Studio extension that adds color highlighting to Visual Studio's Build and Debug Output Windows. Errors are in Red, Warnings in Yellow, build headers are Green.   
   
 Custom match patterns can be added. Colors can be modified.  
   

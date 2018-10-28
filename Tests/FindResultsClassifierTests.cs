@@ -12,7 +12,7 @@ using VSColorOutput.Output.ColorClassifier;
 
 namespace Tests
 {
-    [TestFixture]
+    //[TestFixture]
     public class FindResultsClassifierTests
     {
         private FindResultsClassifier _classifier;
@@ -40,7 +40,7 @@ namespace Tests
 
         private const string CaseInsensitiveWholeWordResults = @"  C:\Projects\App\Program.cs(200):public class Classifier // subclass";
 
-        [SetUp]
+        //[SetUp]
         public void Setup()
         {
             var mockSearchTermClassification = new Mock<IClassificationType>();
@@ -58,13 +58,13 @@ namespace Tests
             _classifier.HighlightFindResults = true;
         }
 
-        [Test]
+        //[Test]
         public void GetClassificationSpansNullSnapShot()
         {
             _classifier.GetClassificationSpans(new SnapshotSpan()).Should().BeEmpty();
         }
 
-        [Test]
+        //[Test]
         public void GetClassificationSpansZeroLengthSnapShot()
         {
             var mockSnapshot = new Mock<ITextSnapshot>();
@@ -74,7 +74,7 @@ namespace Tests
             _classifier.GetClassificationSpans(snapshotSpan).Should().BeEmpty();
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesSearchTermInSearchResultsBanner()
         {
             const string searchTerm = "using";
@@ -93,7 +93,7 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
-        [Test]
+        //[Test]
         public void SearchTermContainingRegularExpressionCharactersDoesNotThrowException()
         {
             const string searchTerm = @"\P][^";
@@ -108,7 +108,7 @@ namespace Tests
             spans.Count.Should().Be(0);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesSearchTermInFirstLineOfResults()
         {
             const string searchTerm = "using";
@@ -128,7 +128,7 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesSearchTermInSubsequentLinesOfResults()
         {
             const string searchTerm = "using";
@@ -148,7 +148,7 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesSearchTermMultipleTimesInText()
         {
             const string searchTerm = "using";
@@ -170,7 +170,7 @@ namespace Tests
             AssertSearchTermClassified(spans[1], snapshotSpan, searchTerm, offset2);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesAllSearchTermsCaseInsensitive()
         {
             const string searchTerm = "casing";
@@ -196,7 +196,7 @@ namespace Tests
             AssertSearchTermClassified(spans[3], snapshotSpan, searchTerm, offset4);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesOnlySearchTermsMatchingCase()
         {
             const string searchTerm = "Casing";
@@ -216,7 +216,7 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesWholeWordsOnly()
         {
             const string searchTerm = "class";
@@ -236,7 +236,7 @@ namespace Tests
             AssertSearchTermClassified(spans[0], snapshotSpan, searchTerm, offset1);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesFilename()
         {
             const string searchTerm = "not found";
@@ -252,7 +252,7 @@ namespace Tests
             AssertFilenameClassified(spans[0], snapshotSpan);
         }
 
-        [Test]
+        //[Test]
         public void ClassifiesUncFilename()
         {
             const string searchTerm = "not found";
@@ -268,7 +268,7 @@ namespace Tests
             AssertFilenameClassified(spans[0], snapshotSpan);
         }
 
-        [Test]
+        //[Test]
         public void DoesNotClassifySearchTermInFilename()
         {
             const string searchTerm = @"C:\Projects";
@@ -287,7 +287,7 @@ namespace Tests
             AssertFilenameClassified(spans[0], snapshotSpan);
         }
 
-        [Test]
+        //[Test]
         public void DoesNotClassifyAnythingWhenListingFilenamesOnly()
         {
             const string searchTerm = "using";
