@@ -1,37 +1,29 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using VSColorOutput.Output.ColorClassifier;
 using VSColorOutput.State;
 
-// ReSharper disable EmptyGeneralCatchClause
-#pragma warning disable 67
-
-namespace VSColorOutput.Output.ColorClassifier
+namespace VSColorOutput.Output.GCCErrorList
 {
-    public class OutputClassifier : IClassifier
+    class GCCErrorListOutputClassifier : IClassifier
     {
         private int _initialized;
         private IList<Classifier> _classifiers;
-        private IClassificationTypeRegistryService _classificationTypeRegistry;
-        private IClassificationFormatMapService _formatMapService;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
-        public void Initialize(IClassificationTypeRegistryService registry, IClassificationFormatMapService formatMapService)
+        public void Initialize()
         {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
             try
             {
-                _classificationTypeRegistry = registry;
-                _formatMapService = formatMapService;
-
                 Settings.SettingsUpdated += (sender, args) =>
                 {
                     UpdateClassifiers();
-                    UpdateFormatMap();
                 };
             }
             catch (Exception ex)
@@ -61,9 +53,24 @@ namespace VSColorOutput.Output.ColorClassifier
                     var text = line.Snapshot.GetText(snapshotSpan);
                     if (string.IsNullOrEmpty(text)) continue;
 
-                    var classificationName = classifiers.First(classifier => classifier.Test(text)).Type;
-                    var type = _classificationTypeRegistry.GetClassificationType(classificationName);
-                    if (type != null) spans.Add(new ClassificationSpan(line.Extent, type));
+                    var classificationName = classifiers.FirstOrDefault(classifier => classifier.Test(text)).Type;
+                    if (classificationName == null)
+                    {
+                        continue;
+                    }
+                    switch (classificationName)
+                    {
+                        case ClassificationTypeDefinitions.LogError:
+                            GCCErrorGenerator.AddError(GCCErrorListItem.Parse(text));
+                            break;
+                        case ClassificationTypeDefinitions.LogWarn:
+                            GCCErrorGenerator.AddWarning(GCCErrorListItem.Parse(text));
+                            break;
+                        case ClassificationTypeDefinitions.LogInfo:
+                            GCCErrorGenerator.AddMessage(GCCErrorListItem.Parse(text));
+                            break;
+
+                    }
                 }
                 return spans;
             }
@@ -90,11 +97,11 @@ namespace VSColorOutput.Output.ColorClassifier
             var patterns = settings.Patterns ?? new RegExClassification[0];
 
             var classifiers = patterns.Select(
-                pattern => new
-                {
-                    classificationType = pattern.ClassificationType.ToString(),
-                    test = RegExClassification.RegExFactory(pattern)
-                })
+                    pattern => new
+                    {
+                        classificationType = pattern.ClassificationType.ToString(),
+                        test = RegExClassification.RegExFactory(pattern)
+                    })
                 .Select(temp => new Classifier
                 {
                     Type = temp.classificationType,
@@ -111,39 +118,9 @@ namespace VSColorOutput.Output.ColorClassifier
             _classifiers = classifiers;
         }
 
-        private void UpdateFormatMap()
+        protected virtual void OnClassificationChanged(ClassificationChangedEventArgs e)
         {
-            var colorMap = ColorMap.GetMap();
-            var formatMap = _formatMapService.GetClassificationFormatMap("output");
-            try
-            {
-                var classificationNames = new[]
-                {
-                    ClassificationTypeDefinitions.BuildHead,
-                    ClassificationTypeDefinitions.BuildText,
-                    ClassificationTypeDefinitions.LogInfo,
-                    ClassificationTypeDefinitions.LogWarn,
-                    ClassificationTypeDefinitions.LogError,
-                    ClassificationTypeDefinitions.LogCustom1,
-                    ClassificationTypeDefinitions.LogCustom2,
-                    ClassificationTypeDefinitions.LogCustom3,
-                    ClassificationTypeDefinitions.LogCustom4
-                };
-
-                formatMap.BeginBatchUpdate();
-                foreach (var name in classificationNames)
-                {
-                    var classificationType = _classificationTypeRegistry.GetClassificationType(name);
-                    var textProperties = formatMap.GetTextProperties(classificationType);
-                    var color = colorMap[name];
-                    var wpfColor = ClassificationTypeDefinitions.ToMediaColor(color);
-                    formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
-                }
-            }
-            finally
-            {
-                formatMap.EndBatchUpdate();
-            }
+            ClassificationChanged?.Invoke(this, e);
         }
     }
 }
