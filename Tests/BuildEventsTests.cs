@@ -9,10 +9,10 @@ using NUnit.Framework;
 
 namespace Tests
 {
-    [TestFixture]
+    //[TestFixture]
     public class BuildEventsTests
     {
-        [Test]
+        //[Test]
         public void OnProjectBuildDoneConstructorShouldWireupDteEvents()
         {
             var mockDte2 = new Mock<DTE2>();
@@ -47,7 +47,7 @@ namespace Tests
             event _dispDTEEvents_ModeChangedEventHandler ModeChanged;
         }
 
-        [Test]
+        //[Test]
         public void OnBuildProjectDoneCancelsBuildOnErrorWhenEnabled()
         {
             var mockDte2 = new Mock<DTE2>();
@@ -73,7 +73,7 @@ namespace Tests
             mockServiceProvider.VerifyAll();
         }
 
-        [Test]
+        //[Test]
         public void OnBuildDoneShowsElapsedTimeWhenEnabled()
         {
             var mockDte2 = new Mock<DTE2>();
@@ -114,7 +114,7 @@ namespace Tests
             mockOutputWindowPanes.VerifyAll();
         }
 
-        [Test]
+        //[Test]
         public void OnBuildDoneShowsProjectsBuildReportWhenEnabled()
         {
             var mockDte2 = new Mock<DTE2>();
@@ -158,7 +158,7 @@ namespace Tests
             mockOutputWindowPane.VerifyAll();
             mockOutputWindowPanes.VerifyAll();
         }
-        [Test]
+        //[Test]
         public void DteEventsModeChangeActivatesDebugOutputWindowWhenEnabled()
         {
             var mockDte2 = new Mock<DTE2>();
