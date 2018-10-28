@@ -6,7 +6,7 @@ namespace Tests
     [SetUpFixture]
     public class Startup
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void Initialize()
         {
             Runtime.RunningUnitTests = true;
