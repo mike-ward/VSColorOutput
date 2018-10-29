@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-using VSColorOutput.State;
+﻿using System.Text.RegularExpressions;
 
 namespace VSColorOutput.Output.GCCErrorList
 {

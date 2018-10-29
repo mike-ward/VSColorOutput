@@ -74,6 +74,11 @@ namespace VSColorOutput.Output.GCCErrorList
                 }
                 return spans;
             }
+            catch (FormatException)
+            {
+                // eat it.
+                return new List<ClassificationSpan>();
+            }
             catch (RegexMatchTimeoutException)
             {
                 // eat it.
