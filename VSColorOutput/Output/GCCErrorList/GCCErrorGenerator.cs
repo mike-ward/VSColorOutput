@@ -1,10 +1,13 @@
-﻿using EnvDTE;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using VSColorOutput.State;
+using Constants = EnvDTE.Constants;
 
 namespace VSColorOutput.Output.GCCErrorList
 {
@@ -12,9 +15,10 @@ namespace VSColorOutput.Output.GCCErrorList
     {
         private static ErrorListProvider _errorListProvider;
 
-        private static readonly HashSet<GCCErrorListItem> _currentListItems = new HashSet<GCCErrorListItem>();
+        private static readonly HashSet<GCCErrorListItem> CurrentListItems = new HashSet<GCCErrorListItem>();
 
-        private static readonly IVsUIShellOpenDocument _vsUiShellOpenDocument = Package.GetGlobalService(typeof(IVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
+        private static readonly IVsUIShellOpenDocument VsUiShellOpenDocument =
+            Package.GetGlobalService(typeof(IVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
 
         public static void Initialize(IServiceProvider serviceProvider)
         {
@@ -36,76 +40,72 @@ namespace VSColorOutput.Output.GCCErrorList
             AddTask(item, TaskErrorCategory.Message);
         }
 
-        public static void DismissAllTasks()
-        {
-            _errorListProvider.Tasks.Clear();
-            _currentListItems.Clear();
-        }
-
         private static void AddTask(GCCErrorListItem item, TaskErrorCategory category)
         {
-            // Visual studio has a bug of showing each gcc message twice. Make sure this error list item doesn't exist already
-            if (item == null || _currentListItems.Contains(item))
+            try
             {
-                return;
+                // Visual studio has a bug of showing each gcc message twice. Make sure this error list item doesn't exist already
+                if (item == null || CurrentListItems.Contains(item)) return;
+
+                var task = new ErrorTask
+                {
+                    Category = TaskCategory.BuildCompile,
+                    ErrorCategory = category,
+                    Text = item.Text
+                };
+
+                switch (item.ErrorType)
+                {
+                    case GCCErrorType.Full:
+                        task.Navigate += TaskOnNavigate;
+                        task.Line = item.Line - 1; // Visual studio starts counting from 0
+                        task.Column = item.Column - 1; // Visual studio starts counting from 0
+                        task.Document = GetFileByProjectNumber(item.ProjectNumber, item.Filename);
+                        task.HierarchyItem = GetItemHierarchy(task.Document);
+                        break;
+                    case GCCErrorType.GCCOnly:
+                        task.Document = item.Filename;
+                        var project = GetProjectByNumber(item.ProjectNumber);
+                        task.HierarchyItem = GetProjectHierarchy(project);
+
+                        break;
+                    case GCCErrorType.NoDetails:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                _errorListProvider.Tasks.Add(task);
+                CurrentListItems.Add(item);
             }
-
-            var task = new ErrorTask
+            catch (Exception e)
             {
-                Category = TaskCategory.BuildCompile,
-                ErrorCategory = category,
-                Text = item.Text
-            };
-
-            switch (item.ErrorType)
-            {
-                case GCCErrorType.Full:
-                    task.Navigate += TaskOnNavigate;
-                    task.Line = item.Line - 1; // Visual studio starts counting from 0
-                    task.Column = item.Column - 1; // Visual studio starts counting from 0
-                    task.Document = GetFileByProjectNumber(item.ProjectNumber, item.Filename);
-                    task.HierarchyItem = GetItemHierarchy(task.Document);
-                    break;
-                case GCCErrorType.GCCOnly:
-                    task.Document = item.Filename;
-                    var project = GetProjectByNumber(item.ProjectNumber);
-                    task.HierarchyItem = GetProjectHierarchy(project);
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                // eat it
+                Log.LogError(e.ToString());
             }
-
-            _errorListProvider.Tasks.Add(task);
-            _currentListItems.Add(item);
         }
 
         private static void TaskOnNavigate(object sender, EventArgs eventArgs)
         {
-            Task task = sender as Task;
-            if (task == null)
-            {
-                throw new ArgumentException("sender");
-            }
+            var task = sender as Task;
+            if (task == null) throw new ArgumentException("sender");
             task.Line++; // Navigation starts counting from 1, do ++
-            _errorListProvider.Navigate(task, new Guid(EnvDTE.Constants.vsViewKindCode));
+            _errorListProvider.Navigate(task, new Guid(Constants.vsViewKindCode));
             task.Line--; // Back to normal, do --
         }
 
         private static IVsUIHierarchy GetItemHierarchy(string filename)
         {
-            if (_vsUiShellOpenDocument != null)
+            if (VsUiShellOpenDocument != null)
             {
-                Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider;
-                IVsWindowFrame frame;
-                IVsUIHierarchy hierarchy;
-                uint itemId;
-                Guid logicalView = VSConstants.LOGVIEWID_Code;
+                var logicalView = VSConstants.LOGVIEWID_Code;
 
-                if (ErrorHandler.Succeeded(_vsUiShellOpenDocument.OpenDocumentViaProject(filename, ref logicalView, out serviceProvider, out hierarchy, out itemId, out frame)))
-                {
+                if (ErrorHandler.Succeeded(VsUiShellOpenDocument.OpenDocumentViaProject(filename, ref logicalView,
+                    out _,
+                    out var hierarchy,
+                    out _,
+                    out _)))
                     return hierarchy;
-                }
             }
 
             return null;
@@ -113,16 +113,11 @@ namespace VSColorOutput.Output.GCCErrorList
 
         public static IVsHierarchy GetProjectHierarchy(Project project)
         {
-            IVsHierarchy hierarchy;
-
             // Get the vs solution
-            IVsSolution solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
-            int hr = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
+            var solution = (IVsSolution) Package.GetGlobalService(typeof(IVsSolution));
+            var hr = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
 
-            if (hr == VSConstants.S_OK)
-            {
-                return hierarchy;
-            }
+            if (hr == VSConstants.S_OK) return hierarchy;
 
             return null;
         }
@@ -130,24 +125,19 @@ namespace VSColorOutput.Output.GCCErrorList
 
         private static Project GetProjectByNumber(int number)
         {
-            var dte = (EnvDTE80.DTE2)Package.GetGlobalService(typeof(EnvDTE.DTE));
+            var dte = (DTE2) Package.GetGlobalService(typeof(DTE));
             return dte.Solution.Projects.Item(number);
         }
 
         private static string GetFileByProjectNumber(int number, string filename)
         {
             var proj = GetProjectByNumber(number);
-            
-            string projectPath = Path.GetDirectoryName(proj.FileName);
+            var projectPath = Path.GetDirectoryName(proj.FileName) ?? string.Empty;
 
-            foreach (string file in Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories))
-            {
+            foreach (var file in Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories))
                 if (Path.GetFileName(file) == filename)
-                {
                     return file;
-                }
-            }
-            
+
             return filename;
         }
     }

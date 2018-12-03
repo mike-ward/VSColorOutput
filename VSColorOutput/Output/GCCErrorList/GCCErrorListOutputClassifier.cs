@@ -110,7 +110,7 @@ namespace VSColorOutput.Output.GCCErrorList
                 .Select(temp => new Classifier
                 {
                     Type = temp.classificationType,
-                    Test = text => temp.test.IsMatch(text)
+                    Test = temp.test.IsMatch
                 })
                 .ToList();
 

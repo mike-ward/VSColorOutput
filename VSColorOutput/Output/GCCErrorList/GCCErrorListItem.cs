@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace VSColorOutput.Output.GCCErrorList
 {
@@ -54,17 +55,23 @@ namespace VSColorOutput.Output.GCCErrorList
 
         protected bool Equals(GCCErrorListItem other)
         {
-            return ProjectNumber == other.ProjectNumber && string.Equals(Filename, other.Filename) && Line == other.Line && Column == other.Column && string.Equals(Text, other.Text) && ErrorType == other.ErrorType;
+            return ProjectNumber == other.ProjectNumber 
+                   && string.Equals(Filename, other.Filename) 
+                   && Line == other.Line 
+                   && Column == other.Column 
+                   && string.Equals(Text, other.Text) 
+                   && ErrorType == other.ErrorType;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((GCCErrorListItem) obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((GCCErrorListItem)obj);
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
         {
             unchecked
