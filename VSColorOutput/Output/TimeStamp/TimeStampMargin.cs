@@ -15,6 +15,16 @@ using VSColorOutput.State;
 
 namespace VSColorOutput.Output.TimeStamp
 {
+    public sealed class TimeStampFormatter
+    {
+        public static string FormatTime(TimeSpan time, CultureInfo cultureInfo, bool addHours)
+        {
+            var separator = cultureInfo.DateTimeFormat.TimeSeparator;
+            return (addHours ? $"{time.Hours:D2}{separator}" : "") +
+                $"{time.Minutes:D2}{separator}{time.Seconds:D2}.{time.Milliseconds:D3}";
+        }
+    }
+
     public sealed class TimeStampMargin : Canvas, IWpfTextViewMargin
     {
         private readonly IWpfTextView _textView;
@@ -26,12 +36,16 @@ namespace VSColorOutput.Output.TimeStamp
         private bool _disposed;
         private TextRunProperties _textRunProperties;
         private double _oldViewportTop = double.MinValue;
+        private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public bool Enabled { get; } = true;
         public double MarginSize => ActualHeight;
         public FrameworkElement VisualElement => this;
 
         public ITextViewMargin GetTextViewMargin(string marginName) => marginName == nameof(TimeStampMargin) ? this : null;
+
+        public bool ShowHoursInTimeStamps { get; set; }
+        public bool ShowTimeStampOnEveryLine { get; set; }
 
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
         {
@@ -51,7 +65,16 @@ namespace VSColorOutput.Output.TimeStamp
             IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
             Settings.SettingsUpdated += OnSettingsOnSettingsUpdated;
+            LoadSettings();
             UpdateFormatMap();
+        }
+
+        private void LoadSettings()
+        {
+            var settings = Settings.Load();
+            _cultureInfo = settings.FormatTimeInSystemLocale ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
+            ShowHoursInTimeStamps = settings.ShowHoursInTimeStamps;
+            ShowTimeStampOnEveryLine = settings.ShowTimeStampOnEveryLine;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -73,6 +96,7 @@ namespace VSColorOutput.Output.TimeStamp
 
         private void OnSettingsOnSettingsUpdated(object sender, EventArgs args)
         {
+            LoadSettings();
             UpdateFormatMap();
         }
 
@@ -128,7 +152,7 @@ namespace VSColorOutput.Output.TimeStamp
             var list2 = new List<TimeStampVisual>();
             foreach (var line in _textView.TextViewLines)
             {
-                if (line.IsFirstTextViewLineForSnapshotLine)
+                if (ShowTimeStampOnEveryLine || line.IsFirstTextViewLineForSnapshotLine)
                 {
                     var lineNumber = line.Start.GetContainingLine().LineNumber;
                     if (lineNumber < _lineTimeStamps.Count)
@@ -154,12 +178,20 @@ namespace VSColorOutput.Output.TimeStamp
                         if (timeStampVisual != null)
                         {
                             var startDiff = timeStamp - BuildEventsProvider.BuildEvents.DebugStartTime;
-                            var lastDiff = timeStamp - previousTimeStamp;
-
-                            var text = lineNumber == 0 || lastDiff != TimeSpan.Zero
-                                ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
-                                    $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
-                                : "";
+                            var text = "";
+                            if (ShowTimeStampOnEveryLine)
+                            {
+                                text = TimeStampFormatter.FormatTime(startDiff, _cultureInfo, ShowHoursInTimeStamps);
+                            }
+                            else
+                            {
+                                var lastDiff = timeStamp - previousTimeStamp;
+                                if (lineNumber == 0 || lastDiff != TimeSpan.Zero)
+                                {
+                                    text = TimeStampFormatter.FormatTime(startDiff, _cultureInfo, ShowHoursInTimeStamps) +
+                                        $" ({TimeStampFormatter.FormatTime(lastDiff, _cultureInfo, ShowHoursInTimeStamps)})";
+                                }
+                            }
 
                             timeStampVisual.Update(text, line, _textView, _textRunProperties, MinWidth, _oldViewportTop);
                         }
@@ -194,8 +226,9 @@ namespace VSColorOutput.Output.TimeStamp
             if (settings.ShowTimeStamps == false) return 0;
             var pixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
+            var timeFormat = TimeStampFormatter.FormatTime(new TimeSpan(0), _cultureInfo, ShowHoursInTimeStamps);
             var text = new FormattedText(
-                "00:00:000 (00:00:000)",
+                ShowTimeStampOnEveryLine ? timeFormat : $"{timeFormat} ({timeFormat})",
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _textRunProperties.Typeface,

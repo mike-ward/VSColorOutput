@@ -23,6 +23,7 @@ namespace VSColorOutput.Output.BuildEvents
         private DTEEvents _dteEvents;
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
+        private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
@@ -62,6 +63,7 @@ namespace VSColorOutput.Output.BuildEvents
         private void LoadSettings()
         {
             var settings = Settings.Load();
+            _cultureInfo = settings.FormatTimeInSystemLocale ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
             StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
             ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
             ShowBuildReport = settings.ShowBuildReport;
@@ -109,8 +111,8 @@ namespace VSColorOutput.Output.BuildEvents
             {
                 var now = DateTime.Now;
                 var elapsed = now - _buildStartTime;
-                var time = elapsed.ToString(@"hh\:mm\:ss\.fff");
-                var buildTime = now.ToString("yyyy-MM-dd hh:mm:ss tt", new CultureInfo("en-US"));
+                var time = TimeStampFormatter.FormatTime(elapsed, _cultureInfo, true);
+                var buildTime = now.ToString("g", _cultureInfo);
                 var text = $"Time Elapsed {time}";
                 var text2 = $"Build ended at {buildTime}";
                 buildOutputPane.OutputString("\r\n" + text + "\r\n");

@@ -33,45 +33,54 @@ namespace VSColorOutput.State
         public bool ShowTimeStamps { get; set; }
 
         [DataMember(Order = 6)]
-        public bool SuppressDonation { get; set; }
+        public bool ShowTimeStampOnEveryLine { get; set; }
 
         [DataMember(Order = 7)]
-        public RegExClassification[] Patterns { get; set; } = DefaultPatterns();
+        public bool ShowHoursInTimeStamps { get; set; }
 
         [DataMember(Order = 8)]
-        public Color BuildMessageColor { get; set; } = Color.Green;
+        public bool FormatTimeInSystemLocale { get; set; }
 
         [DataMember(Order = 9)]
-        public Color BuildTextColor { get; set; } = Color.Gray;
+        public bool SuppressDonation { get; set; }
 
         [DataMember(Order = 10)]
-        public Color ErrorTextColor { get; set; } = Color.Red;
+        public RegExClassification[] Patterns { get; set; } = DefaultPatterns();
 
         [DataMember(Order = 11)]
-        public Color WarningTextColor { get; set; } = Color.Olive;
+        public Color BuildMessageColor { get; set; } = Color.Green;
 
         [DataMember(Order = 12)]
-        public Color InformationTextColor { get; set; } = Color.DarkBlue;
+        public Color BuildTextColor { get; set; } = Color.Gray;
 
         [DataMember(Order = 13)]
-        public Color CustomTextColor1 { get; set; } = Color.DarkOrange;
+        public Color ErrorTextColor { get; set; } = Color.Red;
 
         [DataMember(Order = 14)]
-        public Color CustomTextColor2 { get; set; } = Color.DarkSalmon;
+        public Color WarningTextColor { get; set; } = Color.Olive;
 
         [DataMember(Order = 15)]
-        public Color CustomTextColor3 { get; set; } = Color.Purple;
+        public Color InformationTextColor { get; set; } = Color.DarkBlue;
 
         [DataMember(Order = 16)]
-        public Color CustomTextColor4 { get; set; } = Color.Brown;
+        public Color CustomTextColor1 { get; set; } = Color.DarkOrange;
 
         [DataMember(Order = 17)]
-        public Color FindSearchTermColor { get; set; } = Color.Green;
+        public Color CustomTextColor2 { get; set; } = Color.DarkSalmon;
 
         [DataMember(Order = 18)]
-        public Color FindFileNameColor { get; set; } = Color.Gray;
+        public Color CustomTextColor3 { get; set; } = Color.Purple;
 
         [DataMember(Order = 19)]
+        public Color CustomTextColor4 { get; set; } = Color.Brown;
+
+        [DataMember(Order = 20)]
+        public Color FindSearchTermColor { get; set; } = Color.Green;
+
+        [DataMember(Order = 21)]
+        public Color FindFileNameColor { get; set; } = Color.Gray;
+
+        [DataMember(Order = 22)]
         public Color TimeStampColor { get; set; } = Color.CornflowerBlue;
 
         private static readonly string ProgramDataFolder;
