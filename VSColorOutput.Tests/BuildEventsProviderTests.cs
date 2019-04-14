@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.Composition;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
-using NUnit.Framework;
 using VSColorOutput.Output.BuildEvents;
 
 namespace Tests
 {
-    [TestFixture]
+    [TestClass]
     public class BuildEventsProviderTests
     {
-        [Test]
+        [TestMethod]
         public void GetClassifierAttributes()
         {
             typeof(BuildEventsProvider).Should().BeDecoratedWith<ContentTypeAttribute>(a => a.ContentTypes.Equals("output"));

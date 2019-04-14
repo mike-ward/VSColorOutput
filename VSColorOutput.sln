@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSColorOutput", "VSColorOutput\VSColorOutput.csproj", "{802C16C4-6FE5-4842-9AAF-84D4BD93A962}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSColorOutput.Tests", "VSColorOutput.Tests\VSColorOutput.Tests.csproj", "{4A1ECFBF-6D1C-49B6-9371-3222DE52006B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{802C16C4-6FE5-4842-9AAF-84D4BD93A962} = {802C16C4-6FE5-4842-9AAF-84D4BD93A962}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{802C16C4-6FE5-4842-9AAF-84D4BD93A962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{802C16C4-6FE5-4842-9AAF-84D4BD93A962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{802C16C4-6FE5-4842-9AAF-84D4BD93A962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1ECFBF-6D1C-49B6-9371-3222DE52006B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1ECFBF-6D1C-49B6-9371-3222DE52006B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1ECFBF-6D1C-49B6-9371-3222DE52006B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1ECFBF-6D1C-49B6-9371-3222DE52006B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

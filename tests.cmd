@@ -1,1 +1,3 @@
-"%ProgramFiles(x86)%\NUnit.org\nunit-console\nunit3-console.exe" Tests\bin\Debug\Tests.dll
+pushd "VSColorOutput.Tests\bin\Release"
+vstest.console VSColorOutput.Tests.dll
+popd

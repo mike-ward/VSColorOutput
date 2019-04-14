@@ -1,22 +1,22 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VSColorOutput.State;
 using static VSColorOutput.Output.ColorClassifier.ClassificationTypeDefinitions;
 
 namespace Tests
 {
-    [TestFixture]
+    [TestClass]
     public class ClassificationTypeDefinitionsTests
     {
         private Settings _settings;
 
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
             _settings = new Settings();
         }
 
-        [Test]
+        [TestMethod]
         public void BuildHeaderFormat()
         {
             var format = new BuildHeaderFormat();
@@ -24,7 +24,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void BuildTextFormat()
         {
             var format = new BuildTextFormat();
@@ -32,7 +32,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogErrorFormat()
         {
             var format = new LogErrorFormat();
@@ -40,7 +40,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogWarnFormat()
         {
             var format = new LogWarningFormat();
@@ -48,14 +48,14 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogInfoFormat()
         {
             var format = new LogInformationFormat();
             format.ForegroundColor.Should().Be(ToMediaColor(_settings.InformationTextColor));
         }
 
-        [Test]
+        [TestMethod]
         public void LogCustom1Format()
         {
             var format = new LogCustom1Format();
@@ -63,7 +63,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogCustom2Format()
         {
             var format = new LogCustom2Format();
@@ -71,7 +71,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogCustom3Format()
         {
             var format = new LogCustom3Format();
@@ -79,7 +79,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void LogCustom4Format()
         {
             var format = new LogCustom4Format();
@@ -87,7 +87,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void FindResultsSearchTermFormat()
         {
             var format = new FindResultsSearchTermFormat();
@@ -95,7 +95,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void FindResultsFilenameFormat()
         {
             var format = new FindResultsFilenameFormat();
@@ -103,7 +103,7 @@ namespace Tests
             format.BackgroundOpacity.Should().Be(0);
         }
 
-        [Test]
+        [TestMethod]
         public void TimeStampFormat()
         {
             var format = new TimeStampFormat();
