@@ -1,16 +1,24 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using VSColorOutput.State;
+using Task = System.Threading.Tasks.Task;
 
 namespace VSColorOutput
 {
-    [Guid("CD56B219-38CB-482A-9B2D-7582DF4AAF1E")]
-    [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\14.0")]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [Guid(VSColorOutputPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(VsColorOutputOptionsDialog), VsColorOutputOptionsDialog.Category, VsColorOutputOptionsDialog.SubCategory, 1000, 1001, true)]
     [ProvideProfile(typeof(VsColorOutputOptionsDialog), VsColorOutputOptionsDialog.Category, VsColorOutputOptionsDialog.SubCategory, 1000, 1001, true)]
-    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows - http://mike-ward.net/vscoloroutput", "2.6.4")]
-    public class VsColorOutputPackage : Package
+    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows - http://mike-ward.net/vscoloroutput", "2.6.5")]
+    public sealed class VSColorOutputPackage : AsyncPackage
     {
+        public const string PackageGuidString = "CD56B219-38CB-482A-9B2D-7582DF4AAF1E";
+
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        {
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+        }
     }
 }

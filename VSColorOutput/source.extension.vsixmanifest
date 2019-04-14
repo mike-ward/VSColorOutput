@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CD56B219-38CB-482A-9B2D-7582DF4AAF1E" Version="2.6.4" Language="en-US" Publisher="Mike Ward" />
+    <Identity Id="CD56B219-38CB-482A-9B2D-7582DF4AAF1E" Version="2.6.5" Language="en-US" Publisher="Mike Ward" />
     <DisplayName>VSColorOutput</DisplayName>
     <Description>Color output for build and debug windows</Description>
     <MoreInfo>http://mike-ward.net/vscoloroutput</MoreInfo>
@@ -23,4 +23,3 @@
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
   </Prerequisites>
 </PackageManifest>
-

@@ -30,6 +30,7 @@ namespace VSColorOutput.Output.TimeStamp
         public bool Enabled { get; } = true;
         public double MarginSize => ActualHeight;
         public FrameworkElement VisualElement => this;
+
         public ITextViewMargin GetTextViewMargin(string marginName) => marginName == nameof(TimeStampMargin) ? this : null;
 
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
@@ -85,9 +86,9 @@ namespace VSColorOutput.Output.TimeStamp
 
                 if (textChange.LineCountDelta > 0)
                 {
-                    var count =_lineTimeStamps.Count;
+                    var count = _lineTimeStamps.Count;
                     _lineTimeStamps.InsertRange(
-                        Math.Min(lineNumber, count), 
+                        Math.Min(lineNumber, count),
                         fill(textChange.LineCountDelta + lineNumber - count, DateTime.Now));
                 }
                 else if (textChange.LineCountDelta < 0)
@@ -191,6 +192,7 @@ namespace VSColorOutput.Output.TimeStamp
         {
             var settings = Settings.Load();
             if (settings.ShowTimeStamps == false) return 0;
+            var pixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
             var text = new FormattedText(
                 "00:00:000 (00:00:000)",
@@ -198,7 +200,8 @@ namespace VSColorOutput.Output.TimeStamp
                 FlowDirection.LeftToRight,
                 _textRunProperties.Typeface,
                 _textRunProperties.FontRenderingEmSize,
-                Brushes.Black);
+                Brushes.Black,
+                pixelsPerDip);
 
             return text.Width + 3;
         }

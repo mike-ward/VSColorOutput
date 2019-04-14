@@ -40,13 +40,15 @@ namespace VSColorOutput.Output.TimeStamp
             if (_text == null || !string.Equals(_text, text, StringComparison.Ordinal))
             {
                 _text = text;
+                var pixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
                 _formattedText = new FormattedText(
                     _text,
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     formatting.Typeface,
                     formatting.FontRenderingEmSize,
-                    formatting.ForegroundBrush);
+                    formatting.ForegroundBrush,
+                    pixelsPerDip);
 
                 _horizontalOffset = Math.Round(marginWidth - _formattedText.Width);
                 InvalidateVisual();

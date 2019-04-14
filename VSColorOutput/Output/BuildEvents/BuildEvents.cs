@@ -36,7 +36,9 @@ namespace VSColorOutput.Output.BuildEvents
         {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
 
+#pragma warning disable VSSDK006 // Check services exist
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
+#pragma warning restore VSSDK006 // Check services exist
             if (_dte2 != null)
             {
                 // These event sources have to be rooted or the GC will collect them.
