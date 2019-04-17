@@ -11,7 +11,7 @@
     <Tags>Build, Open Source, Productivity, Extension, Color, Output, Output Coloring</Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Version="[15.0,17.0)" Id="Microsoft.VisualStudio.Community" />
+    <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Community" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
