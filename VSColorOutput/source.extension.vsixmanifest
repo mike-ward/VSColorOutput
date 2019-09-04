@@ -4,7 +4,7 @@
     <Identity Id="CD56B219-38CB-482A-9B2D-7582DF4AAF1E" Version="2.6.5" Language="en-US" Publisher="Mike Ward" />
     <DisplayName>VSColorOutput</DisplayName>
     <Description>Color output for build and debug windows</Description>
-    <MoreInfo>http://mike-ward.net/vscoloroutput</MoreInfo>
+    <MoreInfo>https://mike-ward.net/vscoloroutput</MoreInfo>
     <License>Assets\License.txt</License>
     <Icon>Assets\crayons.jpg</Icon>
     <PreviewImage>Assets\preview.png</PreviewImage>
