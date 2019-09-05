@@ -42,7 +42,7 @@ namespace VSColorOutput.Output.BuildEvents
             if (_dte2 != null)
             {
                 // These event sources have to be rooted or the GC will collect them.
-                // http://social.msdn.microsoft.com/Forums/en-US/vsx/thread/fd2f9108-1df3-4d96-a65d-67a69347ca27
+                // https://social.msdn.microsoft.com/Forums/en-US/vsx/thread/fd2f9108-1df3-4d96-a65d-67a69347ca27
                 _events = _dte2.Events;
                 _buildEvents = _events.BuildEvents;
                 _dteEvents = _events.DTEEvents;
@@ -121,7 +121,7 @@ namespace VSColorOutput.Output.BuildEvents
             {
                 buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                 buildOutputPane.OutputString("\r\n+++                 Please consider donating to VSColorOutput                    +++");
-                buildOutputPane.OutputString("\r\n+++                        http://mike-ward.net/donate/                          +++");
+                buildOutputPane.OutputString("\r\n+++                       https://mike-ward.net/donate/                          +++");
                 buildOutputPane.OutputString("\r\n+++            (this message can be turned off in the settings panel)            +++");
                 buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n");
             }
