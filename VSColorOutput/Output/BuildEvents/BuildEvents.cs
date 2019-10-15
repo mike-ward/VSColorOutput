@@ -137,7 +137,7 @@ namespace VSColorOutput.Output.BuildEvents
 
             if (ShowBuildReport)
             {
-								_projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + $" | {project} [{projectConfig}|{platform}]");
+                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + $" | {project} [{projectConfig}|{platform}]");
             }
         }
 

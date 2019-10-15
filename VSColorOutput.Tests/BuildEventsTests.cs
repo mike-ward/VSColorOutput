@@ -135,7 +135,7 @@ namespace Tests
             mockOutputWindow.SetupGet(o => o.OutputWindowPanes).Returns(mockOutputWindowPanes.Object);
             mockOutputWindowPane.SetupGet(op => op.Guid).Returns(VSConstants.OutputWindowPaneGuid.BuildOutputPane_string);
             mockOutputWindowPane.Setup(op => op.OutputString(It.Is<string>(s => s == $"{Environment.NewLine}Projects build report:{Environment.NewLine}")));
-						mockOutputWindowPane.Setup(op => op.OutputString(It.Is<string>(s => s == $"  Succeeded | test.proj [Debug|Any CPU]{Environment.NewLine}")));
+            mockOutputWindowPane.Setup(op => op.OutputString(It.Is<string>(s => s == $"  Succeeded | test.proj [Debug|Any CPU]{Environment.NewLine}")));
             mockOutputWindowPane.Setup(op => op.OutputString(It.Is<string>(s => s == $"  Failed    | test2.proj [Release|Any CPU]{Environment.NewLine}")));
             var panes = new[] { mockOutputWindowPane.Object };
             mockOutputWindowPanes.Setup(op => op.GetEnumerator()).Returns(panes.GetEnumerator());

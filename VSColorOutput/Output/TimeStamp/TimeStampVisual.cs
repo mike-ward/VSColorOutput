@@ -17,9 +17,9 @@ namespace VSColorOutput.Output.TimeStamp
 
         public object LineTag { get; private set; }
 
-				public TimeStampVisual() => SnapsToDevicePixels = true;
+        public TimeStampVisual() => SnapsToDevicePixels = true;
 
-				protected override void OnRender(DrawingContext drawingContext)
+        protected override void OnRender(DrawingContext drawingContext)
         {
             drawingContext.DrawText(_formattedText, new Point(_horizontalOffset, _verticalOffset));
         }
