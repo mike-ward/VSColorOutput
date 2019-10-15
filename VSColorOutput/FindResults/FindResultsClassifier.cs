@@ -30,12 +30,9 @@ namespace VSColorOutput.FindResults
 
         public bool HighlightFindResults { get; set; }
 
-        static FindResultsClassifier()
-        {
-            FilenameRegex = new Regex(@"^\s*.[:\\]\\.*\(\d+\):", RegexOptions.Compiled);
-        }
+				static FindResultsClassifier() => FilenameRegex = new Regex(@"^\s*.[:\\]\\.*\(\d+\):", RegexOptions.Compiled);
 
-        public void Initialize(IClassificationTypeRegistryService classificationRegistry, IClassificationFormatMapService formatMapService)
+				public void Initialize(IClassificationTypeRegistryService classificationRegistry, IClassificationFormatMapService formatMapService)
         {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
 

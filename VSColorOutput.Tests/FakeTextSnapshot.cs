@@ -76,22 +76,13 @@ namespace Tests
             return position;
         }
 
-        public int Length
-        {
-            get { return _text.Length; }
-        }
+				public int Length => _text.Length;
 
-        public int LineCount
-        {
-            get { return _lines.Length; }
-        }
+				public int LineCount => _lines.Length;
 
-        public char this[int position]
-        {
-            get { return _text[position]; }
-        }
+				public char this[int position] => _text[position];
 
-        public IEnumerable<ITextSnapshotLine> Lines { get; }
+				public IEnumerable<ITextSnapshotLine> Lines { get; }
         public ITextBuffer TextBuffer { get; }
         public ITextVersion Version { get; }
 
@@ -150,12 +141,9 @@ namespace Tests
         // Only here so that ToString will work in SnapshotSpan for debugging
         private class FakeTextBuffer : ITextBuffer
         {
-            public FakeTextBuffer()
-            {
-                Properties = new PropertyCollection();
-            }
+						public FakeTextBuffer() => Properties = new PropertyCollection();
 
-            public PropertyCollection Properties { get; }
+						public PropertyCollection Properties { get; }
 
             public ITextEdit CreateEdit(EditOptions options, int? reiteratedVersionNumber, object editTag)
             {
@@ -255,12 +243,9 @@ namespace Tests
 
         private class FakeVersion : ITextVersion
         {
-            public FakeVersion(int versionNumber)
-            {
-                VersionNumber = versionNumber;
-            }
+						public FakeVersion(int versionNumber) => VersionNumber = versionNumber;
 
-            public ITrackingPoint CreateTrackingPoint(int position, PointTrackingMode trackingMode)
+						public ITrackingPoint CreateTrackingPoint(int position, PointTrackingMode trackingMode)
             {
                 throw new NotImplementedException();
             }
