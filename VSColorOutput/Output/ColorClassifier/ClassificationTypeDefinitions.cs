@@ -34,8 +34,8 @@ namespace VSColorOutput.Output.ColorClassifier
                 _colorMap = ColorMap.GetMap();
                 _settingsLoaded = true;
             }
-            Color color;
-            if (!_colorMap.TryGetValue(classificationName, out color)) color = Color.Gray;
+            
+            if (!_colorMap.TryGetValue(classificationName, out Color color)) color = Color.Gray;
             return ToMediaColor(color);
         }
 

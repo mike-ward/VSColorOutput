@@ -46,29 +46,14 @@ namespace Tests
 
         public SnapshotPoint Start { get; }
 
-        public int Length
-        {
-            get { return _text.Length; }
-        }
+        public int Length => _text.Length;
 
-        public int LengthIncludingLineBreak
-        {
-            get { return _text.Length + LineBreakLength; }
-        }
+        public int LengthIncludingLineBreak => _text.Length + LineBreakLength;
 
-        public SnapshotPoint End
-        {
-            get { return Start + Length; }
-        }
+        public SnapshotPoint End => Start + Length;
 
-        public SnapshotPoint EndIncludingLineBreak
-        {
-            get { return Start + LengthIncludingLineBreak; }
-        }
+        public SnapshotPoint EndIncludingLineBreak => Start + LengthIncludingLineBreak;
 
-        public int LineBreakLength
-        {
-            get { return Environment.NewLine.Length; }
-        }
-    }
+        public int LineBreakLength => Environment.NewLine.Length;
+  }
 }

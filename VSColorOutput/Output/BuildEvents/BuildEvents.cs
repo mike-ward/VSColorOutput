@@ -96,12 +96,12 @@ namespace VSColorOutput.Output.BuildEvents
 
             if (ShowBuildReport)
             {
-                buildOutputPane.OutputString("\r\nProjects build report:\r\n");
-                buildOutputPane.OutputString("  Status    | Project [Config|platform]\r\n");
-                buildOutputPane.OutputString(" -----------|---------------------------------------------------------------------------------------------------\r\n");
+                buildOutputPane.OutputString($"{Environment.NewLine}Projects build report:{Environment.NewLine}");
+                buildOutputPane.OutputString($"  Status    | Project [Config|platform]{Environment.NewLine}");
+                buildOutputPane.OutputString($" -----------|---------------------------------------------------------------------------------------------------{Environment.NewLine}");
                 foreach (var reportItem in _projectsBuildReport)
                 {
-                    buildOutputPane.OutputString(reportItem + "\r\n");
+                    buildOutputPane.OutputString(reportItem + Environment.NewLine);
                 }
             }
 
@@ -110,20 +110,20 @@ namespace VSColorOutput.Output.BuildEvents
                 var now = DateTime.Now;
                 var elapsed = now - _buildStartTime;
                 var time = elapsed.ToString(@"hh\:mm\:ss\.fff");
-                var buildTime = now.ToString("yyyy-MM-dd hh:mm:ss tt", new CultureInfo("en-US"));
-                var text = $"Time Elapsed {time}";
-                var text2 = $"Build ended at {buildTime}";
-                buildOutputPane.OutputString("\r\n" + text + "\r\n");
-                buildOutputPane.OutputString(text2 + "\r\n");
+                var buildTime = now.ToString(CultureInfo.CurrentCulture);
+                var timeElapsed = $"Time Elapsed {time} (hh:mm:ss.fff)";
+                var endedAt = $"Build ended at {buildTime}";
+                buildOutputPane.OutputString($"{Environment.NewLine}{timeElapsed}{Environment.NewLine}");
+                buildOutputPane.OutputString($"{endedAt}{Environment.NewLine}");
             }
 
             if (ShowDonation)
             {
-                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                buildOutputPane.OutputString("\r\n+++                 Please consider donating to VSColorOutput                    +++");
-                buildOutputPane.OutputString("\r\n+++                       https://mike-ward.net/donate/                          +++");
-                buildOutputPane.OutputString("\r\n+++            (this message can be turned off in the settings panel)            +++");
-                buildOutputPane.OutputString("\r\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n");
+                buildOutputPane.OutputString($"{Environment.NewLine}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                buildOutputPane.OutputString($"{Environment.NewLine}+++                 Please consider donating to VSColorOutput                    +++");
+                buildOutputPane.OutputString($"{Environment.NewLine}+++                       https://mike-ward.net/donate/                          +++");
+                buildOutputPane.OutputString($"{Environment.NewLine}+++            (this message can be turned off in the settings panel)            +++");
+                buildOutputPane.OutputString($"{Environment.NewLine}++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++{Environment.NewLine}");
             }
         }
 
@@ -137,7 +137,7 @@ namespace VSColorOutput.Output.BuildEvents
 
             if (ShowBuildReport)
             {
-                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]");
+                _projectsBuildReport.Add("  " + (success ? "Succeeded" : "Failed   ") + $" | {project} [{projectConfig}|{platform}]");
             }
         }
 

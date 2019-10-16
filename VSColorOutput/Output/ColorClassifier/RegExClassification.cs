@@ -7,22 +7,19 @@ namespace VSColorOutput.Output.ColorClassifier
     {
         private string _regExPattern;
 
-        public RegExClassification()
-        {
-            _regExPattern = ".*";
-        }
+        public RegExClassification() => _regExPattern = ".*";
 
         public string RegExPattern
         {
-            get { return _regExPattern; }
-            set
-            {
-                ValidatePattern(value);
-                _regExPattern = value;
-            }
+          get => _regExPattern;
+          set
+          {
+            ValidatePattern(value);
+            _regExPattern = value;
+          }
         }
 
-        public ClassificationTypes ClassificationType { get; set; }
+    public ClassificationTypes ClassificationType { get; set; }
         public bool IgnoreCase { get; set; }
 
         public override string ToString()

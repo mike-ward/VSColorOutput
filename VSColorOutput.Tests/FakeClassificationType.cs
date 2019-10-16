@@ -6,10 +6,7 @@ namespace Tests
 {
     public class FakeClassificationType : IClassificationType
     {
-        public FakeClassificationType(string classification)
-        {
-            Classification = classification;
-        }
+        public FakeClassificationType(string classification) => Classification = classification;
 
         public bool IsOfType(string type)
         {
@@ -18,9 +15,6 @@ namespace Tests
 
         public string Classification { get; private set; }
 
-        public IEnumerable<IClassificationType> BaseTypes
-        {
-            get { return Enumerable.Empty<IClassificationType>(); }
-        }
-    }
+        public IEnumerable<IClassificationType> BaseTypes => Enumerable.Empty<IClassificationType>();
+  }
 }
