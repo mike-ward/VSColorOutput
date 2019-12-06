@@ -11,6 +11,7 @@ using VSColorOutput.State;
 namespace VSColorOutput.Output.ColorClassifier
 {
     [ContentType("output")]
+    [ContentType("plaintext")]
     [Export(typeof(IClassifierProvider))]
     public class OutputClassifierProvider : IClassifierProvider
     {
@@ -21,6 +22,10 @@ namespace VSColorOutput.Output.ColorClassifier
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
+            if (!WillSupplyClassifier(buffer))
+            {
+                return null;
+            }
             try
             {
                 if (_outputClassifier == null)
@@ -40,5 +45,28 @@ namespace VSColorOutput.Output.ColorClassifier
             }
             return _outputClassifier;
         }
+
+        // This works around weird behavior of Visual Studio - when output window content
+        // is saved to disk (using Ctrl+S) the ITextBuffer.ContentType is changed to "plaintext"
+        // and it remains that way until Visual Studio is restarted.
+        // The workaround tags each "output" so it can be identified after the content type is changed.
+        private bool WillSupplyClassifier(ITextBuffer buffer)
+        {
+            var bufferProperties = buffer.Properties;
+            if (bufferProperties.ContainsProperty(SuppliedClassifierForThisBufferKey))
+            {
+                // We worked with this object before so we can work with it once again.
+                return true;
+            }
+            var contentType = buffer.ContentType;
+            if (contentType.IsOfType("Output"))
+            {
+                bufferProperties.AddProperty(SuppliedClassifierForThisBufferKey, null);
+                return true;
+            }
+            return false;
+        }
+
+        private const string SuppliedClassifierForThisBufferKey = "VSColorOutput.Output.SuppliedClassifierForThisTextBufferKey";
     }
 }
