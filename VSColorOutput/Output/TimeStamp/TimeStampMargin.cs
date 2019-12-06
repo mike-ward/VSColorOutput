@@ -202,7 +202,7 @@ namespace VSColorOutput.Output.TimeStamp
             try
             {
                 var elapsedText = string.IsNullOrWhiteSpace(_elapsedTimeFormat) ? string.Empty : elapsed.ToString(_elapsedTimeFormat);
-                var differenceText = string.IsNullOrWhiteSpace(_differenceTimeFormat) ? string.Empty : elapsed.ToString(_differenceTimeFormat);
+                var differenceText = string.IsNullOrWhiteSpace(_differenceTimeFormat) ? string.Empty : difference.ToString(_differenceTimeFormat);
 
                 return elapsedText
                     + (string.IsNullOrWhiteSpace(differenceText) ? string.Empty : $" {differenceText}");
