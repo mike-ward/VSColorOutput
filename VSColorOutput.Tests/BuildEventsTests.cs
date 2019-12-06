@@ -93,7 +93,7 @@ namespace Tests
             mockToolWindows.SetupGet(t => t.OutputWindow).Returns(mockOutputWindow.Object);
             mockOutputWindow.SetupGet(o => o.OutputWindowPanes).Returns(mockOutputWindowPanes.Object);
             mockOutputWindowPane.SetupGet(op => op.Guid).Returns(VSConstants.OutputWindowPaneGuid.BuildOutputPane_string);
-            mockOutputWindowPane.Setup(op => op.OutputString(It.IsRegex("Time Elapsed .*")));
+            mockOutputWindowPane.Setup(op => op.OutputString(It.IsRegex("Build time .*")));
             var panes = new[] { mockOutputWindowPane.Object };
             mockOutputWindowPanes.Setup(op => op.GetEnumerator()).Returns(panes.GetEnumerator());
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);

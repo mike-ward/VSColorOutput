@@ -111,7 +111,7 @@ namespace VSColorOutput.Output.BuildEvents
                 var elapsed = now - _buildStartTime;
                 var time = elapsed.ToString(@"hh\:mm\:ss\.fff");
                 var buildTime = now.ToString(CultureInfo.CurrentCulture);
-                var timeElapsed = $"Time Elapsed {time} (hh:mm:ss.fff)";
+                var timeElapsed = $"Build time {time}";
                 var endedAt = $"Build ended at {buildTime}";
                 buildOutputPane.OutputString($"{Environment.NewLine}{timeElapsed}{Environment.NewLine}");
                 buildOutputPane.OutputString($"{endedAt}{Environment.NewLine}");
