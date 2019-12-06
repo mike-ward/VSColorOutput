@@ -13,7 +13,7 @@ namespace VSColorOutput.State
         public const string SubCategory = "General";
 
         private const string PatternsSubCategory = "Classifier Patterns";
-        
+
         // --------------------------------------------------------------------------
 
         [Category(PatternsSubCategory)]
@@ -124,6 +124,16 @@ namespace VSColorOutput.State
         [DisplayName("Time Stamp")]
         public Color TimeStampColor { get; set; }
 
+        [Category(TimeStampSubCategory)]
+        [DisplayName("Time Stamp  Elapsed Format")] // extra space because dialog sorts alpha
+        [Description("Use TimeSpan format strings, NOT DateTime")]
+        public string TimeStampElapsed { get; set; }
+
+        [Category(TimeStampSubCategory)]
+        [DisplayName("Time Stamp Difference Format")]
+        [Description("Use TimeSpan format strings, NOT DateTime")]
+        public string TimeStampDifference { get; set; }
+
         public override void LoadSettingsFromStorage()
         {
             var settings = Settings.Load();
@@ -153,6 +163,9 @@ namespace VSColorOutput.State
             FindSearchTermColor = settings.FindSearchTermColor;
 
             TimeStampColor = settings.TimeStampColor;
+            TimeStampElapsed = settings.TimeStampElapsed;
+            TimeStampDifference = settings.TimeStampDifference;
+
             SuppressDonation = settings.SuppressDonation;
         }
 
@@ -185,6 +198,9 @@ namespace VSColorOutput.State
                 FindSearchTermColor = FindSearchTermColor,
                 // --
                 TimeStampColor = TimeStampColor,
+                TimeStampElapsed = TimeStampElapsed,
+                TimeStampDifference = TimeStampDifference,
+                // --
                 SuppressDonation = SuppressDonation
             };
             settings.Save();

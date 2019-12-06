@@ -10,6 +10,7 @@ namespace VSColorOutput.State
     [DataContract]
     public class Settings
     {
+        public const string DefaultTimeStampFormat = "mm':'ss':'fff";
         public const string RegistryPath = @"DialogPage\BlueOnionSoftware.VsColorOutputOptions";
 
         [DataMember(Order = 0)]
@@ -71,6 +72,12 @@ namespace VSColorOutput.State
 
         [DataMember(Order = 19)]
         public Color TimeStampColor { get; set; } = Color.CornflowerBlue;
+
+        [DataMember(Order = 20)]
+        public String TimeStampElapsed { get; set; } = DefaultTimeStampFormat;
+
+        [DataMember(Order = 21)]
+        public String TimeStampDifference { get; set; } = DefaultTimeStampFormat;
 
         private static readonly string ProgramDataFolder;
         private static readonly string SettingsFile;

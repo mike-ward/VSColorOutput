@@ -23,6 +23,9 @@ namespace VSColorOutput.Output.TimeStamp
         private readonly Canvas _translatedCanvas = new Canvas();
         private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
 
+        private string _elapsedTimeFormat = Settings.DefaultTimeStampFormat;
+        private string _differenceTimeFormat = Settings.DefaultTimeStampFormat;
+
         private bool _disposed;
         private TextRunProperties _textRunProperties;
         private double _oldViewportTop = double.MinValue;
@@ -155,12 +158,18 @@ namespace VSColorOutput.Output.TimeStamp
                         {
                             var startDiff = timeStamp - BuildEventsProvider.BuildEvents.DebugStartTime;
                             var lastDiff = timeStamp - previousTimeStamp;
+                            var text = string.Empty;
 
-                            var text = lineNumber == 0 || lastDiff != TimeSpan.Zero
-                                ? $"{startDiff.Minutes:D2}:{startDiff.Seconds:D2}.{startDiff.Milliseconds:D3} " +
-                                    $"({lastDiff.Minutes:D2}:{lastDiff.Seconds:D2}.{lastDiff.Milliseconds:D3})"
-                                : "";
-
+                            try
+                            {
+                                text = lineNumber == 0 || lastDiff != TimeSpan.Zero
+                                    ? TimeText(startDiff, lastDiff)
+                                    : "";
+                            }
+                            catch (Exception ex)
+                            {
+                                text = ex.Message;
+                            }
                             timeStampVisual.Update(text, line, _textView, _textRunProperties, MinWidth, _oldViewportTop);
                         }
                     }
@@ -188,14 +197,35 @@ namespace VSColorOutput.Output.TimeStamp
             Update();
         }
 
+        private string TimeText(TimeSpan elapsed, TimeSpan difference)
+        {
+            try
+            {
+                var elapsedText = string.IsNullOrWhiteSpace(_elapsedTimeFormat) ? string.Empty : elapsed.ToString(_elapsedTimeFormat);
+                var differenceText = string.IsNullOrWhiteSpace(_differenceTimeFormat) ? string.Empty : elapsed.ToString(_differenceTimeFormat);
+
+                return elapsedText
+                    + (string.IsNullOrWhiteSpace(differenceText) ? string.Empty : $" {differenceText}");
+            }
+            catch (Exception)
+            {
+                return "invalid timespan format";
+            }
+        }
+
         private double CalculateMarginWidth()
         {
             var settings = Settings.Load();
             if (settings.ShowTimeStamps == false) return 0;
+            _elapsedTimeFormat = settings.TimeStampElapsed;
+            _differenceTimeFormat = settings.TimeStampDifference;
             var pixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
+            var timespan = TimeSpan.FromHours(12.123);
+            var sampleTimeText = TimeText(timespan, timespan);
+
             var text = new FormattedText(
-                "00:00:000 (00:00:000)",
+                sampleTimeText,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _textRunProperties.Typeface,
