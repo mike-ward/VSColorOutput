@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using Microsoft.VisualStudio.Utilities;
 using VSColorOutput.Output.ColorClassifier;
 
 namespace VSColorOutput.State
@@ -137,6 +135,12 @@ namespace VSColorOutput.State
                 },
                 new RegExClassification
                 {
+                    RegExPattern = @".*[t|c]sc\.exe.*",
+                    ClassificationType = ClassificationTypes.BuildText,
+                    IgnoreCase = false
+                },
+                new RegExClassification
+                {
                     RegExPattern = @"(=====|-----|Projects build report|Status    \| Project \[Config\|platform\])",
                     ClassificationType = ClassificationTypes.BuildHead,
                     IgnoreCase = false
@@ -198,6 +202,12 @@ namespace VSColorOutput.State
                 new RegExClassification
                 {
                     RegExPattern = @"Could not find file",
+                    ClassificationType = ClassificationTypes.LogError,
+                    IgnoreCase = true
+                },
+                new RegExClassification
+                {
+                    RegExPattern = @"failed", // .Net Core output
                     ClassificationType = ClassificationTypes.LogError,
                     IgnoreCase = true
                 }

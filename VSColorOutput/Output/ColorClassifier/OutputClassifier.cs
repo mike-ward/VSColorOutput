@@ -18,6 +18,7 @@ namespace VSColorOutput.Output.ColorClassifier
         private IList<Classifier> _classifiers;
         private IClassificationTypeRegistryService _classificationTypeRegistry;
         private IClassificationFormatMapService _formatMapService;
+
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         public void Initialize(IClassificationTypeRegistryService registry, IClassificationFormatMapService formatMapService)
@@ -74,7 +75,7 @@ namespace VSColorOutput.Output.ColorClassifier
             }
             catch (NullReferenceException)
             {
-                // eat it.    
+                // eat it.
                 return new List<ClassificationSpan>();
             }
             catch (Exception ex)
