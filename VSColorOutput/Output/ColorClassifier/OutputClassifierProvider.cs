@@ -19,23 +19,29 @@ namespace VSColorOutput.Output.ColorClassifier
         [Import] internal IClassificationFormatMapService ClassificationFormatMapService;
 
         private static OutputClassifier _outputClassifier;
+        private const string SuppliedClassifierForThisBufferKey = "VSColorOutput.Output.SuppliedClassifierForThisTextBufferKey";
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
-            if (!WillSupplyClassifier(buffer))
-            {
-                return null;
-            }
             try
             {
-                if (_outputClassifier == null)
+                if (CanSupplyClassifier(buffer))
                 {
-                    Interlocked.CompareExchange(
-                        ref _outputClassifier,
-                        new OutputClassifier(),
-                        null);
+                    if (_outputClassifier == null)
+                    {
+                        Interlocked.CompareExchange(
+                            ref _outputClassifier,
+                            new OutputClassifier(),
+                            null);
 
-                    _outputClassifier.Initialize(ClassificationRegistry, ClassificationFormatMapService);
+                        _outputClassifier.Initialize(ClassificationRegistry, ClassificationFormatMapService);
+                    }
+
+                    return _outputClassifier;
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception ex)
@@ -43,14 +49,13 @@ namespace VSColorOutput.Output.ColorClassifier
                 Log.LogError(ex.ToString());
                 throw;
             }
-            return _outputClassifier;
         }
 
         // This works around weird behavior of Visual Studio - when output window content
         // is saved to disk (using Ctrl+S) the ITextBuffer.ContentType is changed to "plaintext"
         // and it remains that way until Visual Studio is restarted.
         // The workaround tags each "output" so it can be identified after the content type is changed.
-        private bool WillSupplyClassifier(ITextBuffer buffer)
+        private bool CanSupplyClassifier(ITextBuffer buffer)
         {
             var bufferProperties = buffer.Properties;
             if (bufferProperties.ContainsProperty(SuppliedClassifierForThisBufferKey))
@@ -66,7 +71,5 @@ namespace VSColorOutput.Output.ColorClassifier
             }
             return false;
         }
-
-        private const string SuppliedClassifierForThisBufferKey = "VSColorOutput.Output.SuppliedClassifierForThisTextBufferKey";
     }
 }
