@@ -205,7 +205,7 @@ namespace VSColorOutput.Output.TimeStamp
                 var differenceText = string.IsNullOrWhiteSpace(_differenceTimeFormat) ? string.Empty : difference.ToString(_differenceTimeFormat);
 
                 return elapsedText
-                    + (string.IsNullOrWhiteSpace(differenceText) ? string.Empty : $" {differenceText}");
+                    + (string.IsNullOrWhiteSpace(differenceText) ? string.Empty : $" ({differenceText})");
             }
             catch (Exception)
             {
