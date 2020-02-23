@@ -1,6 +1,7 @@
 ﻿using System;
 using EnvDTE;
 using EnvDTE80;
+using FluentAssertions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -59,14 +60,15 @@ namespace Tests
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockDte2.SetupGet(d => d.Events).Returns(mockEvents.Object);
-            mockDte2.Setup(d => d.ExecuteCommand("Build.Cancel", ""));
             mockEvents.SetupGet(e => e.DTEEvents).Returns(mockDteEvents.Object);
             mockEvents.SetupGet(e => e.BuildEvents).Returns(() => mockBuildEvents.Object);
 
             var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents();
             buildEvents.Initialize(mockServiceProvider.Object);
             buildEvents.StopOnBuildErrorEnabled = true;
-            mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "", "", "", "", false);
+
+            Action act = () => mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "", "", "", "", false);
+            act.Should().Throw<NullReferenceException>();
 
             mockDte2.VerifyAll();
             mockEvents.VerifyAll();

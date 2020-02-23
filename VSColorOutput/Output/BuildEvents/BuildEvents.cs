@@ -129,10 +129,14 @@ namespace VSColorOutput.Output.BuildEvents
 
         private void OnBuildProjectDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
-            if (StopOnBuildErrorEnabled && success == false)
+            if (StopOnBuildErrorEnabled && !success)
             {
-                const string cancelBuildCommand = "Build.Cancel";
-                _dte2.ExecuteCommand(cancelBuildCommand);
+                Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    const string cancelBuildCommand = "Build.Cancel";
+                    _dte2.ExecuteCommand(cancelBuildCommand);
+                });
             }
 
             if (ShowBuildReport)
