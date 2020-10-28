@@ -43,6 +43,7 @@ namespace Tests
         [DataRow("+++>", ClassificationTypeDefinitions.LogCustom1)]
         [DataRow(":Error:", ClassificationTypeDefinitions.LogError)]
         [DataRow("Error ", ClassificationTypeDefinitions.LogError)]
+        [DataRow("/errorReport:prompt ", ClassificationTypeDefinitions.BuildText)]
         [DataRow(" Failed ", ClassificationTypeDefinitions.LogError)]
         [DataRow("Failed ", ClassificationTypeDefinitions.LogError)]
         [DataRow(" Fail ", ClassificationTypeDefinitions.LogError)]
