@@ -178,7 +178,7 @@ namespace VSColorOutput.State
                 },
                 new RegExClassification
                 {
-                    RegExPattern = @"(\W|^)^(?!.*warning\s(BC|CS|CA)\d+:).*(error|fail|failed|exception)[^\w\.\-\+]",
+                    RegExPattern = @"(\W|^)^(?!.*warning\s(BC|CS|CA)\d+:).*((?<!/)error|fail|failed|exception)[^\w\.\-\+]",
                     ClassificationType = ClassificationTypes.LogError,
                     IgnoreCase = true
                 },
