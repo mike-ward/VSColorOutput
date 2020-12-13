@@ -29,11 +29,7 @@ namespace Tests
             var buildEvents = new VSColorOutput.Output.BuildEvents.BuildEvents();
             buildEvents.Initialize(mockServiceProvider.Object);
 
-            mockDte2.VerifyAll();
-            mockEvents.VerifyAll();
-            mockDteEvents.VerifyAll();
-            mockBuildEvents.VerifyAll();
-            mockServiceProvider.VerifyAll();
+            Mock.VerifyAll();
         }
 
         public interface IDispBuildEvents
@@ -70,11 +66,7 @@ namespace Tests
             Action act = () => mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "", "", "", "", false);
             act.Should().Throw<NullReferenceException>();
 
-            mockDte2.VerifyAll();
-            mockEvents.VerifyAll();
-            mockDteEvents.VerifyAll();
-            mockBuildEvents.VerifyAll();
-            mockServiceProvider.VerifyAll();
+            Mock.VerifyAll();
         }
 
         [TestMethod]
@@ -107,15 +99,7 @@ namespace Tests
             mockBuildEvents.Raise(be => be.OnBuildBegin += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
             mockBuildEvents.Raise(be => be.OnBuildDone += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
 
-            mockDte2.VerifyAll();
-            mockEvents.VerifyAll();
-            mockDteEvents.VerifyAll();
-            mockBuildEvents.VerifyAll();
-            mockServiceProvider.VerifyAll();
-            mockToolWindows.VerifyAll();
-            mockOutputWindow.VerifyAll();
-            mockOutputWindowPane.VerifyAll();
-            mockOutputWindowPanes.VerifyAll();
+            Mock.VerifyAll();
         }
 
         [TestMethod]
@@ -152,15 +136,7 @@ namespace Tests
             mockBuildEvents.Raise(be => be.OnBuildProjConfigDone += null, "test2.proj", "Release", "Any CPU", "", false);
             mockBuildEvents.Raise(be => be.OnBuildDone += null, vsBuildScope.vsBuildScopeSolution, vsBuildAction.vsBuildActionBuild);
 
-            mockDte2.VerifyAll();
-            mockEvents.VerifyAll();
-            mockDteEvents.VerifyAll();
-            mockBuildEvents.VerifyAll();
-            mockServiceProvider.VerifyAll();
-            mockToolWindows.VerifyAll();
-            mockOutputWindow.VerifyAll();
-            mockOutputWindowPane.VerifyAll();
-            mockOutputWindowPanes.VerifyAll();
+            Mock.VerifyAll();
         }
 
         [TestMethod]
@@ -195,16 +171,7 @@ namespace Tests
             buildEvents.ShowDebugWindowOnDebug = true;
             mockDteEvents.Raise(de => de.ModeChanged += null, vsIDEMode.vsIDEModeDesign);
 
-            mockDte2.VerifyAll();
-            mockEvents.VerifyAll();
-            mockDteEvents.VerifyAll();
-            mockBuildEvents.VerifyAll();
-            mockServiceProvider.VerifyAll();
-            mockToolWindows.VerifyAll();
-            mockOutputWindow.VerifyAll();
-            mockOutputWindowPane.VerifyAll();
-            mockOutputWindowPanes.VerifyAll();
-            mockWindow.VerifyAll();
+            Mock.VerifyAll();
         }
     }
 }

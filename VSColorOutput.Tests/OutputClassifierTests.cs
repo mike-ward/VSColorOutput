@@ -31,9 +31,8 @@ namespace Tests
             mockSnapshot.SetupGet(s => s.Length).Returns(0);
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 0);
             outputClassifier.GetClassificationSpans(snapshotSpan).Should().BeEmpty();
-            mockSnapshot.VerifyAll();
-            mockServiceProvider.VerifyAll();
-            mockClassificationTypeRegistryService.VerifyAll();
+
+            Mock.VerifyAll();
         }
 
         [DataRow("-----", ClassificationTypeDefinitions.BuildHead)]
@@ -84,10 +83,8 @@ namespace Tests
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 1);
             var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
-            mockSnapshot.VerifyAll();
-            mockSnapshotLine.VerifyAll();
-            mockServiceProvider.VerifyAll();
-            mockClassificationTypeRegistryService.VerifyAll();
+
+            Mock.VerifyAll();
         }
     }
 }
