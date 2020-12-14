@@ -18,9 +18,10 @@ namespace VSColorOutput.Output.BuildEvents
     {
         private DTE2 _dte2;
         private Events _events;
+        private DTEEvents _dteEvents;
+        private SolutionEvents _solutionEvents;
         private EnvDTE.BuildEvents _buildEvents;
         private int _initialized;
-        private DTEEvents _dteEvents;
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
 
@@ -31,6 +32,7 @@ namespace VSColorOutput.Output.BuildEvents
         public bool ShowTimeStamps { get; set; }
         public DateTime DebugStartTime { get; private set; }
         public bool ShowDonation { get; set; }
+        public static string SolutionPath { get; private set; }
 
         public void Initialize(IServiceProvider serviceProvider)
         {
@@ -46,16 +48,26 @@ namespace VSColorOutput.Output.BuildEvents
                 _events = _dte2.Events;
                 _buildEvents = _events.BuildEvents;
                 _dteEvents = _events.DTEEvents;
+                _solutionEvents = _events.SolutionEvents;
 
                 _buildEvents.OnBuildBegin += OnBuildBegin;
                 _buildEvents.OnBuildDone += OnBuildDone;
                 _buildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
                 _dteEvents.ModeChanged += OnModeChanged;
+
+                _solutionEvents.Opened += SolutionOpened;
+                _solutionEvents.AfterClosing += () => SolutionPath = null;
             }
 
             _projectsBuildReport = new List<string>();
 
             Settings.SettingsUpdated += (sender, args) => LoadSettings();
+            LoadSettings();
+        }
+
+        public void SolutionOpened()
+        {
+            SolutionPath = System.IO.Path.GetDirectoryName(_dte2.Solution.FullName);
             LoadSettings();
         }
 

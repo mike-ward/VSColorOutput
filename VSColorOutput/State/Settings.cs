@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using VSColorOutput.Output.BuildEvents;
 using VSColorOutput.Output.ColorClassifier;
 
 namespace VSColorOutput.State
@@ -79,25 +80,40 @@ namespace VSColorOutput.State
         [DataMember(Order = 21)]
         public String TimeStampDifference { get; set; } = DefaultTimeStampFormat;
 
-        private static readonly string ProgramDataFolder;
-        private static readonly string SettingsFile;
+        private static readonly string ProgramDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSColorOutput");
 
         public static event EventHandler SettingsUpdated;
 
         private static void OnSettingsUpdated(object sender, EventArgs ea) => SettingsUpdated?.Invoke(sender, ea);
 
-        static Settings()
+        private static string GetSettingsFilePath()
         {
-            ProgramDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSColorOutput");
-            SettingsFile = Path.Combine(ProgramDataFolder, "vscoloroutput.json");
+            const string name = "vscoloroutput.json";
+            var settingsPath = Path.Combine(ProgramDataFolder, name);
+            var solutionPath = BuildEvents.SolutionPath;
+
+            if (solutionPath != null)
+            {
+                var path = Path.Combine(solutionPath, name);
+                if (File.Exists(path))
+                {
+                    settingsPath = path;
+                    if (string.IsNullOrWhiteSpace(File.ReadAllText(settingsPath)))
+                    {
+                        new Settings().SaveToFile(settingsPath);
+                    }
+                }
+            }
+
+            if (!File.Exists(settingsPath)) new Settings().Save();
+            return settingsPath;
         }
 
         public static Settings Load()
         {
             if (Runtime.RunningUnitTests) return new Settings();
             Directory.CreateDirectory(ProgramDataFolder);
-            if (!File.Exists(SettingsFile)) new Settings().Save();
-            using (var stream = new FileStream(SettingsFile, FileMode.Open))
+            using (var stream = new FileStream(GetSettingsFilePath(), FileMode.Open))
             {
                 var deserialize = new DataContractJsonSerializer(typeof(Settings));
                 var settings = (Settings)deserialize.ReadObject(stream);
@@ -122,12 +138,17 @@ namespace VSColorOutput.State
         {
             if (Runtime.RunningUnitTests) return;
             Directory.CreateDirectory(ProgramDataFolder);
-            using (var stream = new FileStream(SettingsFile, FileMode.Create))
+            SaveToFile(GetSettingsFilePath());
+            OnSettingsUpdated(this, EventArgs.Empty);
+        }
+
+        private void SaveToFile(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Create))
             {
                 var serializer = new DataContractJsonSerializer(typeof(Settings));
                 serializer.WriteObject(stream, this);
             }
-            OnSettingsUpdated(this, EventArgs.Empty);
         }
 
         private static RegExClassification[] DefaultPatterns()
