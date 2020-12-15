@@ -56,6 +56,21 @@ namespace VSColorOutput.State
         public bool ShowTimeStamps { get; set; }
 
         [Category(ActionSubCategory)]
+        [DisplayName("Show Time Stamp on Every Line")]
+        [Description("Shows elapsed time on every line in debug output window, without incremental time")]
+        public bool ShowTimeStampOnEveryLine { get; set; }
+
+        [Category(ActionSubCategory)]
+        [DisplayName("Show Hours in Time Stamps")]
+        [Description("Shows hours in elapsed and incremental times in debug output window")]
+        public bool ShowHoursInTimeStamps { get; set; }
+
+        [Category(ActionSubCategory)]
+        [DisplayName("Format Time According to System Locale")]
+        [Description("Formats elapsed build time, and elapsed and incremental times in debug output window according to system locale")]
+        public bool FormatTimeInSystemLocale { get; set; }
+
+        [Category(ActionSubCategory)]
         [DisplayName("Yes, I Donated!")]
         [Description("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=REEP6X7DSPMZU")]
         public bool SuppressDonation { get; set; }
@@ -144,6 +159,9 @@ namespace VSColorOutput.State
             ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
             HighlightFindResults = settings.HighlightFindResults;
             ShowTimeStamps = settings.ShowTimeStamps;
+            ShowTimeStampOnEveryLine = settings.ShowTimeStampOnEveryLine;
+            ShowHoursInTimeStamps = settings.ShowHoursInTimeStamps;
+            FormatTimeInSystemLocale = settings.FormatTimeInSystemLocale;
 
             RegExPatterns = settings.Patterns;
 
@@ -179,6 +197,9 @@ namespace VSColorOutput.State
                 ShowDebugWindowOnDebug = ShowDebugWindowOnDebug,
                 HighlightFindResults = HighlightFindResults,
                 ShowTimeStamps = ShowTimeStamps,
+                ShowTimeStampOnEveryLine = ShowTimeStampOnEveryLine,
+                ShowHoursInTimeStamps = ShowHoursInTimeStamps,
+                FormatTimeInSystemLocale = FormatTimeInSystemLocale,
                 // ---
                 Patterns = RegExPatterns,
                 // ---

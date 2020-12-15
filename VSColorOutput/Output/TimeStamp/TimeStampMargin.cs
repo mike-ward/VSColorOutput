@@ -15,6 +15,16 @@ using VSColorOutput.State;
 
 namespace VSColorOutput.Output.TimeStamp
 {
+    public sealed class TimeStampFormatter
+    {
+        public static string FormatTime(TimeSpan time, CultureInfo cultureInfo, bool addHours)
+        {
+            var separator = cultureInfo.DateTimeFormat.TimeSeparator;
+            return (addHours ? $"{time.Hours:D2}{separator}" : "") +
+                $"{time.Minutes:D2}{separator}{time.Seconds:D2}.{time.Milliseconds:D3}";
+        }
+    }
+
     public sealed class TimeStampMargin : Canvas, IWpfTextViewMargin
     {
         private readonly IWpfTextView _textView;
@@ -29,12 +39,16 @@ namespace VSColorOutput.Output.TimeStamp
         private bool _disposed;
         private TextRunProperties _textRunProperties;
         private double _oldViewportTop = double.MinValue;
+        private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public bool Enabled { get; } = true;
         public double MarginSize => ActualHeight;
         public FrameworkElement VisualElement => this;
 
         public ITextViewMargin GetTextViewMargin(string marginName) => marginName == nameof(TimeStampMargin) ? this : null;
+
+        public bool ShowHoursInTimeStamps { get; set; }
+        public bool ShowTimeStampOnEveryLine { get; set; }
 
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
         {
@@ -54,7 +68,16 @@ namespace VSColorOutput.Output.TimeStamp
             IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
             Settings.SettingsUpdated += OnSettingsOnSettingsUpdated;
+            LoadSettings();
             UpdateFormatMap();
+        }
+
+        private void LoadSettings()
+        {
+            var settings = Settings.Load();
+            _cultureInfo = settings.FormatTimeInSystemLocale ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
+            ShowHoursInTimeStamps = settings.ShowHoursInTimeStamps;
+            ShowTimeStampOnEveryLine = settings.ShowTimeStampOnEveryLine;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -76,6 +99,7 @@ namespace VSColorOutput.Output.TimeStamp
 
         private void OnSettingsOnSettingsUpdated(object sender, EventArgs args)
         {
+            LoadSettings();
             UpdateFormatMap();
         }
 
@@ -131,7 +155,7 @@ namespace VSColorOutput.Output.TimeStamp
             var list2 = new List<TimeStampVisual>();
             foreach (var line in _textView.TextViewLines)
             {
-                if (line.IsFirstTextViewLineForSnapshotLine)
+                if (ShowTimeStampOnEveryLine || line.IsFirstTextViewLineForSnapshotLine)
                 {
                     var lineNumber = line.Start.GetContainingLine().LineNumber;
                     if (lineNumber < _lineTimeStamps.Count)
