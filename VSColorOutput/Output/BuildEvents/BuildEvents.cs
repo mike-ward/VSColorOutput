@@ -24,6 +24,7 @@ namespace VSColorOutput.Output.BuildEvents
         private int _initialized;
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
+        private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public bool StopOnBuildErrorEnabled { get; set; }
         public bool ShowElapsedBuildTimeEnabled { get; set; }
@@ -74,6 +75,7 @@ namespace VSColorOutput.Output.BuildEvents
         private void LoadSettings()
         {
             var settings = Settings.Load();
+            _cultureInfo = settings.FormatTimeInSystemLocale ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
             StopOnBuildErrorEnabled = settings.EnableStopOnBuildError;
             ShowElapsedBuildTimeEnabled = settings.ShowElapsedBuildTime;
             ShowBuildReport = settings.ShowBuildReport;
