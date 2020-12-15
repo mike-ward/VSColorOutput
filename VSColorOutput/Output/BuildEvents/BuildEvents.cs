@@ -56,8 +56,11 @@ namespace VSColorOutput.Output.BuildEvents
                 _buildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
                 _dteEvents.ModeChanged += OnModeChanged;
 
-                _solutionEvents.Opened += SolutionOpened;
-                _solutionEvents.AfterClosing += () => SolutionPath = null;
+                if (_solutionEvents != null)
+                {
+                    _solutionEvents.Opened += SolutionOpened;
+                    _solutionEvents.AfterClosing += () => SolutionPath = null;
+                }
             }
 
             _projectsBuildReport = new List<string>();
