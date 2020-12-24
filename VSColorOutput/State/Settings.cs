@@ -114,7 +114,11 @@ namespace VSColorOutput.State
                 }
             }
 
-            if (!File.Exists(settingsPath)) new Settings().Save();
+            if (!File.Exists(settingsPath))
+            {
+                new Settings().SaveToFile(settingsPath);
+            }
+
             return settingsPath;
         }
 
@@ -151,7 +155,7 @@ namespace VSColorOutput.State
             OnSettingsUpdated(this, EventArgs.Empty);
         }
 
-        private void SaveToFile(string path)
+        public void SaveToFile(string path)
         {
             using (var stream = new FileStream(path, FileMode.Create))
             {
