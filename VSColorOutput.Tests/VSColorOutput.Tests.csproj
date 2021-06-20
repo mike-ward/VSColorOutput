@@ -74,13 +74,13 @@
       <Version>5.10.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
-      <Version>16.0.204</Version>
+      <Version>17.0.0-previews-1-31410-273</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.UnitTestLibrary">
       <Version>14.3.25407</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.13.1</Version>
+      <Version>4.16.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.0</Version>

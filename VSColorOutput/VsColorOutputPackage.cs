@@ -11,7 +11,7 @@ namespace VSColorOutput
     [Guid(VSColorOutputPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(VsColorOutputOptionsDialog), VsColorOutputOptionsDialog.Category, VsColorOutputOptionsDialog.SubCategory, 1000, 1001, true)]
     [ProvideProfile(typeof(VsColorOutputOptionsDialog), VsColorOutputOptionsDialog.Category, VsColorOutputOptionsDialog.SubCategory, 1000, 1001, true)]
-    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows - https://mike-ward.net/vscoloroutput", "2.73")]
+    [InstalledProductRegistration("VSColorOutput", "Color output for build and debug windows - https://mike-ward.net/vscoloroutput", "2.8")]
     public sealed class VSColorOutputPackage : AsyncPackage
     {
         public const string PackageGuidString = "CD56B219-38CB-482A-9B2D-7582DF4AAF1E";

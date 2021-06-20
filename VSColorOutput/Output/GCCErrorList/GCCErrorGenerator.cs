@@ -87,7 +87,7 @@ namespace VSColorOutput.Output.GCCErrorList
 
         private static void TaskOnNavigate(object sender, EventArgs eventArgs)
         {
-            var task = sender as Task;
+            var task = sender as TaskListItem;
             if (task == null) throw new ArgumentException("sender");
             task.Line++; // Navigation starts counting from 1, do ++
             _errorListProvider.Navigate(task, new Guid(Constants.vsViewKindCode));
