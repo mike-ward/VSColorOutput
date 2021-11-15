@@ -74,7 +74,7 @@
       <Version>5.10.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
-      <Version>16.0.204</Version>
+      <Version>17.0.31902.203</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.UnitTestLibrary">
       <Version>14.3.25407</Version>
