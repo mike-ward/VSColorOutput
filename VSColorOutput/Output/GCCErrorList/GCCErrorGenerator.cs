@@ -49,19 +49,19 @@ namespace VSColorOutput.Output.GCCErrorList
 
                 var task = new ErrorTask
                 {
-                    Category      = TaskCategory.BuildCompile,
+                    Category = TaskCategory.BuildCompile,
                     ErrorCategory = category,
-                    Text          = item.Text
+                    Text = item.Text
                 };
 
                 switch (item.ErrorType)
                 {
                     case GCCErrorType.Full:
-                        task.Navigate      += TaskOnNavigate;
-                        task.Line          =  item.Line - 1;   // Visual studio starts counting from 0
-                        task.Column        =  item.Column - 1; // Visual studio starts counting from 0
-                        task.Document      =  GetFileByProjectNumber(item.ProjectNumber, item.Filename);
-                        task.HierarchyItem =  GetItemHierarchy(task.Document);
+                        task.Navigate += TaskOnNavigate;
+                        task.Line = item.Line - 1;   // Visual studio starts counting from 0
+                        task.Column = item.Column - 1; // Visual studio starts counting from 0
+                        task.Document = GetFileByProjectNumber(item.ProjectNumber, item.Filename);
+                        task.HierarchyItem = GetItemHierarchy(task.Document);
                         break;
                     case GCCErrorType.GCCOnly:
                         task.Document = item.Filename;
@@ -115,7 +115,7 @@ namespace VSColorOutput.Output.GCCErrorList
         {
             // Get the vs solution
             var solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
-            var hr       = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
+            var hr = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
 
             if (hr == VSConstants.S_OK) return hierarchy;
 
@@ -130,7 +130,7 @@ namespace VSColorOutput.Output.GCCErrorList
 
         private static string GetFileByProjectNumber(int number, string filename)
         {
-            var proj        = GetProjectByNumber(number);
+            var proj = GetProjectByNumber(number);
             var projectPath = Path.GetDirectoryName(proj.FileName) ?? string.Empty;
 
             foreach (var file in Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories))

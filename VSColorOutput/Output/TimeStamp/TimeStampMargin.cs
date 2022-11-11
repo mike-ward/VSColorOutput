@@ -29,29 +29,29 @@ namespace VSColorOutput.Output.TimeStamp
 
     public sealed class TimeStampMargin : Canvas, IWpfTextViewMargin
     {
-        private readonly IWpfTextView             _textView;
+        private readonly IWpfTextView _textView;
         private readonly IClassificationFormatMap _formatMap;
-        private readonly IClassificationType      _timestampClassification;
-        private readonly Canvas                   _translatedCanvas = new Canvas();
-        private readonly List<DateTime>           _lineTimeStamps   = new List<DateTime>();
+        private readonly IClassificationType _timestampClassification;
+        private readonly Canvas _translatedCanvas = new Canvas();
+        private readonly List<DateTime> _lineTimeStamps = new List<DateTime>();
 
-        private string _elapsedTimeFormat    = Settings.DefaultTimeStampFormat;
+        private string _elapsedTimeFormat = Settings.DefaultTimeStampFormat;
         private string _differenceTimeFormat = Settings.DefaultTimeStampFormat;
 
-        private bool              _disposed;
+        private bool _disposed;
         private TextRunProperties _textRunProperties;
-        private double            _oldViewportTop = double.MinValue;
-        private CultureInfo       _cultureInfo    = CultureInfo.InvariantCulture;
+        private double _oldViewportTop = double.MinValue;
+        private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
-        public bool             Enabled       { get; } = true;
-        public double           MarginSize    => ActualHeight;
+        public bool Enabled { get; } = true;
+        public double MarginSize => ActualHeight;
         public FrameworkElement VisualElement => this;
 
         public ITextViewMargin GetTextViewMargin(string marginName) => marginName == nameof(TimeStampMargin)
             ? this
             : null;
 
-        public bool ShowHoursInTimeStamps    { get; set; }
+        public bool ShowHoursInTimeStamps { get; set; }
         public bool ShowTimeStampOnEveryLine { get; set; }
 
         public TimeStampMargin(IWpfTextView textView, TimeStampMarginProvider timeStampMarginProvider)
@@ -64,14 +64,14 @@ namespace VSColorOutput.Output.TimeStamp
             _timestampClassification = timeStampMarginProvider.ClassificationTypeRegistryService
                .GetClassificationType(ClassificationTypeDefinitions.TimeStamp);
 
-            ClipToBounds     = true;
+            ClipToBounds = true;
             IsHitTestVisible = false;
             Children.Add(_translatedCanvas);
             TextOptions.SetTextHintingMode(this, TextHintingMode.Fixed);
 
-            IsVisibleChanged             += OnVisibleChanged;
+            IsVisibleChanged += OnVisibleChanged;
             _textView.TextBuffer.Changed += TextBufferOnChanged;
-            Settings.SettingsUpdated     += OnSettingsOnSettingsUpdated;
+            Settings.SettingsUpdated += OnSettingsOnSettingsUpdated;
             LoadSettings();
             UpdateFormatMap();
         }
@@ -82,14 +82,14 @@ namespace VSColorOutput.Output.TimeStamp
             _cultureInfo = settings.FormatTimeInSystemLocale
                 ? CultureInfo.CurrentCulture
                 : CultureInfo.InvariantCulture;
-            ShowHoursInTimeStamps    = settings.ShowHoursInTimeStamps;
+            ShowHoursInTimeStamps = settings.ShowHoursInTimeStamps;
             ShowTimeStampOnEveryLine = settings.ShowTimeStampOnEveryLine;
         }
 
         private void OnVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue) _textView.LayoutChanged += TextViewOnLayoutChanged;
-            else _textView.LayoutChanged                  -= TextViewOnLayoutChanged;
+            else _textView.LayoutChanged -= TextViewOnLayoutChanged;
         }
 
         private void TextViewOnLayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
@@ -97,7 +97,7 @@ namespace VSColorOutput.Output.TimeStamp
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (_oldViewportTop != _textView.ViewportTop)
             {
-                _oldViewportTop                   = _textView.ViewportTop;
+                _oldViewportTop = _textView.ViewportTop;
                 _translatedCanvas.RenderTransform = new TranslateTransform(0.0, -_textView.ViewportTop);
             }
 
@@ -148,7 +148,7 @@ namespace VSColorOutput.Output.TimeStamp
             }
 
             var dictionary = new Dictionary<object, TimeStampVisual>();
-            var list1      = new List<int>();
+            var list1 = new List<int>();
             for (var index = _translatedCanvas.Children.Count - 1; index >= 0; --index)
             {
                 var timeStampVisual = _translatedCanvas.Children[index] as TimeStampVisual;
@@ -167,7 +167,7 @@ namespace VSColorOutput.Output.TimeStamp
                     var lineNumber = line.Start.GetContainingLine().LineNumber;
                     if (lineNumber < _lineTimeStamps.Count)
                     {
-                        var timeStamp         = _lineTimeStamps[lineNumber];
+                        var timeStamp = _lineTimeStamps[lineNumber];
                         var previousTimeStamp = _lineTimeStamps[Math.Max(lineNumber - 1, 0)];
                         if (!dictionary.TryGetValue(line.IdentityTag, out var timeStampVisual))
                         {
@@ -186,8 +186,8 @@ namespace VSColorOutput.Output.TimeStamp
 
                         if (timeStampVisual != null)
                         {
-                            var    startDiff = timeStamp - BuildEventsProvider.BuildEvents.DebugStartTime;
-                            var    lastDiff  = timeStamp - previousTimeStamp;
+                            var startDiff = timeStamp - BuildEventsProvider.BuildEvents.DebugStartTime;
+                            var lastDiff = timeStamp - previousTimeStamp;
                             string text;
 
                             try
@@ -213,10 +213,10 @@ namespace VSColorOutput.Output.TimeStamp
 
         private void UpdateFormatMap()
         {
-            var colorMap       = ColorMap.GetMap();
+            var colorMap = ColorMap.GetMap();
             var textProperties = _formatMap.GetTextProperties(_timestampClassification);
-            var color          = colorMap[ClassificationTypeDefinitions.TimeStamp];
-            var wpfColor       = ClassificationTypeDefinitions.ToMediaColor(color);
+            var color = colorMap[ClassificationTypeDefinitions.TimeStamp];
+            var wpfColor = ClassificationTypeDefinitions.ToMediaColor(color);
             textProperties = textProperties.SetForeground(wpfColor);
 
             _formatMap.SetTextProperties(_timestampClassification, textProperties);
@@ -224,7 +224,7 @@ namespace VSColorOutput.Output.TimeStamp
             _translatedCanvas.Children.Clear();
 
             Background = _textRunProperties.BackgroundBrush;
-            MinWidth   = CalculateMarginWidth();
+            MinWidth = CalculateMarginWidth();
             Update();
         }
 
@@ -254,11 +254,11 @@ namespace VSColorOutput.Output.TimeStamp
         {
             var settings = Settings.Load();
             if (settings.ShowTimeStamps == false) return 0;
-            _elapsedTimeFormat    = settings.TimeStampElapsed;
+            _elapsedTimeFormat = settings.TimeStampElapsed;
             _differenceTimeFormat = settings.TimeStampDifference;
             var pixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
-            var timespan       = TimeSpan.FromHours(12.123);
+            var timespan = TimeSpan.FromHours(12.123);
             var sampleTimeText = TimeText(timespan, timespan);
 
             var text = new FormattedText(
@@ -276,10 +276,10 @@ namespace VSColorOutput.Output.TimeStamp
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed                    =  true;
+            _disposed = true;
             _textView.TextBuffer.Changed -= TextBufferOnChanged;
-            IsVisibleChanged             -= OnVisibleChanged;
-            Settings.SettingsUpdated     -= OnSettingsOnSettingsUpdated;
+            IsVisibleChanged -= OnVisibleChanged;
+            Settings.SettingsUpdated -= OnSettingsOnSettingsUpdated;
         }
     }
 }

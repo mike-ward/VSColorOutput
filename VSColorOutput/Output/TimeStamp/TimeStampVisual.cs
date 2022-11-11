@@ -10,10 +10,10 @@ namespace VSColorOutput.Output.TimeStamp
 {
     public class TimeStampVisual : UIElement
     {
-        private string        _text;
+        private string _text;
         private FormattedText _formattedText;
-        private double        _verticalOffset;
-        private double        _horizontalOffset;
+        private double _verticalOffset;
+        private double _horizontalOffset;
 
         public object LineTag { get; private set; }
 
@@ -25,12 +25,12 @@ namespace VSColorOutput.Output.TimeStamp
         }
 
         internal void Update(
-            string            text,
-            ITextViewLine     line,
-            IWpfTextView      view,
+            string text,
+            ITextViewLine line,
+            IWpfTextView view,
             TextRunProperties formatting,
-            double            marginWidth,
-            double            verticalOffset)
+            double marginWidth,
+            double verticalOffset)
         {
             LineTag = line.IdentityTag;
 

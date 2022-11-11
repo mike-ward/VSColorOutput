@@ -22,7 +22,7 @@ namespace VSColorOutput.Output.ColorClassifier
         internal IClassificationFormatMapService ClassificationFormatMapService;
 
         private static OutputClassifier _outputClassifier;
-        private const  string           SuppliedClassifierForThisBufferKey = "VSColorOutput.Output.SuppliedClassifierForThisTextBufferKey";
+        private const string SuppliedClassifierForThisBufferKey = "VSColorOutput.Output.SuppliedClassifierForThisTextBufferKey";
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {

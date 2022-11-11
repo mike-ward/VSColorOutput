@@ -17,11 +17,11 @@ namespace Tests
         [TestMethod]
         public void OnProjectBuildDoneConstructorShouldWireupDteEvents()
         {
-            var mockDte2                     = new Mock<DTE2>();
-            var mockEvents                   = new Mock<Events>();
-            var mockDteEvents                = new Mock<DTEEvents>();
-            var mockBuildEvents              = new Mock<BuildEvents>();
-            var mockServiceProvider          = new Mock<IServiceProvider>();
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             var mockIVsSolutionBuildManager2 = new Mock<IVsSolutionBuildManager2>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockServiceProvider.Setup(sp => sp.GetService(typeof(SVsSolutionBuildManager))).Returns(mockIVsSolutionBuildManager2.Object);
@@ -53,11 +53,11 @@ namespace Tests
         [TestMethod]
         public void OnBuildProjectDoneCancelsBuildOnErrorWhenEnabled()
         {
-            var mockDte2                     = new Mock<DTE2>();
-            var mockEvents                   = new Mock<Events>();
-            var mockDteEvents                = new Mock<DTEEvents>();
-            var mockBuildEvents              = new Mock<BuildEvents>();
-            var mockServiceProvider          = new Mock<IServiceProvider>();
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             var mockIVsSolutionBuildManager2 = new Mock<IVsSolutionBuildManager2>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockServiceProvider.Setup(sp => sp.GetService(typeof(SVsSolutionBuildManager))).Returns(mockIVsSolutionBuildManager2.Object);
@@ -78,15 +78,15 @@ namespace Tests
         [TestMethod]
         public void OnBuildDoneShowsElapsedTimeWhenEnabled()
         {
-            var mockDte2                     = new Mock<DTE2>();
-            var mockEvents                   = new Mock<Events>();
-            var mockDteEvents                = new Mock<DTEEvents>();
-            var mockBuildEvents              = new Mock<BuildEvents>();
-            var mockServiceProvider          = new Mock<IServiceProvider>();
-            var mockToolWindows              = new Mock<ToolWindows>();
-            var mockOutputWindow             = new Mock<OutputWindow>();
-            var mockOutputWindowPanes        = new Mock<OutputWindowPanes>();
-            var mockOutputWindowPane         = new Mock<OutputWindowPane>();
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockToolWindows = new Mock<ToolWindows>();
+            var mockOutputWindow = new Mock<OutputWindow>();
+            var mockOutputWindowPanes = new Mock<OutputWindowPanes>();
+            var mockOutputWindowPane = new Mock<OutputWindowPane>();
             var mockIVsSolutionBuildManager2 = new Mock<IVsSolutionBuildManager2>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockServiceProvider.Setup(sp => sp.GetService(typeof(SVsSolutionBuildManager))).Returns(mockIVsSolutionBuildManager2.Object);
@@ -113,15 +113,15 @@ namespace Tests
         [TestMethod]
         public void OnBuildDoneShowsProjectsBuildReportWhenEnabled()
         {
-            var mockDte2                     = new Mock<DTE2>();
-            var mockEvents                   = new Mock<Events>();
-            var mockDteEvents                = new Mock<DTEEvents>();
-            var mockBuildEvents              = new Mock<BuildEvents>();
-            var mockServiceProvider          = new Mock<IServiceProvider>();
-            var mockToolWindows              = new Mock<ToolWindows>();
-            var mockOutputWindow             = new Mock<OutputWindow>();
-            var mockOutputWindowPanes        = new Mock<OutputWindowPanes>();
-            var mockOutputWindowPane         = new Mock<OutputWindowPane>();
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockToolWindows = new Mock<ToolWindows>();
+            var mockOutputWindow = new Mock<OutputWindow>();
+            var mockOutputWindowPanes = new Mock<OutputWindowPanes>();
+            var mockOutputWindowPane = new Mock<OutputWindowPane>();
             var mockIVsSolutionBuildManager2 = new Mock<IVsSolutionBuildManager2>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockServiceProvider.Setup(sp => sp.GetService(typeof(SVsSolutionBuildManager))).Returns(mockIVsSolutionBuildManager2.Object);
@@ -152,16 +152,16 @@ namespace Tests
         [TestMethod]
         public void DteEventsModeChangeActivatesDebugOutputWindowWhenEnabled()
         {
-            var mockDte2                     = new Mock<DTE2>();
-            var mockEvents                   = new Mock<Events>();
-            var mockDteEvents                = new Mock<DTEEvents>();
-            var mockBuildEvents              = new Mock<BuildEvents>();
-            var mockServiceProvider          = new Mock<IServiceProvider>();
-            var mockToolWindows              = new Mock<ToolWindows>();
-            var mockOutputWindow             = new Mock<OutputWindow>();
-            var mockOutputWindowPanes        = new Mock<OutputWindowPanes>();
-            var mockOutputWindowPane         = new Mock<OutputWindowPane>();
-            var mockWindow                   = new Mock<Window>();
+            var mockDte2 = new Mock<DTE2>();
+            var mockEvents = new Mock<Events>();
+            var mockDteEvents = new Mock<DTEEvents>();
+            var mockBuildEvents = new Mock<BuildEvents>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockToolWindows = new Mock<ToolWindows>();
+            var mockOutputWindow = new Mock<OutputWindow>();
+            var mockOutputWindowPanes = new Mock<OutputWindowPanes>();
+            var mockOutputWindowPane = new Mock<OutputWindowPane>();
+            var mockWindow = new Mock<Window>();
             var mockIVsSolutionBuildManager2 = new Mock<IVsSolutionBuildManager2>();
             mockServiceProvider.Setup(sp => sp.GetService(typeof(DTE))).Returns(mockDte2.Object);
             mockServiceProvider.Setup(sp => sp.GetService(typeof(SVsSolutionBuildManager))).Returns(mockIVsSolutionBuildManager2.Object);

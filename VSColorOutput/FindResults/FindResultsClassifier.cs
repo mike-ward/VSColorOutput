@@ -16,16 +16,16 @@ namespace VSColorOutput.FindResults
 {
     public class FindResultsClassifier : IClassifier
     {
-        private       int    _initialized;
-        private const string FindAll           = "Find all \"";
-        private const string MatchCase         = "Match case";
-        private const string WholeWord         = "Whole word";
+        private int _initialized;
+        private const string FindAll = "Find all \"";
+        private const string MatchCase = "Match case";
+        private const string WholeWord = "Whole word";
         private const string ListFilenamesOnly = "List filenames only";
 
-        private                 bool                               _settingsLoaded;
-        private                 IClassificationTypeRegistryService _classificationRegistry;
-        private                 IClassificationFormatMapService    _formatMapService;
-        private static readonly Regex                              FilenameRegex;
+        private bool _settingsLoaded;
+        private IClassificationTypeRegistryService _classificationRegistry;
+        private IClassificationFormatMapService _formatMapService;
+        private static readonly Regex FilenameRegex;
 
         private Regex _searchTextRegex;
 
@@ -40,7 +40,7 @@ namespace VSColorOutput.FindResults
             try
             {
                 _classificationRegistry = classificationRegistry;
-                _formatMapService       = formatMapService;
+                _formatMapService = formatMapService;
 
                 Settings.SettingsUpdated += (sender, args) =>
                 {
@@ -68,7 +68,7 @@ namespace VSColorOutput.FindResults
 
             var text = span.GetText();
 
-            var filenameSpans   = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
+            var filenameSpans = GetMatches(text, FilenameRegex, span.Start, FilenameClassificationType).ToList();
             var searchTermSpans = GetMatches(text, _searchTextRegex, span.Start, SearchTermClassificationType).ToList();
 
             var toRemove = (from searchSpan in searchTermSpans
@@ -95,13 +95,13 @@ namespace VSColorOutput.FindResults
                 var strings = (from s in firstLine.Split(',')
                                select s.Trim()).ToList();
 
-                var start  = strings[0].IndexOf('"');
+                var start = strings[0].IndexOf('"');
                 var length = strings[0].Length - start - 2;
                 if (length < 0) return false;
-                var searchTerm     = strings[0].Substring(start + 1, length);
-                var matchCase      = strings.Contains(MatchCase);
+                var searchTerm = strings[0].Substring(start + 1, length);
+                var matchCase = strings.Contains(MatchCase);
                 var matchWholeWord = strings.Contains(WholeWord);
-                var filenamesOnly  = strings.Contains(ListFilenamesOnly);
+                var filenamesOnly = strings.Contains(ListFilenamesOnly);
 
                 if (!filenamesOnly)
                 {
@@ -122,7 +122,7 @@ namespace VSColorOutput.FindResults
 
         private void UpdateFormatMap()
         {
-            var colorMap  = ColorMap.GetMap();
+            var colorMap = ColorMap.GetMap();
             var formatMap = _formatMapService.GetClassificationFormatMap("find results");
             try
             {
@@ -136,9 +136,9 @@ namespace VSColorOutput.FindResults
                 foreach (var names in classificationNames)
                 {
                     var classificationType = _classificationRegistry.GetClassificationType(names);
-                    var textProperties     = formatMap.GetTextProperties(classificationType);
-                    var color              = colorMap[names];
-                    var wpfColor           = Color.FromArgb(color.A, color.R, color.G, color.B);
+                    var textProperties = formatMap.GetTextProperties(classificationType);
+                    var color = colorMap[names];
+                    var wpfColor = Color.FromArgb(color.A, color.R, color.G, color.B);
                     formatMap.SetTextProperties(classificationType, textProperties.SetForeground(wpfColor));
                 }
             }
@@ -153,7 +153,7 @@ namespace VSColorOutput.FindResults
             if (_settingsLoaded) return;
             var settings = Settings.Load();
             HighlightFindResults = settings.HighlightFindResults;
-            _settingsLoaded      = true;
+            _settingsLoaded = true;
         }
 
         private static IEnumerable<ClassificationSpan> GetMatches(string text, Regex regex, SnapshotPoint snapStart, IClassificationType classificationType)

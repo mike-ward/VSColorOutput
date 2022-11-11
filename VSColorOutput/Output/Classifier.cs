@@ -7,7 +7,7 @@ namespace VSColorOutput.Output
 {
     public struct Classifier
     {
-        public string            Type { get; set; }
+        public string Type { get; set; }
         public Predicate<string> Test { get; set; }
     }
 }

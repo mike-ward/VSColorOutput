@@ -27,11 +27,11 @@ namespace VSColorOutput.Output.GCCErrorList
                 return new GCCErrorListItem
                 {
                     ProjectNumber = int.Parse(groups[1].Value),
-                    Filename      = groups[2].Value,
-                    Line          = int.Parse(groups[3].Value),
-                    Column        = int.Parse(groups[4].Value),
-                    Text          = groups[5].Value,
-                    ErrorType     = GCCErrorType.Full
+                    Filename = groups[2].Value,
+                    Line = int.Parse(groups[3].Value),
+                    Column = int.Parse(groups[4].Value),
+                    Text = groups[5].Value,
+                    ErrorType = GCCErrorType.Full
                 };
             }
 
@@ -42,9 +42,9 @@ namespace VSColorOutput.Output.GCCErrorList
                 return new GCCErrorListItem
                 {
                     ProjectNumber = int.Parse(groups[1].Value),
-                    Filename      = "gcc",
-                    Text          = groups[2].Value,
-                    ErrorType     = GCCErrorType.GCCOnly
+                    Filename = "gcc",
+                    Text = groups[2].Value,
+                    ErrorType = GCCErrorType.GCCOnly
                 };
             }
 

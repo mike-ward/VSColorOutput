@@ -20,7 +20,7 @@ namespace VSColorOutput.Output.ColorClassifier
         }
 
         public ClassificationTypes ClassificationType { get; set; }
-        public bool                IgnoreCase         { get; set; }
+        public bool IgnoreCase { get; set; }
 
         public override string ToString()
         {

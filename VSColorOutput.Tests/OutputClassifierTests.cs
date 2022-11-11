@@ -23,9 +23,9 @@ namespace Tests
         [TestMethod]
         public void GetClassificationSpansZeroLengthSnapShot()
         {
-            var mockServiceProvider                   = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
-            var outputClassifier                      = new OutputClassifier();
+            var outputClassifier = new OutputClassifier();
             outputClassifier.Initialize(mockClassificationTypeRegistryService.Object, null);
             var mockSnapshot = new Mock<ITextSnapshot>();
             mockSnapshot.SetupGet(s => s.Length).Returns(0);
@@ -65,7 +65,7 @@ namespace Tests
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();
-            var mockServiceProvider                   = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
             mockClassificationTypeRegistryService
                .Setup(c => c.GetClassificationType(classification))
@@ -73,7 +73,7 @@ namespace Tests
 
             var outputClassifier = new OutputClassifier();
             outputClassifier.Initialize(mockClassificationTypeRegistryService.Object, null);
-            var mockSnapshot     = new Mock<ITextSnapshot>();
+            var mockSnapshot = new Mock<ITextSnapshot>();
             var mockSnapshotLine = new Mock<ITextSnapshotLine>();
 
             mockSnapshot.SetupGet(s => s.Length).Returns(1);
@@ -87,7 +87,7 @@ namespace Tests
             mockSnapshotLine.SetupGet(l => l.Snapshot).Returns(mockSnapshot.Object);
 
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 1);
-            var spans        = outputClassifier.GetClassificationSpans(snapshotSpan);
+            var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
 
             Mock.VerifyAll();

@@ -9,10 +9,10 @@ namespace Tests
 
         public FakeTextSnapshotLine(ITextSnapshot snapshot, string text, int position, int lineNumber)
         {
-            Snapshot   = snapshot;
-            _text      = text;
+            Snapshot = snapshot;
+            _text = text;
             LineNumber = lineNumber;
-            Start      = new SnapshotPoint(snapshot, position);
+            Start = new SnapshotPoint(snapshot, position);
         }
 
         public string GetText()
