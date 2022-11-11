@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="65dd734b-180a-4c67-b245-56de889637e1" Version="2022.11" Language="en-US" Publisher="Mike Ward - Ann Arbor" />
+        <Identity Id="65dd734b-180a-4c67-b245-56de889637e1" Version="2.74" Language="en-US" Publisher="Mike Ward - Ann Arbor" />
         <DisplayName>VSColorOutput64</DisplayName>
         <Description xml:space="preserve">Color output for build and debug windows</Description>
         <MoreInfo>https://mike-ward.net/vscoloroutput</MoreInfo>
@@ -36,6 +36,6 @@
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
     </Assets>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
 </PackageManifest>
