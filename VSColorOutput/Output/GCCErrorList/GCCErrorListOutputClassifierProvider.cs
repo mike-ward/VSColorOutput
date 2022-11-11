@@ -1,17 +1,17 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Threading;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
+using System;
+using System.ComponentModel.Composition;
+using System.Threading;
 using VSColorOutput.State;
 
 namespace VSColorOutput.Output.GCCErrorList
 {
     [ContentType("output")]
     [Export(typeof(IClassifierProvider))]
-    class GCCErrorListOutputClassifierProvider : IClassifierProvider
+    internal class GCCErrorListOutputClassifierProvider : IClassifierProvider
     {
         private static GCCErrorListOutputClassifier _outputClassifier;
 
@@ -34,6 +34,7 @@ namespace VSColorOutput.Output.GCCErrorList
                 Log.LogError(ex.ToString());
                 throw;
             }
+
             return _outputClassifier;
         }
     }

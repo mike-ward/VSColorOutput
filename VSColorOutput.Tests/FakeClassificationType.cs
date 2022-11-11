@@ -13,8 +13,8 @@ namespace Tests
             return false;
         }
 
-        public string Classification { get; private set; }
+        public string Classification { get; }
 
         public IEnumerable<IClassificationType> BaseTypes => Enumerable.Empty<IClassificationType>();
-  }
+    }
 }

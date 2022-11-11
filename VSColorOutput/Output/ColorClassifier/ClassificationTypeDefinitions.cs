@@ -1,8 +1,8 @@
+using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Drawing;
-using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Utilities;
 
 namespace VSColorOutput.Output.ColorClassifier
 {
@@ -11,31 +11,31 @@ namespace VSColorOutput.Output.ColorClassifier
         public const string BuildHead = "BuildHead";
         public const string BuildText = "BuildText";
 
-        public const string LogInfo = "LogInformation";
-        public const string LogWarn = "LogWarning";
-        public const string LogError = "LogError";
+        public const string LogInfo    = "LogInformation";
+        public const string LogWarn    = "LogWarning";
+        public const string LogError   = "LogError";
         public const string LogCustom1 = "LogCustom1";
         public const string LogCustom2 = "LogCustom2";
         public const string LogCustom3 = "LogCustom3";
         public const string LogCustom4 = "LogCustom4";
 
         public const string FindResultsSearchTerm = "FindResultsSearchTerm";
-        public const string FindResultsFilename = "FindResultsFilename";
+        public const string FindResultsFilename   = "FindResultsFilename";
 
         public const string TimeStamp = "TimeStamp";
 
-        private static bool _settingsLoaded;
+        private static bool                      _settingsLoaded;
         private static Dictionary<string, Color> _colorMap;
 
         private static System.Windows.Media.Color GetColor(string classificationName)
         {
             if (_settingsLoaded == false)
             {
-                _colorMap = ColorMap.GetMap();
+                _colorMap       = ColorMap.GetMap();
                 _settingsLoaded = true;
             }
-            
-            if (!_colorMap.TryGetValue(classificationName, out Color color)) color = Color.Gray;
+
+            if (!_colorMap.TryGetValue(classificationName, out var color)) color = Color.Gray;
             return ToMediaColor(color);
         }
 
@@ -57,7 +57,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public BuildHeaderFormat()
             {
-                ForegroundColor = GetColor(BuildHead);
+                ForegroundColor   = GetColor(BuildHead);
                 BackgroundOpacity = 0;
             }
         }
@@ -75,7 +75,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public BuildTextFormat()
             {
-                ForegroundColor = GetColor(BuildText);
+                ForegroundColor   = GetColor(BuildText);
                 BackgroundOpacity = 0;
             }
         }
@@ -93,7 +93,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogErrorFormat()
             {
-                ForegroundColor = GetColor(LogError);
+                ForegroundColor   = GetColor(LogError);
                 BackgroundOpacity = 0;
             }
         }
@@ -111,7 +111,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogWarningFormat()
             {
-                ForegroundColor = GetColor(LogWarn);
+                ForegroundColor   = GetColor(LogWarn);
                 BackgroundOpacity = 0;
             }
         }
@@ -129,7 +129,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogInformationFormat()
             {
-                ForegroundColor = GetColor(LogInfo);
+                ForegroundColor   = GetColor(LogInfo);
                 BackgroundOpacity = 0;
             }
         }
@@ -147,7 +147,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogCustom1Format()
             {
-                ForegroundColor = GetColor(LogCustom1);
+                ForegroundColor   = GetColor(LogCustom1);
                 BackgroundOpacity = 0;
             }
         }
@@ -165,7 +165,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogCustom2Format()
             {
-                ForegroundColor = GetColor(LogCustom2);
+                ForegroundColor   = GetColor(LogCustom2);
                 BackgroundOpacity = 0;
             }
         }
@@ -183,7 +183,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogCustom3Format()
             {
-                ForegroundColor = GetColor(LogCustom3);
+                ForegroundColor   = GetColor(LogCustom3);
                 BackgroundOpacity = 0;
             }
         }
@@ -201,7 +201,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public LogCustom4Format()
             {
-                ForegroundColor = GetColor(LogCustom4);
+                ForegroundColor   = GetColor(LogCustom4);
                 BackgroundOpacity = 0;
             }
         }
@@ -219,7 +219,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public FindResultsSearchTermFormat()
             {
-                ForegroundColor = GetColor(FindResultsSearchTerm);
+                ForegroundColor   = GetColor(FindResultsSearchTerm);
                 BackgroundOpacity = 0;
             }
         }
@@ -237,7 +237,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public FindResultsFilenameFormat()
             {
-                ForegroundColor = GetColor(FindResultsFilename);
+                ForegroundColor   = GetColor(FindResultsFilename);
                 BackgroundOpacity = 0;
             }
         }
@@ -255,7 +255,7 @@ namespace VSColorOutput.Output.ColorClassifier
         {
             public TimeStampFormat()
             {
-                ForegroundColor = GetColor(TimeStamp);
+                ForegroundColor   = GetColor(TimeStamp);
                 BackgroundOpacity = 0;
             }
         }

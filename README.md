@@ -6,7 +6,7 @@ VSColorOutput is a Visual Studio extension that adds color highlighting to Visua
   
 Custom match patterns can be added. Colors can be modified.  
   
-Developed in C# and NUnit.  
+Developed in C#
   
 ![Image](https://mike-ward.net/cdn/images/vscoloroutput/vscoloroutput.png)  
   

@@ -9,7 +9,7 @@ namespace VSColorOutput.State
     [Guid("BE905985-26BB-492B-9453-743E26F4E8BB")]
     public class VsColorOutputOptionsDialog : DialogPage
     {
-        public const string Category = "VSColorOutput";
+        public const string Category    = "VSColorOutput64";
         public const string SubCategory = "General";
 
         private const string PatternsSubCategory = "Classifier Patterns";
@@ -19,7 +19,7 @@ namespace VSColorOutput.State
         [Category(PatternsSubCategory)]
         [DisplayName("RegEx Patterns")]
         [Description("Specify patterns (Regular Expressions) and assoicate with classification types. " +
-            "The order of the patterns is significant. ")]
+                     "The order of the patterns is significant. ")]
         public RegExClassification[] RegExPatterns { get; set; }
 
         // --------------------------------------------------------------------------
@@ -153,23 +153,23 @@ namespace VSColorOutput.State
         {
             var settings = Settings.Load();
 
-            StopOnFirstBuildError = settings.EnableStopOnBuildError;
-            ShowElapsedBuildTime = settings.ShowElapsedBuildTime;
-            ShowBuildReport = settings.ShowBuildReport;
-            ShowDebugWindowOnDebug = settings.ShowDebugWindowOnDebug;
-            HighlightFindResults = settings.HighlightFindResults;
-            ShowTimeStamps = settings.ShowTimeStamps;
+            StopOnFirstBuildError    = settings.EnableStopOnBuildError;
+            ShowElapsedBuildTime     = settings.ShowElapsedBuildTime;
+            ShowBuildReport          = settings.ShowBuildReport;
+            ShowDebugWindowOnDebug   = settings.ShowDebugWindowOnDebug;
+            HighlightFindResults     = settings.HighlightFindResults;
+            ShowTimeStamps           = settings.ShowTimeStamps;
             ShowTimeStampOnEveryLine = settings.ShowTimeStampOnEveryLine;
-            ShowHoursInTimeStamps = settings.ShowHoursInTimeStamps;
+            ShowHoursInTimeStamps    = settings.ShowHoursInTimeStamps;
             FormatTimeInSystemLocale = settings.FormatTimeInSystemLocale;
 
             RegExPatterns = settings.Patterns;
 
             BuildMessageColor = settings.BuildMessageColor;
-            BuildTextColor = settings.BuildTextColor;
+            BuildTextColor    = settings.BuildTextColor;
 
-            ErrorTextColor = settings.ErrorTextColor;
-            WarningTextColor = settings.WarningTextColor;
+            ErrorTextColor       = settings.ErrorTextColor;
+            WarningTextColor     = settings.WarningTextColor;
             InformationTextColor = settings.InformationTextColor;
 
             CustomTextColor1 = settings.CustomTextColor1;
@@ -177,11 +177,11 @@ namespace VSColorOutput.State
             CustomTextColor3 = settings.CustomTextColor3;
             CustomTextColor4 = settings.CustomTextColor4;
 
-            FindFileNameColor = settings.FindFileNameColor;
+            FindFileNameColor   = settings.FindFileNameColor;
             FindSearchTermColor = settings.FindSearchTermColor;
 
-            TimeStampColor = settings.TimeStampColor;
-            TimeStampElapsed = settings.TimeStampElapsed;
+            TimeStampColor      = settings.TimeStampColor;
+            TimeStampElapsed    = settings.TimeStampElapsed;
             TimeStampDifference = settings.TimeStampDifference;
 
             SuppressDonation = settings.SuppressDonation;
@@ -191,23 +191,23 @@ namespace VSColorOutput.State
         {
             var settings = new Settings
             {
-                EnableStopOnBuildError = StopOnFirstBuildError,
-                ShowElapsedBuildTime = ShowElapsedBuildTime,
-                ShowBuildReport = ShowBuildReport,
-                ShowDebugWindowOnDebug = ShowDebugWindowOnDebug,
-                HighlightFindResults = HighlightFindResults,
-                ShowTimeStamps = ShowTimeStamps,
+                EnableStopOnBuildError   = StopOnFirstBuildError,
+                ShowElapsedBuildTime     = ShowElapsedBuildTime,
+                ShowBuildReport          = ShowBuildReport,
+                ShowDebugWindowOnDebug   = ShowDebugWindowOnDebug,
+                HighlightFindResults     = HighlightFindResults,
+                ShowTimeStamps           = ShowTimeStamps,
                 ShowTimeStampOnEveryLine = ShowTimeStampOnEveryLine,
-                ShowHoursInTimeStamps = ShowHoursInTimeStamps,
+                ShowHoursInTimeStamps    = ShowHoursInTimeStamps,
                 FormatTimeInSystemLocale = FormatTimeInSystemLocale,
                 // ---
                 Patterns = RegExPatterns,
                 // ---
                 BuildMessageColor = BuildMessageColor,
-                BuildTextColor = BuildTextColor,
+                BuildTextColor    = BuildTextColor,
                 // ---
-                ErrorTextColor = ErrorTextColor,
-                WarningTextColor = WarningTextColor,
+                ErrorTextColor       = ErrorTextColor,
+                WarningTextColor     = WarningTextColor,
                 InformationTextColor = InformationTextColor,
                 // ---
                 CustomTextColor1 = CustomTextColor1,
@@ -215,11 +215,11 @@ namespace VSColorOutput.State
                 CustomTextColor3 = CustomTextColor3,
                 CustomTextColor4 = CustomTextColor4,
                 // --
-                FindFileNameColor = FindFileNameColor,
+                FindFileNameColor   = FindFileNameColor,
                 FindSearchTermColor = FindSearchTermColor,
                 // --
-                TimeStampColor = TimeStampColor,
-                TimeStampElapsed = TimeStampElapsed,
+                TimeStampColor      = TimeStampColor,
+                TimeStampElapsed    = TimeStampElapsed,
                 TimeStampDifference = TimeStampDifference,
                 // --
                 SuppressDonation = SuppressDonation

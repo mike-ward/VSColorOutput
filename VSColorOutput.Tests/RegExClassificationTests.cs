@@ -15,9 +15,9 @@ namespace Tests
         {
             var rc = new RegExClassification
             {
-                RegExPattern = "/d",
+                RegExPattern       = "/d",
                 ClassificationType = ClassificationTypes.BuildText,
-                IgnoreCase = true
+                IgnoreCase         = true
             };
             rc.ToString().Should().Be("\"/d\",BuildText,True");
         }

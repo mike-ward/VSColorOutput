@@ -27,11 +27,11 @@ namespace VSColorOutput.Output.GCCErrorList
                 return new GCCErrorListItem
                 {
                     ProjectNumber = int.Parse(groups[1].Value),
-                    Filename = groups[2].Value,
-                    Line = int.Parse(groups[3].Value),
-                    Column = int.Parse(groups[4].Value),
-                    Text = groups[5].Value,
-                    ErrorType = GCCErrorType.Full
+                    Filename      = groups[2].Value,
+                    Line          = int.Parse(groups[3].Value),
+                    Column        = int.Parse(groups[4].Value),
+                    Text          = groups[5].Value,
+                    ErrorType     = GCCErrorType.Full
                 };
             }
 
@@ -42,11 +42,10 @@ namespace VSColorOutput.Output.GCCErrorList
                 return new GCCErrorListItem
                 {
                     ProjectNumber = int.Parse(groups[1].Value),
-                    Filename = "gcc",
-                    Text = groups[2].Value,
-                    ErrorType = GCCErrorType.GCCOnly
+                    Filename      = "gcc",
+                    Text          = groups[2].Value,
+                    ErrorType     = GCCErrorType.GCCOnly
                 };
-
             }
 
             // Nothing parsed. Probably not a GCC error
@@ -55,12 +54,12 @@ namespace VSColorOutput.Output.GCCErrorList
 
         protected bool Equals(GCCErrorListItem other)
         {
-            return ProjectNumber == other.ProjectNumber 
-                   && string.Equals(Filename, other.Filename) 
-                   && Line == other.Line 
-                   && Column == other.Column 
-                   && string.Equals(Text, other.Text) 
-                   && ErrorType == other.ErrorType;
+            return ProjectNumber == other.ProjectNumber
+                && string.Equals(Filename, other.Filename)
+                && Line == other.Line
+                && Column == other.Column
+                && string.Equals(Text, other.Text)
+                && ErrorType == other.ErrorType;
         }
 
         public override bool Equals(object obj)
@@ -77,10 +76,14 @@ namespace VSColorOutput.Output.GCCErrorList
             unchecked
             {
                 var hashCode = ProjectNumber;
-                hashCode = (hashCode * 397) ^ (Filename != null ? Filename.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Filename != null
+                    ? Filename.GetHashCode()
+                    : 0);
                 hashCode = (hashCode * 397) ^ Line;
                 hashCode = (hashCode * 397) ^ Column;
-                hashCode = (hashCode * 397) ^ (Text != null ? Text.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Text != null
+                    ? Text.GetHashCode()
+                    : 0);
                 hashCode = (hashCode * 397) ^ ErrorType.GetHashCode();
                 return hashCode;
             }

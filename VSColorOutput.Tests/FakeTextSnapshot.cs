@@ -9,18 +9,18 @@ namespace Tests
 {
     public class FakeTextSnapshot : ITextSnapshot
     {
-        private readonly string _text;
+        private readonly string   _text;
         private readonly string[] _lines;
 
         public FakeTextSnapshot(string text)
         {
-            this._text = text;
-            _lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            _text  = text;
+            _lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             Lines = _lines.Select((t, i) => GetLineFromLineNumber(i)).ToList();
 
             TextBuffer = new FakeTextBuffer();
-            Version = new FakeVersion(1);
+            Version    = new FakeVersion(1);
         }
 
         public string GetText(Span span)
@@ -82,9 +82,9 @@ namespace Tests
 
         public char this[int position] => _text[position];
 
-        public IEnumerable<ITextSnapshotLine> Lines { get; }
-        public ITextBuffer TextBuffer { get; }
-        public ITextVersion Version { get; }
+        public IEnumerable<ITextSnapshotLine> Lines      { get; }
+        public ITextBuffer                    TextBuffer { get; }
+        public ITextVersion                   Version    { get; }
 
         #region Not required or implemented
 
@@ -231,13 +231,13 @@ namespace Tests
             }
 
 #pragma warning disable 67
-            public event EventHandler<SnapshotSpanEventArgs> ReadOnlyRegionsChanged;
-            public event EventHandler<TextContentChangedEventArgs> Changed;
-            public event EventHandler<TextContentChangedEventArgs> ChangedLowPriority;
-            public event EventHandler<TextContentChangedEventArgs> ChangedHighPriority;
+            public event EventHandler<SnapshotSpanEventArgs>        ReadOnlyRegionsChanged;
+            public event EventHandler<TextContentChangedEventArgs>  Changed;
+            public event EventHandler<TextContentChangedEventArgs>  ChangedLowPriority;
+            public event EventHandler<TextContentChangedEventArgs>  ChangedHighPriority;
             public event EventHandler<TextContentChangingEventArgs> Changing;
-            public event EventHandler PostChanged;
-            public event EventHandler<ContentTypeChangedEventArgs> ContentTypeChanged;
+            public event EventHandler                               PostChanged;
+            public event EventHandler<ContentTypeChangedEventArgs>  ContentTypeChanged;
         }
 #pragma warning restore 67
 

@@ -9,10 +9,10 @@ namespace Tests
 
         public FakeTextSnapshotLine(ITextSnapshot snapshot, string text, int position, int lineNumber)
         {
-            Snapshot = snapshot;
-            this._text = text;
+            Snapshot   = snapshot;
+            _text      = text;
             LineNumber = lineNumber;
-            Start = new SnapshotPoint(snapshot, position);
+            Start      = new SnapshotPoint(snapshot, position);
         }
 
         public string GetText()
@@ -55,5 +55,5 @@ namespace Tests
         public SnapshotPoint EndIncludingLineBreak => Start + LengthIncludingLineBreak;
 
         public int LineBreakLength => Environment.NewLine.Length;
-  }
+    }
 }

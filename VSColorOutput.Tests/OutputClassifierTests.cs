@@ -23,9 +23,9 @@ namespace Tests
         [TestMethod]
         public void GetClassificationSpansZeroLengthSnapShot()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider                   = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
-            var outputClassifier = new OutputClassifier();
+            var outputClassifier                      = new OutputClassifier();
             outputClassifier.Initialize(mockClassificationTypeRegistryService.Object, null);
             var mockSnapshot = new Mock<ITextSnapshot>();
             mockSnapshot.SetupGet(s => s.Length).Returns(0);
@@ -55,19 +55,25 @@ namespace Tests
         [DataRow(" 0 Error(s)", ClassificationTypeDefinitions.BuildHead)]
         [DataRow("Could not find file", ClassificationTypeDefinitions.LogError)]
         [DataRow("warning CS0168: The variable \'exception\'", ClassificationTypeDefinitions.LogWarn)]
+        [DataRow("[11:15:27.531394] info: some mundane information message", ClassificationTypeDefinitions.LogInfo)]
+        [DataRow("[11:15:27.531394] warn: a message to notify a user", ClassificationTypeDefinitions.LogWarn)]
+        [DataRow("[11:15:27.531394] trce: random trace message", ClassificationTypeDefinitions.BuildText)]
+        [DataRow("[11:15:27.531394] dbug: random debug message", ClassificationTypeDefinitions.BuildText)]
+        [DataRow("[11:15:27.531394] fail: failure description", ClassificationTypeDefinitions.LogError)]
+        [DataRow("[11:15:27.531394] crit: failure description", ClassificationTypeDefinitions.LogError)]
         [DataTestMethod]
         public void GetClassificationSpansFromSnapShot(string pattern, string classification)
         {
             Settings.Load();
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider                   = new Mock<IServiceProvider>();
             var mockClassificationTypeRegistryService = new Mock<IClassificationTypeRegistryService>();
             mockClassificationTypeRegistryService
-                .Setup(c => c.GetClassificationType(classification))
-                .Returns(new Mock<IClassificationType>().Object);
+               .Setup(c => c.GetClassificationType(classification))
+               .Returns(new Mock<IClassificationType>().Object);
 
             var outputClassifier = new OutputClassifier();
             outputClassifier.Initialize(mockClassificationTypeRegistryService.Object, null);
-            var mockSnapshot = new Mock<ITextSnapshot>();
+            var mockSnapshot     = new Mock<ITextSnapshot>();
             var mockSnapshotLine = new Mock<ITextSnapshotLine>();
 
             mockSnapshot.SetupGet(s => s.Length).Returns(1);
@@ -81,7 +87,7 @@ namespace Tests
             mockSnapshotLine.SetupGet(l => l.Snapshot).Returns(mockSnapshot.Object);
 
             var snapshotSpan = new SnapshotSpan(mockSnapshot.Object, 0, 1);
-            var spans = outputClassifier.GetClassificationSpans(snapshotSpan);
+            var spans        = outputClassifier.GetClassificationSpans(snapshotSpan);
             spans.Should().NotBeEmpty();
 
             Mock.VerifyAll();

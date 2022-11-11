@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using VSColorOutput.State;
 using Constants = EnvDTE.Constants;
 
@@ -49,19 +49,19 @@ namespace VSColorOutput.Output.GCCErrorList
 
                 var task = new ErrorTask
                 {
-                    Category = TaskCategory.BuildCompile,
+                    Category      = TaskCategory.BuildCompile,
                     ErrorCategory = category,
-                    Text = item.Text
+                    Text          = item.Text
                 };
 
                 switch (item.ErrorType)
                 {
                     case GCCErrorType.Full:
-                        task.Navigate += TaskOnNavigate;
-                        task.Line = item.Line - 1; // Visual studio starts counting from 0
-                        task.Column = item.Column - 1; // Visual studio starts counting from 0
-                        task.Document = GetFileByProjectNumber(item.ProjectNumber, item.Filename);
-                        task.HierarchyItem = GetItemHierarchy(task.Document);
+                        task.Navigate      += TaskOnNavigate;
+                        task.Line          =  item.Line - 1;   // Visual studio starts counting from 0
+                        task.Column        =  item.Column - 1; // Visual studio starts counting from 0
+                        task.Document      =  GetFileByProjectNumber(item.ProjectNumber, item.Filename);
+                        task.HierarchyItem =  GetItemHierarchy(task.Document);
                         break;
                     case GCCErrorType.GCCOnly:
                         task.Document = item.Filename;
@@ -87,7 +87,7 @@ namespace VSColorOutput.Output.GCCErrorList
 
         private static void TaskOnNavigate(object sender, EventArgs eventArgs)
         {
-            var task = sender as Task;
+            var task = sender as TaskListItem;
             if (task == null) throw new ArgumentException("sender");
             task.Line++; // Navigation starts counting from 1, do ++
             _errorListProvider.Navigate(task, new Guid(Constants.vsViewKindCode));
@@ -114,24 +114,23 @@ namespace VSColorOutput.Output.GCCErrorList
         public static IVsHierarchy GetProjectHierarchy(Project project)
         {
             // Get the vs solution
-            var solution = (IVsSolution) Package.GetGlobalService(typeof(IVsSolution));
-            var hr = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
+            var solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
+            var hr       = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
 
             if (hr == VSConstants.S_OK) return hierarchy;
 
             return null;
         }
 
-
         private static Project GetProjectByNumber(int number)
         {
-            var dte = (DTE2) Package.GetGlobalService(typeof(DTE));
+            var dte = (DTE2)Package.GetGlobalService(typeof(DTE));
             return dte.Solution.Projects.Item(number);
         }
 
         private static string GetFileByProjectNumber(int number, string filename)
         {
-            var proj = GetProjectByNumber(number);
+            var proj        = GetProjectByNumber(number);
             var projectPath = Path.GetDirectoryName(proj.FileName) ?? string.Empty;
 
             foreach (var file in Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories))

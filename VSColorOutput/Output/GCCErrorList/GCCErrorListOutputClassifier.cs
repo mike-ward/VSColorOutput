@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 using VSColorOutput.Output.ColorClassifier;
 using VSColorOutput.State;
 
 namespace VSColorOutput.Output.GCCErrorList
 {
-    class GCCErrorListOutputClassifier : IClassifier
+    internal class GCCErrorListOutputClassifier : IClassifier
     {
-        private int _initialized;
-        private IList<Classifier> _classifiers;
+        private int                                               _initialized;
+        private IList<Classifier>                                 _classifiers;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         public void Initialize()
@@ -37,27 +37,27 @@ namespace VSColorOutput.Output.GCCErrorList
         {
             try
             {
-                var spans = new List<ClassificationSpan>();
                 var snapshot = span.Snapshot;
-                if (snapshot == null || snapshot.Length == 0) return spans;
+                if (snapshot == null || snapshot.Length == 0) return Array.Empty<ClassificationSpan>();
                 if (_classifiers == null) UpdateClassifiers();
 
-                var classifiers = _classifiers ?? new List<Classifier>();
-                var start = span.Start.GetContainingLine().LineNumber;
-                var end = (span.End - 1).GetContainingLine().LineNumber;
+                var classifiers = _classifiers;
+                var start       = span.Start.GetContainingLine().LineNumber;
+                var end         = (span.End - 1).GetContainingLine().LineNumber;
                 for (var i = start; i <= end; i++)
                 {
                     var line = snapshot.GetLineFromLineNumber(i);
                     if (line == null) continue;
                     var snapshotSpan = new SnapshotSpan(line.Start, line.Length);
-                    var text = line.Snapshot.GetText(snapshotSpan);
+                    var text         = line.Snapshot.GetText(snapshotSpan);
                     if (string.IsNullOrEmpty(text)) continue;
 
-                    var classificationName = classifiers.FirstOrDefault(classifier => classifier.Test(text)).Type;
+                    var classificationName = classifiers?.FirstOrDefault(classifier => classifier.Test(text)).Type;
                     if (classificationName == null)
                     {
                         continue;
                     }
+
                     switch (classificationName)
                     {
                         case ClassificationTypeDefinitions.LogError:
@@ -69,25 +69,25 @@ namespace VSColorOutput.Output.GCCErrorList
                         case ClassificationTypeDefinitions.LogInfo:
                             GCCErrorGenerator.AddMessage(GCCErrorListItem.Parse(text));
                             break;
-
                     }
                 }
-                return spans;
+
+                return Array.Empty<ClassificationSpan>();
             }
             catch (FormatException)
             {
                 // eat it.
-                return new List<ClassificationSpan>();
+                return Array.Empty<ClassificationSpan>();
             }
             catch (RegexMatchTimeoutException)
             {
                 // eat it.
-                return new List<ClassificationSpan>();
+                return Array.Empty<ClassificationSpan>();
             }
             catch (NullReferenceException)
             {
                 // eat it.    
-                return new List<ClassificationSpan>();
+                return Array.Empty<ClassificationSpan>();
             }
             catch (Exception ex)
             {
@@ -105,14 +105,14 @@ namespace VSColorOutput.Output.GCCErrorList
                     pattern => new
                     {
                         classificationType = pattern.ClassificationType.ToString(),
-                        test = RegExClassification.RegExFactory(pattern)
+                        test               = RegExClassification.RegExFactory(pattern)
                     })
-                .Select(temp => new Classifier
+               .Select(temp => new Classifier
                 {
                     Type = temp.classificationType,
                     Test = temp.test.IsMatch
                 })
-                .ToList();
+               .ToList();
 
             classifiers.Add(new Classifier
             {
