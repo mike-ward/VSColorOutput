@@ -98,16 +98,16 @@
       <Version>17.4.33103.184</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.UnitTestLibrary">
-      <Version>14.3.25407</Version>
+      <Version>15.0.25726-Preview5</Version>
     </PackageReference>
     <PackageReference Include="Moq">
       <Version>4.18.2</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>2.2.10</Version>
+      <Version>3.0.0-preview-20221110-04</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>2.2.10</Version>
+      <Version>3.0.0-preview-20221110-04</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
