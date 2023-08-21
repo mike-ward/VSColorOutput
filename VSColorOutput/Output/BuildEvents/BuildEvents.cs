@@ -5,6 +5,7 @@ using System.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
 using VSColorOutput.Output.TimeStamp;
 using VSColorOutput.State;
 
@@ -19,11 +20,11 @@ namespace VSColorOutput.Output.BuildEvents
         private DTE2 _dte2;
         private Events _events;
         private DTEEvents _dteEvents;
-        private SolutionEvents _solutionEvents;
         private EnvDTE.BuildEvents _buildEvents;
         private int _initialized;
         private DateTime _buildStartTime;
         private List<string> _projectsBuildReport;
+        private IVsSolution _solutionService;
         private CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public bool StopOnBuildErrorEnabled { get; set; }
@@ -35,11 +36,13 @@ namespace VSColorOutput.Output.BuildEvents
         public bool ShowDonation { get; set; }
         public static string SolutionPath { get; private set; }
 
+
         public void Initialize(IServiceProvider serviceProvider)
         {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 1) return;
 
 #pragma warning disable VSSDK006 // Check services exist
+            _solutionService = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
             _dte2 = serviceProvider.GetService(typeof(DTE)) as DTE2;
 #pragma warning restore VSSDK006 // Check services exist
             if (_dte2 != null)
@@ -49,30 +52,47 @@ namespace VSColorOutput.Output.BuildEvents
                 _events = _dte2.Events;
                 _buildEvents = _events.BuildEvents;
                 _dteEvents = _events.DTEEvents;
-                _solutionEvents = _events.SolutionEvents;
 
                 _buildEvents.OnBuildBegin += OnBuildBegin;
                 _buildEvents.OnBuildDone += OnBuildDone;
                 _buildEvents.OnBuildProjConfigDone += OnBuildProjectDone;
                 _dteEvents.ModeChanged += OnModeChanged;
-
-                if (_solutionEvents != null)
-                {
-                    _solutionEvents.Opened += SolutionOpened;
-                    _solutionEvents.AfterClosing += () => SolutionPath = null;
-                }
             }
 
             _projectsBuildReport = new List<string>();
 
+            // If not started from Test session
+            if (_solutionService != null)
+            {
+                if (IsSolutionLoaded())
+                {
+                    SolutionOpened();
+                }
+
+                Microsoft.VisualStudio.Shell.Events.SolutionEvents.OnAfterOpenSolution += (s, e) => SolutionOpened();
+                Microsoft.VisualStudio.Shell.Events.SolutionEvents.OnAfterCloseSolution += (s, e) => SolutionClosed();
+            }
+
             Settings.SettingsUpdated += (sender, args) => LoadSettings();
             LoadSettings();
+        }
+
+        private bool IsSolutionLoaded()
+        {
+            _solutionService.GetProperty((int)__VSPROPID.VSPROPID_IsSolutionOpen, out object value);
+
+            return value is bool isSolOpen && isSolOpen;
         }
 
         public void SolutionOpened()
         {
             SolutionPath = System.IO.Path.GetDirectoryName(_dte2.Solution.FullName);
             LoadSettings();
+        }
+
+        public void SolutionClosed()
+        {
+            SolutionPath = null;
         }
 
         private void LoadSettings()
